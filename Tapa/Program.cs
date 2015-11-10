@@ -14,9 +14,12 @@ namespace Tapa
         [STAThread]
         static void Main()
         {
+            // ボタンをWindows風のスタイルにしてくれる
             Application.EnableVisualStyles();
+            // falseにすることでパフォーマンスを優先する
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            // Form1()が停止しない間常に動作
+            Application.Run(new Display());
         }
     }
 }
