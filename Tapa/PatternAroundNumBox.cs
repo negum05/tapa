@@ -10,31 +10,31 @@ namespace Tapa
     class PatternAroundNumBox
     {
         // 数字ごとの黒マスパターンの先頭id
-        public static const byte HEAD_BN_0 = 0;
-        public static const byte HEAD_BN_1 = 1;
-        public static const byte HEAD_BN_2 = 9;
-        public static const byte HEAD_BN_3 = 17;
-        public static const byte HEAD_BN_4 = 25;
-        public static const byte HEAD_BN_5 = 33;
-        public static const byte HEAD_BN_6 = 41;
-        public static const byte HEAD_BN_7 = 49;
-        public static const byte HEAD_BN_8 = 57;
-        public static const byte HEAD_BN_11 = 58;
-        public static const byte HEAD_BN_12 = 78;
-        public static const byte HEAD_BN_13 = 110;
-        public static const byte HEAD_BN_14 = 134;
-        public static const byte HEAD_BN_15 = 150;
-        public static const byte HEAD_BN_22 = 158;
-        public static const byte HEAD_BN_23 = 170;
-        public static const byte HEAD_BN_24 = 186;
-        public static const byte HEAD_BN_33 = 194;
-        public static const byte HEAD_BN_111 = 198;
-        public static const byte HEAD_BN_112 = 214;
-        public static const byte HEAD_BN_113 = 238;
-        public static const byte HEAD_BN_122 = 246;
-        public static const byte HEAD_BN_1111 = 254;
-        public static const byte MIN_ID = 0;
-        public static const byte MAX_ID = 255;
+        public static readonly byte HEAD_BN_0 = 0;
+        public static readonly byte HEAD_BN_1 = 1;
+        public static readonly byte HEAD_BN_2 = 9;
+        public static readonly byte HEAD_BN_3 = 17;
+        public static readonly byte HEAD_BN_4 = 25;
+        public static readonly byte HEAD_BN_5 = 33;
+        public static readonly byte HEAD_BN_6 = 41;
+        public static readonly byte HEAD_BN_7 = 49;
+        public static readonly byte HEAD_BN_8 = 57;
+        public static readonly byte HEAD_BN_11 = 58;
+        public static readonly byte HEAD_BN_12 = 78;
+        public static readonly byte HEAD_BN_13 = 110;
+        public static readonly byte HEAD_BN_14 = 134;
+        public static readonly byte HEAD_BN_15 = 150;
+        public static readonly byte HEAD_BN_22 = 158;
+        public static readonly byte HEAD_BN_23 = 170;
+        public static readonly byte HEAD_BN_24 = 186;
+        public static readonly byte HEAD_BN_33 = 194;
+        public static readonly byte HEAD_BN_111 = 198;
+        public static readonly byte HEAD_BN_112 = 214;
+        public static readonly byte HEAD_BN_113 = 238;
+        public static readonly byte HEAD_BN_122 = 246;
+        public static readonly byte HEAD_BN_1111 = 254;
+        public static readonly byte MIN_ID = 0;
+        public static readonly byte MAX_ID = 255;
 
         // idとマスの数字の連想配列
         public static Dictionary<byte, int> id_num_dict
@@ -180,6 +180,8 @@ namespace Tapa
          * id       : 各パターンを識別するための数値(型はbyte)
          *   
          * *******************************/
+
+		/*
         static public bool checkPatternAroundNumBox(int x, int y, byte id)
         {
             int TL = Tapa.box[x-1][y-1].color;    // 左上(Top-Left)
@@ -276,5 +278,6 @@ namespace Tapa
                 Application.Exit();
             }
         }
+		 * */
     }
 }

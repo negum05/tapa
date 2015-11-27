@@ -10,15 +10,15 @@ namespace Tapa
 
     class Box
     {
-        public static const int WHITE = 0;      // 白色
-        public static const int BLACK = 1;      // 黒色
-        public static const int NOCOLOR = -1;   // 色未定
-        public int x { get; set; }              // x座標
-        public int y { get; set; }              // y座標
-        public bool has_num { get; set; }       // 数字を持っているか
-        public List<int> box_num_list;          // マスの数字
-        public List<byte> id_list;              // id(数字マス周りのパターンの識別子)のリスト
-        public int color { get; set; }          // マスの色 -1:未定 0:白 1:黒
+        public static readonly int WHITE = 0;       // 白色
+        public static readonly int BLACK = 1;       // 黒色
+        public static readonly int NOCOLOR = -1;    // 色未定
+        public int x { get; set; }                  // x座標
+        public int y { get; set; }                  // y座標
+        public bool has_num { get; set; }           // 数字を持っているか
+        public List<int> box_num_list;              // マスの数字
+        public List<byte> id_list;                  // id(数字マス周りのパターンの識別子)のリスト
+        public int color { get; set; }              // マスの色 -1:未定 0:白 1:黒
 
 
         public Box()
@@ -64,6 +64,8 @@ namespace Tapa
             }
             else {
                 int count = 5;
+                // Console.Write("(" + this.x + "," + this.y +")");
+                Console.Write(this.box_num_list.Count);
                 foreach (int tmp_num in this.box_num_list) {
                     Console.Write(tmp_num);
                     count--;

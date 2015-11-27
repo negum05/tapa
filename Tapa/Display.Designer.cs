@@ -34,7 +34,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(450, 355);
+            this.ClientSize = new System.Drawing.Size(395, 355);
             this.Name = "Display";
             this.Text = "Tapa_puzzle";
             this.ResumeLayout(false);
@@ -42,6 +42,7 @@
         }
 
         #endregion
+
 
     }
 }
