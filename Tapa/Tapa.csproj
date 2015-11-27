@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Box.cs" />
+    <Compile Include="PatternAroundNumBox.cs" />
     <Compile Include="Display.cs">
       <SubType>Form</SubType>
     </Compile>

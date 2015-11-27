@@ -28,7 +28,11 @@ namespace Tapa
 
             // 入力ファイルの読み込み
             Tapa.inputTapa(args[0]);
+            // 盤面の出力
+            Tapa.printBoard();
 
+            // 数字マス周りのチェック
+            PatternAroundNumBox.checkPatternAroundNumBox();
             /*
             // ボタンをWindows風のスタイルにしてくれる
             Application.EnableVisualStyles();
@@ -40,6 +44,8 @@ namespace Tapa
 
         }
 
+
+
         /*********************************
          * 
          * 入力ファイルの読み込み
@@ -48,7 +54,6 @@ namespace Tapa
          * *******************************/
         static public void inputTapa(string in_filename)
         {
-
             Microsoft.Office.Interop.Excel.Application ExcelApp
                 = new Microsoft.Office.Interop.Excel.Application();
             Console.Write("infilename >> " + in_filename + "\n");
@@ -91,10 +96,10 @@ namespace Tapa
             // 各セルのデータの取得
             // Excelでは（列、行）座標を用いているため、
             // ########### ここから（j、i）=（行、列）とする。 
-            List<Box> tmp_box_list = new List<Box>();   // 行ごとのリストを格納する用
-            Box tmp_box = new Box();
             for (int i = 1; i <= row_count; i++) {
+                List<Box> tmp_box_list = new List<Box>();   // 行ごとのリストを格納する用
                 for (int j = 1; j <= column_count; j++) {
+                    Box tmp_box = new Box();
                     int tmp_num = 0;
                     string st = "";
                     Microsoft.Office.Interop.Excel.Range range = sheet.Cells[j, i];
@@ -105,6 +110,8 @@ namespace Tapa
                         Console.Write("Error: セル(" + j + "," + i + ")の読み込み中にエラー(中身がnull)\n");
                         Application.Exit();
                     }
+                    tmp_box.x = j;  // x座標
+                    tmp_box.y = i;  // y座標
                     if (st.Equals("-")) {
                         tmp_box.has_num = false;
                     }
@@ -112,58 +119,64 @@ namespace Tapa
                         if (DEBUG) { Console.Write("st >> " + st + "\n"); }
                         tmp_box.has_num = true;
                         do {              // 数字を桁毎にリストに追加
-                            tmp_box.box_num.Insert(0, tmp_num % 10);
+                            tmp_box.box_num_list.Insert(0, tmp_num % 10);
                             tmp_num /= 10;
                         } while (tmp_num > 0);  // do-whileは0の場合を許可するため
                     }
                     else {
                         Console.WriteLine("Error: セル(" + j + "," + i + ")の読み込み中にエラー(中身が数字でも'-'でもない)\n", j, i);
                     }
-                    tmp_box_list.Add(tmp_box.clone());
+                    tmp_box_list.Add(new Box(tmp_box));
                     tmp_box.clear();
                 }
                 box.Add(new List<Box>(tmp_box_list));  // 行毎にリストをboxに追加
                 tmp_box_list.Clear();
             }
             // ########## ここまで（j、i）=（行、列）とする。
-
-
-            // ########## 盤面の外側にも1マスずつマスを配置
-            tmp_box.my_color = 0;   // 外側のマスは白色
-            for (int i = 0; i <= column_count + 1; i++) {
-                tmp_box_list.Add(tmp_box.clone());      // 最上(下)行のマスのリストを生成
-            }
-            box.Insert(0, new List<Box>(tmp_box_list));    // 最上行に空マスのリストを追加
-            box.Add(new List<Box>(tmp_box_list));          // 最下行に空マスのリストを追加
-            for (int i = 0; i <= row_count + 1; i++) {
-                box[i].Insert(0, tmp_box.clone());
-                box[i].Add(tmp_box.clone());
-            }
-            // ##########
-
-            for (int i = 0; i <= row_count+1; i++) {
-                // Console.WriteLine("box[" + i + "].size >> " + box[i].Count());
-                for (int j = 0; j <= column_count+1; j++) {
-                    if (!box[i][j].has_num) {
-                        if (box[i][j].my_color == 0) { Console.Write("**** "); }
-                        else { Console.Write("---- "); }
-                    }
-                    else {
-                        int count = 5;
-                        foreach (int tmp in box[i][j].box_num) {
-                            Console.Write(tmp);
-                            count--;
-                        }
-                        while (count-- > 0) { Console.Write(" "); }
-                    }
-                }
-                Console.Write("\n");
-            }
-
+            // 盤面の外側に余分な白マスを生成
+            makeOuterBox(row_count, column_count);
             //ワークブックを閉じる
             WorkBook.Close();
             //エクセルを閉じる
             ExcelApp.Quit();
+        }
+
+        /*********************************
+         * 
+         *   盤面の外側に1マスずつ白マスを配置
+         *   引数：（盤面の行数、盤面の列数）
+         *  
+         * *******************************/
+        private static void makeOuterBox(int row_count, int column_count)
+        {
+            // ########## 盤面の外側にも1マスずつマスを配置
+            Box tmp_box = new Box();
+            List<Box> tmp_box_list = new List<Box>();
+            tmp_box.color = Box.WHITE;   // 外側のマスは白色
+            for (int i = 0; i <= column_count+1; i++) {
+                tmp_box_list.Add(new Box(tmp_box));      // 最上(下)行に追加するマスのリストを生成
+            }
+            box.Insert(0, new List<Box>(tmp_box_list));    // 最上行に空マスのリストを追加
+            box.Add(new List<Box>(tmp_box_list));          // 最下行に空マスのリストを追加
+            for (int i = 1; i <= row_count; i++) {
+                box[i].Insert(0, new Box(tmp_box));
+                box[i].Add(new Box(tmp_box));
+            }
+        }
+        /*********************************
+         * 
+         *   盤面をシェルに表示
+         *  
+         * *******************************/
+        private static void printBoard()
+        {
+            foreach (List<Box> tmp_box_list in box) {
+                foreach(Box tmp_box in tmp_box_list) {
+                    tmp_box.printBoxNum();
+                }
+                Console.WriteLine();
+            }
+
         }
     }
 }
