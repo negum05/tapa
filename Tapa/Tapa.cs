@@ -32,7 +32,7 @@ namespace Tapa
             Tapa.printBoard();
 
             // 数字マス周りのチェック
-            PatternAroundNumBox.checkPatternAroundNumBox();
+            // PatternAroundNumBox.checkPatternAroundNumBox();
             /*
             // ボタンをWindows風のスタイルにしてくれる
             Application.EnableVisualStyles();
@@ -122,6 +122,7 @@ namespace Tapa
                             tmp_box.box_num_list.Insert(0, tmp_num % 10);
                             tmp_num /= 10;
                         } while (tmp_num > 0);  // do-whileは0の場合を許可するため
+                        Console.Write("size(" + tmp_box.x + "," + tmp_box.y + ") >> " + tmp_box_list.Count + " ");
                     }
                     else {
                         Console.WriteLine("Error: セル(" + j + "," + i + ")の読み込み中にエラー(中身が数字でも'-'でもない)\n", j, i);
