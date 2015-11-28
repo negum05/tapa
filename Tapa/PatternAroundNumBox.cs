@@ -192,7 +192,7 @@ namespace Tapa
             int BC = Tapa.box[x+1][y].color;      // 中下(Bottom-Center)
             int BR = Tapa.box[x-1][y-1].color;    // 右下(Bottom-Right)
 
-            if (id == HEAD_BN_0) {
+			if (id == HEAD_BN_0) {
                 if(TL)
             }
             else if (HEAD_BN_1 <= box_num && box_num < HEAD_BN_2) {
