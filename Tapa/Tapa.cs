@@ -116,13 +116,12 @@ namespace Tapa
                         tmp_box.has_num = false;
                     }
                     else if (int.TryParse(st, out tmp_num)) { // tmp_num=(int)stが数字だった場合
-                        if (DEBUG) { Console.Write("st >> " + st + "\n"); }
+                        if (DEBUG) { Console.Write("st >> " + st + "  "); }
                         tmp_box.has_num = true;
                         do {              // 数字を桁毎にリストに追加
                             tmp_box.box_num_list.Insert(0, tmp_num % 10);
                             tmp_num /= 10;
                         } while (tmp_num > 0);  // do-whileは0の場合を許可するため
-                        Console.Write("size(" + tmp_box.x + "," + tmp_box.y + ") >> " + tmp_box_list.Count + " ");
                     }
                     else {
                         Console.WriteLine("Error: セル(" + j + "," + i + ")の読み込み中にエラー(中身が数字でも'-'でもない)\n", j, i);
@@ -155,7 +154,7 @@ namespace Tapa
             List<Box> tmp_box_list = new List<Box>();
             tmp_box.color = Box.WHITE;   // 外側のマスは白色
             for (int i = 0; i <= column_count+1; i++) {
-                tmp_box_list.Add(new Box(tmp_box));      // 最上(下)行に追加するマスのリストを生成
+                tmp_box_list.Add(new Box(tmp_box));      // 最上(下)行に追加する空マスのリストを生成
             }
             box.Insert(0, new List<Box>(tmp_box_list));    // 最上行に空マスのリストを追加
             box.Add(new List<Box>(tmp_box_list));          // 最下行に空マスのリストを追加

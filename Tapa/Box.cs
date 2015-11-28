@@ -39,7 +39,7 @@ namespace Tapa
                     this.box_num_list.Add(tmp_num);
                 }
             }
-            this.box_num_list = new List<int>();
+            this.id_list = new List<byte>();
             if (origin_box.id_list.Count > 0) {
                 foreach (byte tmp_id in origin_box.id_list) {
                     this.id_list.Add(tmp_id);
@@ -64,8 +64,6 @@ namespace Tapa
             }
             else {
                 int count = 5;
-                // Console.Write("(" + this.x + "," + this.y +")");
-                Console.Write(this.box_num_list.Count);
                 foreach (int tmp_num in this.box_num_list) {
                     Console.Write(tmp_num);
                     count--;
