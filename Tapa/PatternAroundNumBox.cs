@@ -188,18 +188,16 @@ namespace Tapa
 		 * id       : 各パターンを識別するための数値(型はbyte)
 		 *   
 		 * *******************************/
-
-
 		static public bool checkPatternAroundNumBox(int x, int y, byte id)
 		{
-			int TL = Tapa.box[x - 1][y - 1].color;    // 左上(Top-Left)
-			int TC = Tapa.box[x][y - 1].color;      // 中上(Top-Center)
-			int TR = Tapa.box[x - 1][y + 1].color;    // 右上(Top-Right)
-			int ML = Tapa.box[x][y - 1].color;      // 左中(Middle-Left)
-			int MR = Tapa.box[x][y + 1].color;      // 右中(Middle-Right)
-			int BL = Tapa.box[x + 1][y - 1].color;    // 左下(Bottom-Left)
-			int BC = Tapa.box[x + 1][y].color;      // 中下(Bottom-Center)
-			int BR = Tapa.box[x - 1][y - 1].color;    // 右下(Bottom-Right)
+			int TL = Tapa.box[x - 1][y - 1].Color;    // 左上(Top-Left)
+			int TC = Tapa.box[x][y - 1].Color;      // 中上(Top-Center)
+			int TR = Tapa.box[x - 1][y + 1].Color;    // 右上(Top-Right)
+			int ML = Tapa.box[x][y - 1].Color;      // 左中(Middle-Left)
+			int MR = Tapa.box[x][y + 1].Color;      // 右中(Middle-Right)
+			int BL = Tapa.box[x + 1][y - 1].Color;    // 左下(Bottom-Left)
+			int BC = Tapa.box[x + 1][y].Color;      // 中下(Bottom-Center)
+			int BR = Tapa.box[x - 1][y - 1].Color;    // 右下(Bottom-Right)
 
 			// [0] id=0
 			if (id == HEAD_BN_0) {
@@ -1678,6 +1676,1505 @@ namespace Tapa
 				Console.WriteLine("Error: 数字マスのid振り分けでエラー");
 				Application.Exit();
 				return false;
+			}
+		}
+
+		/*********************************
+		 * 
+		 * 座標とidから座標周りでidの通り黒マスを配置する。
+		 * 引数
+		 * x        : 数字マスのx座標
+		 * y        : 数字マスのy座標
+		 * id       : 各パターンを識別するための数値(型はbyte)
+		 *   
+		 * *******************************/
+		static public void setPatternAroundNumBox(int x, int y, byte id)
+		{
+			// 数字マス周りのマスを取得
+			Box TL = Tapa.box[x - 1][y - 1];    // 左上(Top-Left)
+			Box TC = Tapa.box[x][y - 1];      // 中上(Top-Center)
+			Box TR = Tapa.box[x - 1][y + 1];    // 右上(Top-Right)
+			Box ML = Tapa.box[x][y - 1];      // 左中(Middle-Left)
+			Box MR = Tapa.box[x][y + 1];      // 右中(Middle-Right)
+			Box BL = Tapa.box[x + 1][y - 1];    // 左下(Bottom-Left)
+			Box BC = Tapa.box[x + 1][y];      // 中下(Bottom-Center)
+			Box BR = Tapa.box[x - 1][y - 1];    // 右下(Bottom-Right)
+
+			// idから数字マス周りに黒マスを配置
+			// [0] id=0
+			if (id == HEAD_BN_0) {
+				TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+				ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+				BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+			}
+			// [1] id=1~8
+			else if (HEAD_BN_1 <= id && id < HEAD_BN_2) {
+				switch (id) {
+					case (byte)1:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)2:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)3:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)4:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)5:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)6:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)7:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)8:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					default:
+						Console.WriteLine("Error: 数字マス[1]周りの黒マス配置中にエラー");
+						Application.Exit();
+						break;
+				}
+			}
+			// [2] id=9~16
+			else if (HEAD_BN_2 <= id && id < HEAD_BN_3) {
+				switch (id) {
+					case (byte)9:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)10:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)11:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)12:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)13:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)14:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)15:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)16:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					default:
+						Console.WriteLine("Error: 数字マス[2]周りの黒マス配置中にエラー");
+						Application.Exit();
+						break;
+				}
+			}
+			// [3] id=17~24
+			else if (HEAD_BN_3 <= id && id < HEAD_BN_4) {
+				switch (id) {
+					case (byte)17:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)18:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)19:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)20:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)21:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)22:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)23:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)24:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					default:
+						Console.WriteLine("Error: 数字マス[3]周りの黒マス配置中にエラー");
+						Application.Exit();
+						break;
+				}
+			}
+			// [4] id=25~32
+			else if (HEAD_BN_4 <= id && id < HEAD_BN_5) {
+				switch (id) {
+					case (byte)25:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)26:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)27:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)28:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)29:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)30:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)31:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)32:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					default:
+						Console.WriteLine("Error: 数字マス[4]周りの黒マス配置中にエラー");
+						Application.Exit();
+						break;
+				}
+			}
+			// [5] id=33~40
+			else if (HEAD_BN_5 <= id && id < HEAD_BN_6) {
+				switch (id) {
+					case (byte)33:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)34:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)35:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)36:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)37:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)38:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)39:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)40:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					default:
+						Console.WriteLine("Error: 数字マス[5]周りの黒マス配置中にエラー");
+						Application.Exit();
+						break;
+				}
+			}
+			// [6] id=41~48
+			else if (HEAD_BN_6 <= id && id < HEAD_BN_7) {
+				switch (id) {
+					case (byte)41:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)42:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)43:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)44:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)45:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)46:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)47:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)48:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					default:
+						Console.WriteLine("Error: 数字マス[6]周りの黒マス配置中にエラー");
+						Application.Exit();
+						break;
+				}
+			}
+			// [7] id=49~56
+			else if (HEAD_BN_7 <= id && id < HEAD_BN_8) {
+				switch (id) {
+					case (byte)49:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)50:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)51:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)52:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)53:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)54:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)55:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)56:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					default:
+						Console.WriteLine("Error: 数字マス[7]周りの黒マス配置中にエラー");
+						Application.Exit();
+						break;
+				}
+			}
+			// [8] id=57
+			else if (id == HEAD_BN_8) {
+				TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+				ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+				BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+			}
+			// [11] id=58~77
+			else if (HEAD_BN_11 <= id && id < HEAD_BN_12) {
+				switch (id) {
+					case (byte)58:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)59:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)60:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)61:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)62:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)63:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)64:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)65:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)66:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)67:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)68:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)69:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)70:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)71:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)72:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)73:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)74:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)75:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)76:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)77:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					default:
+						Console.WriteLine("Error: 数字マス[11]周りの黒マス配置中にエラー");
+						Application.Exit();
+						break;
+				}
+			}
+			// [12] id=78~109
+			else if (HEAD_BN_12 <= id && id < HEAD_BN_13) {
+				switch (id) {
+					case (byte)78:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)79:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)80:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)81:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)82:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)83:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)84:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)85:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)86:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)87:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)88:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)89:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)90:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)91:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)92:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)93:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)94:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)95:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)96:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)97:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)98:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)99:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)100:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)101:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)102:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)103:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)104:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)105:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)106:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)107:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)108:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)109:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					default:
+						Console.WriteLine("Error: 数字マス[12]周りの黒マス配置中にエラー");
+						Application.Exit();
+						break;
+				}
+			}
+			// [13] id=110~133
+			else if (HEAD_BN_13 <= id && id < HEAD_BN_14) {
+				switch (id) {
+					case (byte)110:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)111:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)112:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)113:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)114:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)115:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)116:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)117:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)118:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)119:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)120:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)121:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)122:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)123:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)124:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)125:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)126:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)127:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)128:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)129:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)130:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)131:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)132:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)133:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					default:
+						Console.WriteLine("Error: 数字マス[13]周りの黒マス配置中にエラー");
+						Application.Exit();
+						break;
+				}
+			}
+			// [14] id=134~149
+			else if (HEAD_BN_14 <= id && id < HEAD_BN_15) {
+				switch (id) {
+					case (byte)134:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)135:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)136:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)137:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)138:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)139:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)140:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)141:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)142:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)143:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)144:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)145:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)146:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)147:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)148:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)149:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					default:
+						Console.WriteLine("Error: 数字マス[14]周りの黒マス配置中にエラー");
+						Application.Exit();
+						break;
+				}
+			}
+			// [15] id=150~157
+			else if (HEAD_BN_15 <= id && id < HEAD_BN_22) {
+				switch (id) {
+					case (byte)150:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)151:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)152:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)153:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)154:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)155:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)156:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)157:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					default:
+						Console.WriteLine("Error: 数字マス[15]周りの黒マス配置中にエラー");
+						Application.Exit();
+						break;
+				}
+			}
+			// [22] id=158~169
+			else if (HEAD_BN_22 <= id && id < HEAD_BN_23) {
+				switch (id) {
+					case (byte)158:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)159:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)160:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)161:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)162:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)163:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)164:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)165:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)166:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)167:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)168:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)169:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					default:
+						Console.WriteLine("Error: 数字マス[22]周りの黒マス配置中にエラー");
+						Application.Exit();
+						break;
+				}
+			}
+			// [23] id=170~185
+			else if (HEAD_BN_23 <= id && id < HEAD_BN_24) {
+				switch (id) {
+					case (byte)170:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)171:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)172:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)173:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)174:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)175:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)176:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)177:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)178:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)179:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)180:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)181:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)182:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)183:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)184:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)185:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					default:
+						Console.WriteLine("Error: 数字マス[23]周りの黒マス配置中にエラー");
+						Application.Exit();
+						break;
+				}
+			}
+			// [24] id=186~193
+			else if (HEAD_BN_24 <= id && id < HEAD_BN_33) {
+				switch (id) {
+					case (byte)186:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)187:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)188:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)189:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)190:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)191:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)192:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)193:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					default:
+						Console.WriteLine("Error: 数字マス[24]周りの黒マス配置中にエラー");
+						Application.Exit();
+						break;
+				}
+			}
+			// [33] id=194~197
+			else if (HEAD_BN_33 <= id && id < HEAD_BN_111) {
+				switch (id) {
+					case (byte)194:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)195:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)196:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)197:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					default:
+						Console.WriteLine("Error: 数字マス[33]周りの黒マス配置中にエラー");
+						Application.Exit();
+						break;
+				}
+			}
+			// [111] id=198~213			
+			else if (HEAD_BN_111 <= id && id < HEAD_BN_112) {
+				switch (id) {
+					case (byte)198:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)199:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)200:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)201:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)202:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)203:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)204:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)205:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)206:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)207:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)208:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)209:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)210:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)211:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)212:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)213:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					default:
+						Console.WriteLine("Error: 数字マス[111]周りの黒マス配置中にエラー");
+						Application.Exit();
+						break;
+				}
+			}
+			// [112] id=214~237
+			else if (HEAD_BN_112 <= id && id < HEAD_BN_113) {
+				switch (id) {
+					case (byte)214:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;/*					  */MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)215:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;/*					  */MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)216:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;/*					  */MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)217:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;/*					  */MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)218:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;/*					  */MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)219:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;/*					  */MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)220:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;/*					  */MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)221:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;/*					  */MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)222:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;/*					  */MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)223:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;/*					  */MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)224:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;/*					  */MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)225:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;/*					  */MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)226:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;/*					  */MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)227:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;/*					  */MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)228:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;/*					  */MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)229:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;/*					  */MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)230:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;/*					  */MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)231:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;/*					  */MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)232:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;/*					  */MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						break;
+					case (byte)233:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;/*					  */MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)234:
+						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;/*					  */MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)235:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;/*					  */MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)236:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;/*					  */MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)237:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;/*					  */MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					default:
+						Console.WriteLine("Error: 数字マス[112]周りの黒マス配置中にエラー");
+						Application.Exit();
+						break;
+				}
+			}
+			// [113] id=238~245
+			else if (HEAD_BN_113 <= id && id < HEAD_BN_122) {
+				switch (id) {
+					case (byte)238:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;/*					  */MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)239:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;/*					  */MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)240:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;/*					  */MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)241:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;/*					  */MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)242:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;/*					  */MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)243:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;/*					  */MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)244:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;/*					  */MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)245:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;/*					  */MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					default:
+						Console.WriteLine("Error: 数字マス[113]周りの黒マス配置中にエラー");
+						Application.Exit();
+						break;
+				}
+			}
+			// [122] id=246~253
+			else if (HEAD_BN_122 <= id && id < HEAD_BN_1111) {
+				switch (id) {
+					case (byte)246:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;/*					  */MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)247:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;/*					  */MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)248:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;/*					  */MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					case (byte)249:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;/*					  */MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)250:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;/*					  */MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)251:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;/*					  */MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					case (byte)252:
+						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.WHITE;/*					  */MR.Color = Box.BLACK;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)253:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
+						ML.Color = Box.BLACK;/*					  */MR.Color = Box.WHITE;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
+						break;
+					default:
+						Console.WriteLine("Error: 数字マス[122]周りの黒マス配置中にエラー");
+						Application.Exit();
+						break;
+				}
+			}
+			// [1111] id=254~255
+			else if (HEAD_BN_1111 <= id && id <= MAX_ID) {
+				switch (id) {
+					case (byte)254:
+						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
+						ML.Color = Box.WHITE;/*					  */MR.Color = Box.WHITE;
+						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
+						break;
+					case (byte)255:
+						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
+						ML.Color = Box.BLACK;/*					  */MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
+						break;
+					default:
+						Console.WriteLine("Error: 数字マス[1111]周りの黒マス配置中にエラー");
+						Application.Exit();
+						break;
+				}
+			}
+			else {
+				Console.WriteLine("Error: idから数字マス周りの黒マスを配置中にエラー");
+				Application.Exit();
 			}
 		}
 	}

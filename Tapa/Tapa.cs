@@ -12,6 +12,7 @@ namespace Tapa
     {
         // マスの2次元配列のようなリスト
         public static List<List<Box>> box = new List<List<Box>>();
+		public static List<Box> numbox_list = new List<Box>();
         static bool DEBUG = true;
 
         /// <summary>
@@ -31,6 +32,12 @@ namespace Tapa
             // 盤面の出力
             Tapa.printBoard();
 
+			// 数字マスリストの出力
+			foreach (Box tmp_box in numbox_list) {
+				tmp_box.printBoxNum();
+				Console.Write("\n");
+			}
+
             // 数字マス周りのチェック
             // PatternAroundNumBox.checkPatternAroundNumBox();
             /*
@@ -43,7 +50,6 @@ namespace Tapa
              */
 
         }
-
 
 
         /*********************************
@@ -77,7 +83,6 @@ namespace Tapa
             int column_count
                 = sheet.get_Range("A1").End[Microsoft.Office.Interop.Excel.XlDirection.xlToRight].Column;
 
-
             if (DEBUG) {
                 Console.WriteLine("row_count >> " + row_count + "\ncolumn_count >> " + column_count + "\n");
 
@@ -94,37 +99,37 @@ namespace Tapa
             }
 
             // 各セルのデータの取得
-            // Excelでは（列、行）座標を用いているため、
-            // ########### ここから（j、i）=（行、列）とする。 
             for (int i = 1; i <= row_count; i++) {
                 List<Box> tmp_box_list = new List<Box>();   // 行ごとのリストを格納する用
                 for (int j = 1; j <= column_count; j++) {
                     Box tmp_box = new Box();
                     int tmp_num = 0;
                     string st = "";
-                    Microsoft.Office.Interop.Excel.Range range = sheet.Cells[j, i];
+                    Microsoft.Office.Interop.Excel.Range range = sheet.Cells[i, j];
                     if (range.Value != null) {
-                        st = range.Value.ToString();  // セル(j,i)のデータを文字列で取得
+                        st = range.Value.ToString();  // セル(i,j)のデータを文字列で取得
                     }
                     else {
-                        Console.Write("Error: セル(" + j + "," + i + ")の読み込み中にエラー(中身がnull)\n");
+                        Console.Write("Error: セル(" + i + "," + j + ")の読み込み中にエラー(中身がnull)\n");
                         Application.Exit();
                     }
-                    tmp_box.x = j;  // x座標
-                    tmp_box.y = i;  // y座標
+                    tmp_box.x = i;  // x座標
+                    tmp_box.y = j;  // y座標
                     if (st.Equals("-")) {
                         tmp_box.has_num = false;
                     }
                     else if (int.TryParse(st, out tmp_num)) { // tmp_num=(int)stが数字だった場合
-                        if (DEBUG) { Console.Write("st >> " + st + "  "); }
+                        if (DEBUG) { Console.WriteLine("st >> " + st); }
                         tmp_box.has_num = true;
                         do {              // 数字を桁毎にリストに追加
                             tmp_box.box_num_list.Insert(0, tmp_num % 10);
                             tmp_num /= 10;
                         } while (tmp_num > 0);  // do-whileは0の場合を許可するため
+						tmp_box.box_num_list.Sort();	// 昇順にソート
+						numbox_list.Add(new Box(tmp_box));		// 数字マスのListに追加
                     }
                     else {
-                        Console.WriteLine("Error: セル(" + j + "," + i + ")の読み込み中にエラー(中身が数字でも'-'でもない)\n", j, i);
+                        Console.WriteLine("Error: セル(" + i + "," + j + ")の読み込み中にエラー(中身が数字でも'-'でもない)\n");
                     }
                     tmp_box_list.Add(new Box(tmp_box));
                     tmp_box.clear();
@@ -132,7 +137,6 @@ namespace Tapa
                 box.Add(new List<Box>(tmp_box_list));  // 行毎にリストをboxに追加
                 tmp_box_list.Clear();
             }
-            // ########## ここまで（j、i）=（行、列）とする。
             // 盤面の外側に余分な白マスを生成
             makeOuterBox(row_count, column_count);
             //ワークブックを閉じる
@@ -152,7 +156,7 @@ namespace Tapa
             // ########## 盤面の外側にも1マスずつマスを配置
             Box tmp_box = new Box();
             List<Box> tmp_box_list = new List<Box>();
-            tmp_box.color = Box.WHITE;   // 外側のマスは白色
+            tmp_box.Color = Box.WHITE;   // 外側のマスは白色
             for (int i = 0; i <= column_count+1; i++) {
                 tmp_box_list.Add(new Box(tmp_box));      // 最上(下)行に追加する空マスのリストを生成
             }
@@ -176,7 +180,6 @@ namespace Tapa
                 }
                 Console.WriteLine();
             }
-
         }
     }
 }

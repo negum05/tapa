@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
@@ -10,22 +11,36 @@ namespace Tapa
 
     class Box
     {
+		public static readonly int NOCOLOR = -1;    // 色未定
         public static readonly int WHITE = 0;       // 白色
         public static readonly int BLACK = 1;       // 黒色
-        public static readonly int NOCOLOR = -1;    // 色未定
+
         public int x { get; set; }                  // x座標
         public int y { get; set; }                  // y座標
         public bool has_num { get; set; }           // 数字を持っているか
         public List<int> box_num_list;              // マスの数字
         public List<byte> id_list;                  // id(数字マス周りのパターンの識別子)のリスト
-        public int color { get; set; }              // マスの色 -1:未定 0:白 1:黒
-
+		public int color;							// マスの色
+		public int Color
+		{
+			get { return this.color; }
+			set
+			{
+				if (this.color != Box.NOCOLOR) {
+					Console.WriteLine("Error: 色の確定したマスに再度色を設定しようとしています。");
+					Application.Exit();
+				}
+				else {
+					this.color = value;
+				}
+			}
+		}
 
         public Box()
         {
-            color = Box.NOCOLOR;
-            box_num_list = new List<int>();
-            id_list = new List<byte>();
+            this.color = Box.NOCOLOR;
+            this.box_num_list = new List<int>();
+            this.id_list = new List<byte>();
         }
 
         public Box(Box origin_box)
@@ -52,6 +67,7 @@ namespace Tapa
         {
             this.has_num = false;
             this.box_num_list.Clear();
+			this.id_list.Clear();
             this.color = Box.NOCOLOR;
         }
 
