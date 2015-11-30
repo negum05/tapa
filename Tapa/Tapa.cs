@@ -10,10 +10,15 @@ namespace Tapa
 {
     static class Tapa
     {
-        // マスの2次元配列のようなリスト
+        // 盤面の全てのマス
         public static List<List<Box>> box = new List<List<Box>>();
-		public static List<Box> numbox_list = new List<Box>();
-        static bool DEBUG = true;
+		// 数字マスの座標のリスト
+		public static List<Coordinates> numbox_coord_list = new List<Coordinates>();
+		// 未定マスの座標リスト
+		public static List<Coordinates> not_deployedbox_coord_list = new List<Coordinates>();
+		// 伸び代のある黒マスの座標リスト
+		public static List<Coordinates> edge_blackbox_coord_list = new List<Coordinates>();
+        public static bool DEBUG = false;
 
         /// <summary>
         /// アプリケーションのメイン エントリ ポイントです。
@@ -31,13 +36,50 @@ namespace Tapa
             Tapa.inputTapa(args[0]);
             // 盤面の出力
             Tapa.printBoard();
+			Console.WriteLine();
 
 			// 数字マスリストの出力
-			foreach (Box tmp_box in numbox_list) {
-				tmp_box.printBoxNum();
-				Console.Write("\n");
-			}
+			//foreach (Coordinates tmp_co in numbox_coord_list) {
+			//	Console.Write("(" + tmp_co.x + "," + tmp_co.y + ") >> ");
+			//	box[tmp_co.x][tmp_co.y].printBoxNum();
+			//	Console.Write("\n");
+			//}
 
+			// 未定マスリストの出力
+			//foreach (Coordinates tmp_co in not_deployedbox_coord_list) {
+			//	Console.Write("(" + tmp_co.x + "," + tmp_co.y + ")");
+			//	Console.Write("\n");
+			//}
+			
+			// 準備：数字マスにidのリストを追加
+			PatternAroundNumBox.preparePatternArroundNumBox();
+			//foreach (Coordinates tmp_co in numbox_coord_list) {
+			//	box[tmp_co.x][tmp_co.y].printBoxNum();
+			//	Console.Write("(" + tmp_co.x + "," + tmp_co.y + ") >> ");
+			//	box[tmp_co.x][tmp_co.y].printIdList();
+			//	Console.Write("\n");
+			//}
+
+			// 数字マス周りのパターンを管理
+			PatternAroundNumBox.managePatternAroundNumBox();
+
+			// 盤面の出力
+			Tapa.printBoard();
+			Console.WriteLine();
+
+			// 伸び代のある黒マスから、黒マスが伸びないかを見て、可能なら実際に伸ばす。
+			Box.extendBlackBox();
+
+			// 盤面の出力
+			Tapa.printBoard();
+
+			// 伸び代のある黒マスから、黒マスが伸びないかを見て、可能なら実際に伸ばす。
+			Box.extendBlackBox();
+
+			// 盤面の出力
+			Tapa.printBoard();
+
+			
             // 数字マス周りのチェック
             // PatternAroundNumBox.checkPatternAroundNumBox();
             /*
@@ -48,7 +90,6 @@ namespace Tapa
             // Form1()が停止しない間常に動作
             Application.Run(new Display());
              */
-
         }
 
 
@@ -113,20 +154,31 @@ namespace Tapa
                         Console.Write("Error: セル(" + i + "," + j + ")の読み込み中にエラー(中身がnull)\n");
                         Application.Exit();
                     }
-                    tmp_box.x = i;  // x座標
-                    tmp_box.y = j;  // y座標
+					tmp_box.coord = new Coordinates(i, j);	// 座標の代入
                     if (st.Equals("-")) {
-                        tmp_box.has_num = false;
+						tmp_box.hasNum = false;
+						not_deployedbox_coord_list.Add(new Coordinates(tmp_box.coord));		// 未定マスの座標Listに追加
                     }
                     else if (int.TryParse(st, out tmp_num)) { // tmp_num=(int)stが数字だった場合
                         if (DEBUG) { Console.WriteLine("st >> " + st); }
-                        tmp_box.has_num = true;
+						int origin_num = tmp_num;
+						tmp_box.hasNum = true;
+						// ####### (begin) マスの数字を昇順に並べ替える
+						List<int> tmp_box_num_list = new List<int>();
                         do {              // 数字を桁毎にリストに追加
-                            tmp_box.box_num_list.Insert(0, tmp_num % 10);
+                            tmp_box_num_list.Insert(0, tmp_num % 10);
                             tmp_num /= 10;
                         } while (tmp_num > 0);  // do-whileは0の場合を許可するため
-						tmp_box.box_num_list.Sort();	// 昇順にソート
-						numbox_list.Add(new Box(tmp_box));		// 数字マスのListに追加
+						tmp_box_num_list.Sort();	// 昇順にソート
+						int digit_pow = (int)Math.Pow(10, origin_num.ToString().Length - 1);	// 10^(桁数-1)
+						tmp_num = 0;
+						foreach (int _num in tmp_box_num_list) {
+							tmp_num += _num * digit_pow;
+							digit_pow /= 10;
+						}
+						tmp_box.box_num = tmp_num;
+						// ####### (end) マスの数字を昇順に並べ替える
+						numbox_coord_list.Add(new Coordinates(tmp_box.coord));		// 数字マスの座標Listに追加
                     }
                     else {
                         Console.WriteLine("Error: セル(" + i + "," + j + ")の読み込み中にエラー(中身が数字でも'-'でもない)\n");
@@ -137,6 +189,7 @@ namespace Tapa
                 box.Add(new List<Box>(tmp_box_list));  // 行毎にリストをboxに追加
                 tmp_box_list.Clear();
             }
+			
             // 盤面の外側に余分な白マスを生成
             makeOuterBox(row_count, column_count);
             //ワークブックを閉じる
@@ -163,10 +216,11 @@ namespace Tapa
             box.Insert(0, new List<Box>(tmp_box_list));    // 最上行に空マスのリストを追加
             box.Add(new List<Box>(tmp_box_list));          // 最下行に空マスのリストを追加
             for (int i = 1; i <= row_count; i++) {
-                box[i].Insert(0, new Box(tmp_box));
-                box[i].Add(new Box(tmp_box));
+                box[i].Insert(0, new Box(tmp_box));			// 先頭に空マスを追加
+                box[i].Add(new Box(tmp_box));				// 末尾に空マスを追加
             }
         }
+
         /*********************************
          * 
          *   盤面をシェルに表示

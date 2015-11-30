@@ -72,7 +72,7 @@ namespace Tapa
 		 * box_num : 数字マスの値（[1 2]なら12）
 		 *   
 		 * *******************************/
-		static public List<byte> getPatternAroundNumBoxList(int box_num)
+		static List<byte> getPatternAroundNumBoxList(int box_num)
 		{
 			List<byte> byte_list = new List<byte>();
 			byte head_id = 0;
@@ -173,7 +173,7 @@ namespace Tapa
 			}
 
 			// idをリストにする
-			for (byte i = head_id; i < tail_id; i++) {
+			for (byte i = head_id; i <= tail_id; i++) {
 				byte_list.Add(i);
 			}
 			return byte_list;
@@ -183,21 +183,20 @@ namespace Tapa
 		 * 
 		 * 座標とidから座標周りでidの配置方法が可能か判定する。
 		 * 引数
-		 * x        : 数字マスのx座標
-		 * y        : 数字マスのy座標
+		 * co		: マスの座標
 		 * id       : 各パターンを識別するための数値(型はbyte)
 		 *   
 		 * *******************************/
-		static public bool checkPatternAroundNumBox(int x, int y, byte id)
+		static bool checkPatternAroundNumBox(Coordinates co, byte id)
 		{
-			int TL = Tapa.box[x - 1][y - 1].Color;    // 左上(Top-Left)
-			int TC = Tapa.box[x][y - 1].Color;      // 中上(Top-Center)
-			int TR = Tapa.box[x - 1][y + 1].Color;    // 右上(Top-Right)
-			int ML = Tapa.box[x][y - 1].Color;      // 左中(Middle-Left)
-			int MR = Tapa.box[x][y + 1].Color;      // 右中(Middle-Right)
-			int BL = Tapa.box[x + 1][y - 1].Color;    // 左下(Bottom-Left)
-			int BC = Tapa.box[x + 1][y].Color;      // 中下(Bottom-Center)
-			int BR = Tapa.box[x - 1][y - 1].Color;    // 右下(Bottom-Right)
+			int TL = Tapa.box[co.x - 1][co.y - 1].Color;    // 左上(Top-Left)
+			int TC = Tapa.box[co.x - 1][co.y].Color;      // 中上(Top-Center)
+			int TR = Tapa.box[co.x - 1][co.y + 1].Color;    // 右上(Top-Right)
+			int ML = Tapa.box[co.x][co.y - 1].Color;      // 左中(Middle-Left)
+			int MR = Tapa.box[co.x][co.y + 1].Color;      // 右中(Middle-Right)
+			int BL = Tapa.box[co.x + 1][co.y - 1].Color;    // 左下(Bottom-Left)
+			int BC = Tapa.box[co.x + 1][co.y].Color;      // 中下(Bottom-Center)
+			int BR = Tapa.box[co.x + 1][co.y + 1].Color;    // 右下(Bottom-Right)
 
 			// [0] id=0
 			if (id == HEAD_BN_0) {
@@ -854,7 +853,7 @@ namespace Tapa
 						else { return false; }
 					case (byte)113:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK/*              */ && MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)114:
@@ -1683,22 +1682,21 @@ namespace Tapa
 		 * 
 		 * 座標とidから座標周りでidの通り黒マスを配置する。
 		 * 引数
-		 * x        : 数字マスのx座標
-		 * y        : 数字マスのy座標
+		 * co		: マスの座標
 		 * id       : 各パターンを識別するための数値(型はbyte)
 		 *   
 		 * *******************************/
-		static public void setPatternAroundNumBox(int x, int y, byte id)
+		static void setPatternAroundNumBox(Coordinates co, byte id)
 		{
 			// 数字マス周りのマスを取得
-			Box TL = Tapa.box[x - 1][y - 1];    // 左上(Top-Left)
-			Box TC = Tapa.box[x][y - 1];      // 中上(Top-Center)
-			Box TR = Tapa.box[x - 1][y + 1];    // 右上(Top-Right)
-			Box ML = Tapa.box[x][y - 1];      // 左中(Middle-Left)
-			Box MR = Tapa.box[x][y + 1];      // 右中(Middle-Right)
-			Box BL = Tapa.box[x + 1][y - 1];    // 左下(Bottom-Left)
-			Box BC = Tapa.box[x + 1][y];      // 中下(Bottom-Center)
-			Box BR = Tapa.box[x - 1][y - 1];    // 右下(Bottom-Right)
+			Box TL = Tapa.box[co.x - 1][co.y - 1];    // 左上(Top-Left)
+			Box TC = Tapa.box[co.x - 1][co.y];      // 中上(Top-Center)
+			Box TR = Tapa.box[co.x - 1][co.y + 1];    // 右上(Top-Right)
+			Box ML = Tapa.box[co.x][co.y - 1];      // 左中(Middle-Left)
+			Box MR = Tapa.box[co.x][co.y + 1];      // 右中(Middle-Right)
+			Box BL = Tapa.box[co.x + 1][co.y - 1];    // 左下(Bottom-Left)
+			Box BC = Tapa.box[co.x + 1][co.y];      // 中下(Bottom-Center)
+			Box BR = Tapa.box[co.x + 1][co.y + 1];    // 右下(Bottom-Right)
 
 			// idから数字マス周りに黒マスを配置
 			// [0] id=0
@@ -3175,6 +3173,57 @@ namespace Tapa
 			else {
 				Console.WriteLine("Error: idから数字マス周りの黒マスを配置中にエラー");
 				Application.Exit();
+			}
+		}
+
+		/*********************************
+		 * 
+		 * 数字マスのリストの各要素にidをセットする。
+		 *   
+		 * *******************************/
+		static public void preparePatternArroundNumBox()
+		{
+			foreach (Coordinates tmp_co in Tapa.numbox_coord_list) {
+				Tapa.box[tmp_co.x][tmp_co.y].id_list
+					= new List<byte>(PatternAroundNumBox.getPatternAroundNumBoxList(
+						Tapa.box[tmp_co.x][tmp_co.y].box_num));
+			}
+		}
+
+		/*********************************
+		 * 
+		 * 数字マス周りのパターンを管理
+		 * 配置可能パターンが一意になった場合、その通りに配置する。
+		 *   
+		 * *******************************/
+		static public void managePatternAroundNumBox()
+		{
+			// Coordinates tmp_co = new Coordinates();
+			// byte tmp_id = 0;
+			for (int ite_coord = Tapa.numbox_coord_list.Count - 1; ite_coord >= 0; ite_coord-- ) {	// 数字マスのリスト
+				Coordinates tmp_co = new Coordinates(Tapa.numbox_coord_list[ite_coord]);
+				for (int ite_id = Tapa.box[tmp_co.x][tmp_co.y].id_list.Count - 1; ite_id >= 0; ite_id-- ) {	// id_list
+					byte tmp_id = Tapa.box[tmp_co.x][tmp_co.y].id_list[ite_id];
+					// idのパターンが配置できなければそのidをid_listから除外
+					if (!PatternAroundNumBox.checkPatternAroundNumBox(tmp_co, tmp_id)) {
+						if (Tapa.DEBUG) {
+							tmp_co.printCoordinates();
+							Console.Write(" " + Tapa.box[tmp_co.x][tmp_co.y].id_list[ite_id].ToString() + "\n");
+						}
+						Tapa.box[tmp_co.x][tmp_co.y].id_list.RemoveAt(ite_id);
+					}
+				}
+				// id_listが一意ならそれを配置して数字マスリストから除外
+				if (Tapa.box[tmp_co.x][tmp_co.y].id_list.Count == 1) {	
+					PatternAroundNumBox.setPatternAroundNumBox(tmp_co, Tapa.box[tmp_co.x][tmp_co.y].id_list[0]);
+					Tapa.numbox_coord_list.RemoveAt(ite_coord);
+				}
+				// id_listの大きさが0ならエラー
+				else if (Tapa.box[tmp_co.x][tmp_co.y].id_list.Count == 0) {
+					Console.WriteLine("Error: id_listの長さが0になってしまいました。");
+					tmp_co.printCoordinates();
+					Application.Exit();
+				}
 			}
 		}
 	}

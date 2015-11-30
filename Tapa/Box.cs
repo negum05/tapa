@@ -15,45 +15,48 @@ namespace Tapa
         public static readonly int WHITE = 0;       // 白色
         public static readonly int BLACK = 1;       // 黒色
 
-        public int x { get; set; }                  // x座標
-        public int y { get; set; }                  // y座標
-        public bool has_num { get; set; }           // 数字を持っているか
-        public List<int> box_num_list;              // マスの数字
+		public Coordinates coord;					// 座標
+		private bool has_num = false;				// 数字を持っているか
+		public bool hasNum
+		{
+			get { return this.has_num; }
+			set
+			{
+				if (value == true) { this.Color = Box.WHITE; }			// 数字マスは白色
+				this.has_num = value;
+			}
+		}
+        public int box_num;							// マスの数字
         public List<byte> id_list;                  // id(数字マス周りのパターンの識別子)のリスト
-		public int color;							// マスの色
+		private int color;							// マスの色
 		public int Color
 		{
 			get { return this.color; }
 			set
 			{
-				if (this.color != Box.NOCOLOR) {
-					Console.WriteLine("Error: 色の確定したマスに再度色を設定しようとしています。");
-					Application.Exit();
-				}
-				else {
+				if (this.color == Box.NOCOLOR) {
+					// 塗る色が黒であれば、伸び代のある黒マスリストに追加
+					if (value == Box.BLACK) { Tapa.edge_blackbox_coord_list.Add(this.coord); }
 					this.color = value;
+					Tapa.not_deployedbox_coord_list.Remove(this.coord);
 				}
 			}
 		}
 
         public Box()
         {
-            this.color = Box.NOCOLOR;
-            this.box_num_list = new List<int>();
+			this.coord = new Coordinates();
+			hasNum = false;
+            this.box_num = -1;
             this.id_list = new List<byte>();
+			this.color = Box.NOCOLOR;
         }
 
         public Box(Box origin_box)
         {
-            this.x = origin_box.x;
-            this.y = origin_box.y;
-            this.has_num = origin_box.has_num;
-            this.box_num_list = new List<int>();
-            if (origin_box.box_num_list.Count > 0) {
-                foreach (int tmp_num in origin_box.box_num_list) {
-                    this.box_num_list.Add(tmp_num);
-                }
-            }
+			this.coord = new Coordinates(origin_box.coord);
+            this.hasNum = origin_box.has_num;
+			this.box_num = origin_box.box_num;
             this.id_list = new List<byte>();
             if (origin_box.id_list.Count > 0) {
                 foreach (byte tmp_id in origin_box.id_list) {
@@ -65,12 +68,14 @@ namespace Tapa
 
         public void clear()
         {
+			this.coord = new Coordinates();
             this.has_num = false;
-            this.box_num_list.Clear();
+            this.box_num = -1;
 			this.id_list.Clear();
             this.color = Box.NOCOLOR;
         }
 
+		// 数字マスの数字の表示
         public void printBoxNum()
         {
             if (!this.has_num) {
@@ -79,33 +84,68 @@ namespace Tapa
                 else { Console.Write("---- "); }
             }
             else {
-                int count = 5;
-                foreach (int tmp_num in this.box_num_list) {
-                    Console.Write(tmp_num);
-                    count--;
-                }
-                while (count-- > 0) { Console.Write(" "); }
+                int rest = 5 - this.box_num.ToString().Length;
+                Console.Write(this.box_num);
+                while (rest-- > 0) { Console.Write(" "); }
             }
         }
 
-        /*
-         * Boxの深いコピー用に作成したけど
-         * コンストラクタで似たような実装をしたからいらない疑惑...
-         * 
-        public Box clone()
-        {
-            Box tmp = new Box();
-            tmp.has_num = this.has_num;
-            if (this.box_num_list.Count > 0) {
-                foreach (int tmp_num in this.box_num_list) {
-                    tmp.box_num_list.Add(tmp_num);
-                }
-            }
-            tmp.color = this.color;
+		// 数字マスのid_listの表示
+		public void printIdList()
+		{
+			if (!this.has_num) {
+				Console.WriteLine("Error: id_listの内マスからid_listを出力しようとしています。");
+				Application.Exit();
+			}
+			else {
+				foreach (byte tmp_id in id_list) {
+					Console.Write(tmp_id.ToString() + " ");
+				}
+			}
+		}
 
-            return tmp;
-        }
-         */
+		/*********************************
+		 * 
+		 * 伸び代のある黒マスリストから、
+		 * 黒マスの上下左右で未定マスが1つならそれを黒にし、リストから除外する。
+		 *   
+		 * *******************************/
+		public static void extendBlackBox()
+		{
+			for(int ite_coord = Tapa.edge_blackbox_coord_list.Count - 1; ite_coord >= 0; ite_coord--) {
 
+				Coordinates tmp_coord = new Coordinates(Tapa.edge_blackbox_coord_list[ite_coord]);
+
+				Box T = new Box(Tapa.box[tmp_coord.x - 1][tmp_coord.y]);	// TOP
+				Box R = new Box(Tapa.box[tmp_coord.x][tmp_coord.y + 1]);	// RIGHT
+				Box B = new Box(Tapa.box[tmp_coord.x + 1][tmp_coord.y]);	// BOTTOM
+				Box L = new Box(Tapa.box[tmp_coord.x][tmp_coord.y - 1]);	// LEFT
+
+				// 伸び代のある黒マスが予期せぬ動きをしたら見てみるといいかも
+				Console.WriteLine("(" + tmp_coord.x + "," + tmp_coord.y + ')');
+				Console.WriteLine("T >> " + "(" + T.coord.x + "," + T.coord.y + ") " + T.color.ToString() + " " + T.hasNum.ToString());
+				Console.WriteLine("R >> " + "(" + R.coord.x + "," + R.coord.y + ") " + R.color.ToString() + " " + R.hasNum.ToString());
+				Console.WriteLine("B >> " + "(" + B.coord.x + "," + B.coord.y + ") " + B.color.ToString() + " " + B.hasNum.ToString());
+				Console.WriteLine("L >> " + "(" + L.coord.x + "," + L.coord.y + ") " + L.color.ToString() + " " + L.hasNum.ToString());
+				Console.WriteLine();
+
+				if (T.Color == Box.NOCOLOR && R.Color == Box.WHITE && B.Color == Box.WHITE && L.Color == Box.WHITE) {
+					Tapa.box[tmp_coord.x - 1][tmp_coord.y].Color = Box.BLACK;
+					Tapa.edge_blackbox_coord_list.RemoveAt(ite_coord);
+				}
+				else if (T.Color == Box.WHITE && R.Color == Box.NOCOLOR && B.Color == Box.WHITE && L.Color == Box.WHITE) {
+					Tapa.box[tmp_coord.x][tmp_coord.y + 1].Color = Box.BLACK;
+					Tapa.edge_blackbox_coord_list.RemoveAt(ite_coord);
+				}
+				else if (T.Color == Box.WHITE && R.Color == Box.WHITE && B.Color == Box.NOCOLOR && L.Color == Box.WHITE) {
+					Tapa.box[tmp_coord.x - 1][tmp_coord.y].Color = Box.BLACK;
+					Tapa.edge_blackbox_coord_list.RemoveAt(ite_coord);
+				}
+				else if (T.Color == Box.WHITE && R.Color == Box.WHITE && B.Color == Box.WHITE && L.Color == Box.NOCOLOR) {
+					Tapa.box[tmp_coord.x][tmp_coord.y - 1].Color = Box.BLACK;
+					Tapa.edge_blackbox_coord_list.RemoveAt(ite_coord);
+				}
+			}
+		}
     }
 }
