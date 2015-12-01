@@ -168,7 +168,7 @@ namespace Tapa
 				tail_id = (byte)(MAX_ID);
 			}
 			else {
-				Console.WriteLine("Error: 数字マスのid振り分けでエラー");
+				Console.WriteLine("Error: 数字マスのid振り分けでエラー[box_num >> {0}]", box_num);
 				Application.Exit();
 			}
 
@@ -3240,9 +3240,15 @@ namespace Tapa
 					new Box(Tapa.box[co.x+1][co.y-1]),	// 左下
 					new Box(Tapa.box[co.x][co.y-1])		// 左
 				};
+
 			// クローンのマス色変更回数を0にする。
+			Tapa.box[co.x][co.y].printBoxNum();
+			Console.Write("\n");
 			foreach (Box tmp_box in clonebox_arround_numbox_list) {
 				tmp_box.changed_count_in_search_confirm_box = 0;
+				Console.Write("({0},{1})\n", tmp_box.coord.x, tmp_box.coord.y);
+				tmp_box.printBoxNum();
+				Console.Write("\n");
 			}
 			// クローンのマス色が何回変化するか調べる。
 			foreach (byte tmp_id in Tapa.box[co.x][co.y].id_list) {	// id_list(配置可能なパターン)
