@@ -72,13 +72,6 @@ namespace Tapa
 
 			// 盤面の出力
 			Tapa.printBoard();
-
-			// 伸び代のある黒マスから、黒マスが伸びないかを見て、可能なら実際に伸ばす。
-			Box.extendBlackBox();
-
-			// 盤面の出力
-			Tapa.printBoard();
-
 			
             // 数字マス周りのチェック
             // PatternAroundNumBox.checkPatternAroundNumBox();

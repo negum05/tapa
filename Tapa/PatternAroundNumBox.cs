@@ -187,7 +187,7 @@ namespace Tapa
 		 * id       : 各パターンを識別するための数値(型はbyte)
 		 *   
 		 * *******************************/
-		static bool checkPatternAroundNumBox(Coordinates co, byte id)
+		static private bool checkPatternAroundNumBox(Coordinates co, byte id)
 		{
 			int TL = Tapa.box[co.x - 1][co.y - 1].Color;    // 左上(Top-Left)
 			int TC = Tapa.box[co.x - 1][co.y].Color;      // 中上(Top-Center)
@@ -662,7 +662,7 @@ namespace Tapa
 						Console.WriteLine("Error: 数字マス[11]周りのパターンチェック");
 						Application.Exit();
 						return false;
-				}							
+				}
 			}
 			// [12] id=78~109
 			else if (HEAD_BN_12 <= id && id < HEAD_BN_13) {
@@ -759,7 +759,7 @@ namespace Tapa
 						else { return false; }
 					case (byte)96:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.BLACK&& MR != Box.BLACK
+							&& ML != Box.BLACK && MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)97:
@@ -1684,25 +1684,50 @@ namespace Tapa
 		 * 引数
 		 * co		: マスの座標
 		 * id       : 各パターンを識別するための数値(型はbyte)
+		 * clone_box_arround_numbox_list [default : null]
+		 *			: 数字マス周りの8マスのリスト
 		 *   
 		 * *******************************/
-		static void setPatternAroundNumBox(Coordinates co, byte id)
+		static private void setPatternAroundNumBox(Coordinates co, byte id
+			, List<Box> clone_box_arround_numbox_list = null)
 		{
-			// 数字マス周りのマスを取得
-			Box TL = Tapa.box[co.x - 1][co.y - 1];    // 左上(Top-Left)
-			Box TC = Tapa.box[co.x - 1][co.y];      // 中上(Top-Center)
-			Box TR = Tapa.box[co.x - 1][co.y + 1];    // 右上(Top-Right)
-			Box ML = Tapa.box[co.x][co.y - 1];      // 左中(Middle-Left)
-			Box MR = Tapa.box[co.x][co.y + 1];      // 右中(Middle-Right)
-			Box BL = Tapa.box[co.x + 1][co.y - 1];    // 左下(Bottom-Left)
-			Box BC = Tapa.box[co.x + 1][co.y];      // 中下(Bottom-Center)
-			Box BR = Tapa.box[co.x + 1][co.y + 1];    // 右下(Bottom-Right)
+			Box TL = new Box();		// 左上(Top-Left)
+			Box TC = new Box();		// 中上(Top-Center)
+			Box TR = new Box();		// 右上(Top-Right)
+			Box ML = new Box();		// 左中(Middle-Left)
+			Box MR = new Box();		// 右中(Middle-Right)
+			Box BL = new Box();	    // 左下(Bottom-Left)
+			Box BC = new Box();		// 中下(Bottom-Center)
+			Box BR = new Box();	    // 右下(Bottom-Right)
+
+			if (clone_box_arround_numbox_list == null) {
+				// 盤面の数字マス周りのマスを取得（盤面本体）
+				TL = Tapa.box[co.x - 1][co.y - 1];		// 左上(Top-Left)
+				TC = Tapa.box[co.x - 1][co.y];			// 中上(Top-Center)
+				TR = Tapa.box[co.x - 1][co.y + 1];		// 右上(Top-Right)
+				ML = Tapa.box[co.x][co.y - 1];			// 左中(Middle-Left)
+				MR = Tapa.box[co.x][co.y + 1];			// 右中(Middle-Right)
+				BL = Tapa.box[co.x + 1][co.y - 1];	    // 左下(Bottom-Left)
+				BC = Tapa.box[co.x + 1][co.y];			// 中下(Bottom-Center)
+				BR = Tapa.box[co.x + 1][co.y + 1];	    // 右下(Bottom-Right)
+			}
+			else {
+				// 盤面の数字マス周りのマスを取得（盤面のコピー）
+				TL = clone_box_arround_numbox_list[0];		// 左上(Top-Left)
+				TC = clone_box_arround_numbox_list[1];      // 中上(Top-Center)
+				TR = clone_box_arround_numbox_list[2];		// 右上(Top-Right)
+				ML = clone_box_arround_numbox_list[7];		// 左中(Middle-Left)
+				MR = clone_box_arround_numbox_list[3];      // 右中(Middle-Right)
+				BL = clone_box_arround_numbox_list[6];		// 左下(Bottom-Left)
+				BC = clone_box_arround_numbox_list[5];      // 中下(Bottom-Center)
+				BR = clone_box_arround_numbox_list[4];		// 右下(Bottom-Right)
+			}
 
 			// idから数字マス周りに黒マスを配置
 			// [0] id=0
 			if (id == HEAD_BN_0) {
 				TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-				ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+				ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 				BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 			}
 			// [1] id=1~8
@@ -1710,42 +1735,42 @@ namespace Tapa
 				switch (id) {
 					case (byte)1:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)2:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)3:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)4:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)5:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)6:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)7:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)8:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					default:
@@ -1759,42 +1784,42 @@ namespace Tapa
 				switch (id) {
 					case (byte)9:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)10:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)11:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)12:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)13:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)14:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)15:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)16:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					default:
@@ -1808,42 +1833,42 @@ namespace Tapa
 				switch (id) {
 					case (byte)17:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)18:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)19:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)20:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)21:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)22:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)23:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)24:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					default:
@@ -1857,42 +1882,42 @@ namespace Tapa
 				switch (id) {
 					case (byte)25:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)26:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)27:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)28:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)29:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)30:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)31:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)32:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					default:
@@ -1906,42 +1931,42 @@ namespace Tapa
 				switch (id) {
 					case (byte)33:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)34:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)35:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)36:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)37:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)38:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)39:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)40:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					default:
@@ -1955,42 +1980,42 @@ namespace Tapa
 				switch (id) {
 					case (byte)41:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)42:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)43:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)44:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)45:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)46:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)47:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)48:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					default:
@@ -2004,42 +2029,42 @@ namespace Tapa
 				switch (id) {
 					case (byte)49:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)50:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)51:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)52:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)53:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)54:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)55:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)56:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					default:
@@ -2051,7 +2076,7 @@ namespace Tapa
 			// [8] id=57
 			else if (id == HEAD_BN_8) {
 				TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-				ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+				ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 				BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 			}
 			// [11] id=58~77
@@ -2059,102 +2084,102 @@ namespace Tapa
 				switch (id) {
 					case (byte)58:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)59:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)60:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)61:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)62:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)63:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)64:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)65:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)66:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)67:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)68:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)69:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)70:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)71:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)72:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)73:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)74:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)75:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)76:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)77:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					default:
@@ -2168,107 +2193,107 @@ namespace Tapa
 				switch (id) {
 					case (byte)78:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)79:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)80:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)81:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)82:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)83:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)84:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)85:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)86:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)87:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)88:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)89:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)90:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)91:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)92:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)93:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)94:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)95:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)96:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)97:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)98:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)99:
@@ -2278,52 +2303,52 @@ namespace Tapa
 						break;
 					case (byte)100:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)101:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)102:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)103:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)104:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)105:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)106:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)107:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)108:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)109:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					default:
@@ -2337,67 +2362,67 @@ namespace Tapa
 				switch (id) {
 					case (byte)110:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)111:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)112:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)113:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)114:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)115:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)116:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)117:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)118:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)119:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)120:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)121:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)122:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)123:
@@ -2407,27 +2432,27 @@ namespace Tapa
 						break;
 					case (byte)124:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)125:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)126:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)127:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)128:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)129:
@@ -2437,22 +2462,22 @@ namespace Tapa
 						break;
 					case (byte)130:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)131:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)132:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)133:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					default:
@@ -2466,82 +2491,82 @@ namespace Tapa
 				switch (id) {
 					case (byte)134:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)135:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)136:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)137:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)138:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)139:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)140:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)141:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)142:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)143:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)144:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)145:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)146:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)147:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)148:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)149:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					default:
@@ -2555,42 +2580,42 @@ namespace Tapa
 				switch (id) {
 					case (byte)150:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)151:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)152:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)153:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)154:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)155:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)156:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)157:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					default:
@@ -2604,62 +2629,62 @@ namespace Tapa
 				switch (id) {
 					case (byte)158:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)159:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)160:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)161:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)162:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)163:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)164:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)165:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)166:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)167:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)168:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)169:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					default:
@@ -2673,82 +2698,82 @@ namespace Tapa
 				switch (id) {
 					case (byte)170:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)171:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)172:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)173:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)174:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)175:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)176:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)177:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)178:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)179:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)180:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)181:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)182:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)183:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)184:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)185:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					default:
@@ -2762,42 +2787,42 @@ namespace Tapa
 				switch (id) {
 					case (byte)186:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)187:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)188:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)189:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)190:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)191:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)192:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)193:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					default:
@@ -2811,22 +2836,22 @@ namespace Tapa
 				switch (id) {
 					case (byte)194:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)195:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)196:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)197:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					default:
@@ -2840,82 +2865,82 @@ namespace Tapa
 				switch (id) {
 					case (byte)198:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)199:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)200:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)201:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)202:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)203:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)204:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)205:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)206:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)207:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)208:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)209:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)210:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE;						MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)211:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)212:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK;						MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)213:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK;						MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					default:
@@ -3178,7 +3203,7 @@ namespace Tapa
 
 		/*********************************
 		 * 
-		 * 数字マスのリストの各要素にidをセットする。
+		 * 数字マスリストの各数字マスにidをセットする。
 		 *   
 		 * *******************************/
 		static public void preparePatternArroundNumBox()
@@ -3192,17 +3217,56 @@ namespace Tapa
 
 		/*********************************
 		 * 
+		 * 数字マスのid_listを見て、数字マス周りで色が確定するマスを埋める。
+		 * 引数
+		 * co	: 数字マスの座標
+		 * 
+		 * 
+		 * 
+		 * うまくいかないからここから調べて！
+		 * 
+		 *   
+		 * *******************************/
+		static private void setConfirmBoxArroundNumBox(Coordinates co)
+		{
+			// 数字マス周りのクローンを作成
+			List<Box> clonebox_arround_numbox_list = new List<Box> {	
+					new Box(Tapa.box[co.x-1][co.y-1]),	// 左上
+					new Box(Tapa.box[co.x-1][co.y]),	// 上
+					new Box(Tapa.box[co.x-1][co.y+1]),	// 右上
+					new Box(Tapa.box[co.x][co.y+1]),	// 右
+					new Box(Tapa.box[co.x+1][co.y+1]),	// 右下
+					new Box(Tapa.box[co.x+1][co.y]),	// 下
+					new Box(Tapa.box[co.x+1][co.y-1]),	// 左下
+					new Box(Tapa.box[co.x][co.y-1])		// 左
+				};
+			// クローンのマス色変更回数を0にする。
+			foreach (Box tmp_box in clonebox_arround_numbox_list) {
+				tmp_box.changed_count_in_search_confirm_box = 0;
+			}
+			// クローンのマス色が何回変化するか調べる。
+			foreach (byte tmp_id in Tapa.box[co.x][co.y].id_list) {	// id_list(配置可能なパターン)
+				PatternAroundNumBox.setPatternAroundNumBox(co, tmp_id, clonebox_arround_numbox_list);
+			}
+			// クローンのマス色変更回数が1回なら、そのマスをその色で埋める。
+			foreach (Box tmp_box in clonebox_arround_numbox_list) {
+				if (tmp_box.changed_count_in_search_confirm_box == 1) {
+					Tapa.box[tmp_box.coord.x][tmp_box.coord.y].Color = tmp_box.Color;
+				}
+			}
+		}
+
+		/*********************************
+		 * 
 		 * 数字マス周りのパターンを管理
 		 * 配置可能パターンが一意になった場合、その通りに配置する。
 		 *   
 		 * *******************************/
 		static public void managePatternAroundNumBox()
 		{
-			// Coordinates tmp_co = new Coordinates();
-			// byte tmp_id = 0;
-			for (int ite_coord = Tapa.numbox_coord_list.Count - 1; ite_coord >= 0; ite_coord-- ) {	// 数字マスのリスト
+			for (int ite_coord = Tapa.numbox_coord_list.Count - 1; ite_coord >= 0; ite_coord--) {	// 数字マスのリスト
 				Coordinates tmp_co = new Coordinates(Tapa.numbox_coord_list[ite_coord]);
-				for (int ite_id = Tapa.box[tmp_co.x][tmp_co.y].id_list.Count - 1; ite_id >= 0; ite_id-- ) {	// id_list
+				for (int ite_id = Tapa.box[tmp_co.x][tmp_co.y].id_list.Count - 1; ite_id >= 0; ite_id--) {	// id_list
 					byte tmp_id = Tapa.box[tmp_co.x][tmp_co.y].id_list[ite_id];
 					// idのパターンが配置できなければそのidをid_listから除外
 					if (!PatternAroundNumBox.checkPatternAroundNumBox(tmp_co, tmp_id)) {
@@ -3214,7 +3278,7 @@ namespace Tapa
 					}
 				}
 				// id_listが一意ならそれを配置して数字マスリストから除外
-				if (Tapa.box[tmp_co.x][tmp_co.y].id_list.Count == 1) {	
+				if (Tapa.box[tmp_co.x][tmp_co.y].id_list.Count == 1) {
 					PatternAroundNumBox.setPatternAroundNumBox(tmp_co, Tapa.box[tmp_co.x][tmp_co.y].id_list[0]);
 					Tapa.numbox_coord_list.RemoveAt(ite_coord);
 				}
@@ -3224,6 +3288,8 @@ namespace Tapa
 					tmp_co.printCoordinates();
 					Application.Exit();
 				}
+				// idを見て数字周りで色が固定しているマスを埋める。
+				setConfirmBoxArroundNumBox(tmp_co);
 			}
 		}
 	}

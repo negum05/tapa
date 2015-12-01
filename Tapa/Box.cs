@@ -16,6 +16,7 @@ namespace Tapa
         public static readonly int BLACK = 1;       // 黒色
 
 		public Coordinates coord;					// 座標
+		public int changed_count_in_search_confirm_box { get; set; }		// 異なる色に変更された回数
 		private bool has_num = false;				// 数字を持っているか
 		public bool hasNum
 		{
@@ -34,6 +35,8 @@ namespace Tapa
 			get { return this.color; }
 			set
 			{
+				// 数字マスのid_listを見て、数字マス周りで色が確定するマスを探す間、異なる色に変更されそうになればインクリメント
+				if (this.color != value) { changed_count_in_search_confirm_box++; }	
 				if (this.color == Box.NOCOLOR) {
 					// 塗る色が黒であれば、伸び代のある黒マスリストに追加
 					if (value == Box.BLACK) { Tapa.edge_blackbox_coord_list.Add(this.coord); }
@@ -46,6 +49,7 @@ namespace Tapa
         public Box()
         {
 			this.coord = new Coordinates();
+			changed_count_in_search_confirm_box = 0;
 			hasNum = false;
             this.box_num = -1;
             this.id_list = new List<byte>();
@@ -55,6 +59,7 @@ namespace Tapa
         public Box(Box origin_box)
         {
 			this.coord = new Coordinates(origin_box.coord);
+			this.changed_count_in_search_confirm_box = origin_box.changed_count_in_search_confirm_box;
             this.hasNum = origin_box.has_num;
 			this.box_num = origin_box.box_num;
             this.id_list = new List<byte>();
@@ -69,6 +74,7 @@ namespace Tapa
         public void clear()
         {
 			this.coord = new Coordinates();
+			this.changed_count_in_search_confirm_box = 0;
             this.has_num = false;
             this.box_num = -1;
 			this.id_list.Clear();
@@ -122,12 +128,12 @@ namespace Tapa
 				Box L = new Box(Tapa.box[tmp_coord.x][tmp_coord.y - 1]);	// LEFT
 
 				// 伸び代のある黒マスが予期せぬ動きをしたら見てみるといいかも
-				Console.WriteLine("(" + tmp_coord.x + "," + tmp_coord.y + ')');
-				Console.WriteLine("T >> " + "(" + T.coord.x + "," + T.coord.y + ") " + T.color.ToString() + " " + T.hasNum.ToString());
-				Console.WriteLine("R >> " + "(" + R.coord.x + "," + R.coord.y + ") " + R.color.ToString() + " " + R.hasNum.ToString());
-				Console.WriteLine("B >> " + "(" + B.coord.x + "," + B.coord.y + ") " + B.color.ToString() + " " + B.hasNum.ToString());
-				Console.WriteLine("L >> " + "(" + L.coord.x + "," + L.coord.y + ") " + L.color.ToString() + " " + L.hasNum.ToString());
-				Console.WriteLine();
+				//Console.WriteLine("(" + tmp_coord.x + "," + tmp_coord.y + ')');
+				//Console.WriteLine("T >> " + "(" + T.coord.x + "," + T.coord.y + ") " + T.color.ToString() + " " + T.hasNum.ToString());
+				//Console.WriteLine("R >> " + "(" + R.coord.x + "," + R.coord.y + ") " + R.color.ToString() + " " + R.hasNum.ToString());
+				//Console.WriteLine("B >> " + "(" + B.coord.x + "," + B.coord.y + ") " + B.color.ToString() + " " + B.hasNum.ToString());
+				//Console.WriteLine("L >> " + "(" + L.coord.x + "," + L.coord.y + ") " + L.color.ToString() + " " + L.hasNum.ToString());
+				//Console.WriteLine();
 
 				if (T.Color == Box.NOCOLOR && R.Color == Box.WHITE && B.Color == Box.WHITE && L.Color == Box.WHITE) {
 					Tapa.box[tmp_coord.x - 1][tmp_coord.y].Color = Box.BLACK;
