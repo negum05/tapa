@@ -35,6 +35,7 @@ namespace Tapa
             // 入力ファイルの読み込み
             Tapa.inputTapa(args[0]);
             // 盤面の出力
+			Console.WriteLine("入力盤面");
             Tapa.printBoard();
 			Console.WriteLine();
 
@@ -60,18 +61,19 @@ namespace Tapa
 			//	Console.Write("\n");
 			//}
 
-			// 数字マス周りのパターンを管理
-			PatternAroundNumBox.managePatternAroundNumBox();
+			for (int i = 1; i <= 3; i++) {
+				// 数字マス周りのパターンを管理
+				PatternAroundNumBox.managePatternAroundNumBox();
+				Console.WriteLine("{0}回目：数字マス周りの処理後", i);
+				Tapa.printBoard();
+				Console.WriteLine();
 
-			// 盤面の出力
-			Tapa.printBoard();
-			Console.WriteLine();
-
-			// 伸び代のある黒マスから、黒マスが伸びないかを見て、可能なら実際に伸ばす。
-			Box.extendBlackBox();
-
-			// 盤面の出力
-			Tapa.printBoard();
+				// 伸び代のある黒マスから、黒マスが伸びないかを見て、可能なら実際に伸ばす。
+				Box.extendBlackBox();
+				Console.WriteLine("{0}回目：孤立する黒マスの処理後", i);
+				Tapa.printBoard();
+				Console.WriteLine();
+			}
 			
             // 数字マス周りのチェック
             // PatternAroundNumBox.checkPatternAroundNumBox();
@@ -201,15 +203,22 @@ namespace Tapa
         {
             // ########## 盤面の外側にも1マスずつマスを配置
             Box tmp_box = new Box();
-            List<Box> tmp_box_list = new List<Box>();
+            List<Box> tmp_top_box_list = new List<Box>();	// 最上行に配置する行
+			List<Box> tmp_bot_box_list = new List<Box>();	// 最下行に配置する行
             tmp_box.Color = Box.WHITE;   // 外側のマスは白色
             for (int i = 0; i <= column_count+1; i++) {
-                tmp_box_list.Add(new Box(tmp_box));      // 最上(下)行に追加する空マスのリストを生成
+				tmp_box.coord = new Coordinates(0, i);
+                tmp_top_box_list.Add(new Box(tmp_box));      // 最上行に追加する空マスのリストに追加
+
+				tmp_box.coord = new Coordinates(row_count + 1, i);
+				tmp_bot_box_list.Add(new Box(tmp_box));      // 最下行に追加する空マスのリストに追加
             }
-            box.Insert(0, new List<Box>(tmp_box_list));    // 最上行に空マスのリストを追加
-            box.Add(new List<Box>(tmp_box_list));          // 最下行に空マスのリストを追加
+            box.Insert(0, new List<Box>(tmp_top_box_list));    // 最上行に空マスのリストを追加
+            box.Add(new List<Box>(tmp_bot_box_list));          // 最下行に空マスのリストを追加
             for (int i = 1; i <= row_count; i++) {
+				tmp_box.coord = new Coordinates(i, 0);	// 座標情報を訂正
                 box[i].Insert(0, new Box(tmp_box));			// 先頭に空マスを追加
+				tmp_box.coord = new Coordinates(i, column_count + 1);	// 座標情報を訂正
                 box[i].Add(new Box(tmp_box));				// 末尾に空マスを追加
             }
         }

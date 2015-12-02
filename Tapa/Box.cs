@@ -113,7 +113,7 @@ namespace Tapa
 		/*********************************
 		 * 
 		 * 伸び代のある黒マスリストから、
-		 * 黒マスの上下左右で未定マスが1つならそれを黒にし、リストから除外する。
+		 * 黒マスの上下左右で3つが白マス、1つが未定マスならそれを黒にし、リストから除外する。
 		 *   
 		 * *******************************/
 		public static void extendBlackBox()
@@ -136,19 +136,19 @@ namespace Tapa
 				//Console.WriteLine();
 
 				if (T.Color == Box.NOCOLOR && R.Color == Box.WHITE && B.Color == Box.WHITE && L.Color == Box.WHITE) {
-					Tapa.box[tmp_coord.x - 1][tmp_coord.y].Color = Box.BLACK;
+					Tapa.box[tmp_coord.x - 1][tmp_coord.y].Color = Box.BLACK;	// 上のマスを黒に
 					Tapa.edge_blackbox_coord_list.RemoveAt(ite_coord);
 				}
 				else if (T.Color == Box.WHITE && R.Color == Box.NOCOLOR && B.Color == Box.WHITE && L.Color == Box.WHITE) {
-					Tapa.box[tmp_coord.x][tmp_coord.y + 1].Color = Box.BLACK;
+					Tapa.box[tmp_coord.x][tmp_coord.y + 1].Color = Box.BLACK;	// 右のマスを黒に
 					Tapa.edge_blackbox_coord_list.RemoveAt(ite_coord);
 				}
 				else if (T.Color == Box.WHITE && R.Color == Box.WHITE && B.Color == Box.NOCOLOR && L.Color == Box.WHITE) {
-					Tapa.box[tmp_coord.x - 1][tmp_coord.y].Color = Box.BLACK;
+					Tapa.box[tmp_coord.x + 1][tmp_coord.y].Color = Box.BLACK;	// 下のマスを黒に
 					Tapa.edge_blackbox_coord_list.RemoveAt(ite_coord);
 				}
 				else if (T.Color == Box.WHITE && R.Color == Box.WHITE && B.Color == Box.WHITE && L.Color == Box.NOCOLOR) {
-					Tapa.box[tmp_coord.x][tmp_coord.y - 1].Color = Box.BLACK;
+					Tapa.box[tmp_coord.x][tmp_coord.y - 1].Color = Box.BLACK;	// 上のマスを黒に
 					Tapa.edge_blackbox_coord_list.RemoveAt(ite_coord);
 				}
 			}

@@ -3242,14 +3242,12 @@ namespace Tapa
 				};
 
 			// クローンのマス色変更回数を0にする。
-			Tapa.box[co.x][co.y].printBoxNum();
-			Console.Write("\n");
-			foreach (Box tmp_box in clonebox_arround_numbox_list) {
-				tmp_box.changed_count_in_search_confirm_box = 0;
-				Console.Write("({0},{1})\n", tmp_box.coord.x, tmp_box.coord.y);
-				tmp_box.printBoxNum();
-				Console.Write("\n");
-			}
+			//foreach (Box tmp_box in clonebox_arround_numbox_list) {
+			//	tmp_box.changed_count_in_search_confirm_box = 0;
+			//	//Console.Write("({0},{1})\n", tmp_box.coord.x, tmp_box.coord.y);
+			//	//tmp_box.printBoxNum();
+			//	//Console.Write("\n");
+			//}
 			// クローンのマス色が何回変化するか調べる。
 			foreach (byte tmp_id in Tapa.box[co.x][co.y].id_list) {	// id_list(配置可能なパターン)
 				PatternAroundNumBox.setPatternAroundNumBox(co, tmp_id, clonebox_arround_numbox_list);
@@ -3294,7 +3292,7 @@ namespace Tapa
 					tmp_co.printCoordinates();
 					Application.Exit();
 				}
-				// idを見て数字周りで色が固定しているマスを埋める。
+				// tmp_coのid_listを見て数字周りで色が確定しているマスを埋める。
 				setConfirmBoxArroundNumBox(tmp_co);
 			}
 		}
