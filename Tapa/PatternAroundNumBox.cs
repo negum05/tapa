@@ -3248,16 +3248,24 @@ namespace Tapa
 			//	//tmp_box.printBoxNum();
 			//	//Console.Write("\n");
 			//}
+
+			// ######## <begin> クローン処理中はリスト関係の処理をしない
+			Box.during_clone = true;
 			// クローンのマス色が何回変化するか調べる。
 			foreach (byte tmp_id in Tapa.box[co.x][co.y].id_list) {	// id_list(配置可能なパターン)
 				PatternAroundNumBox.setPatternAroundNumBox(co, tmp_id, clonebox_arround_numbox_list);
 			}
+			Box.during_clone = false;
+			// ######## <end> クローン処理中はリスト関係の処理をしない
+
 			// クローンのマス色変更回数が1回なら、そのマスをその色で埋める。
 			foreach (Box tmp_box in clonebox_arround_numbox_list) {
 				if (tmp_box.changed_count_in_search_confirm_box == 1) {
 					Tapa.box[tmp_box.coord.x][tmp_box.coord.y].Color = tmp_box.Color;
 				}
 			}
+			
+
 		}
 
 		/*********************************

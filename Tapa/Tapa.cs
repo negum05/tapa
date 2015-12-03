@@ -16,7 +16,7 @@ namespace Tapa
 		public static List<Coordinates> numbox_coord_list = new List<Coordinates>();
 		// 未定マスの座標リスト
 		public static List<Coordinates> not_deployedbox_coord_list = new List<Coordinates>();
-		// 伸び代のある黒マスの座標リスト
+		// 伸び代（上下左右に未定マス）のある黒マスの座標リスト [###伸び代のない黒マスがゴミとして紛れる可能性あり]
 		public static List<Coordinates> edge_blackbox_coord_list = new List<Coordinates>();
         public static bool DEBUG = false;
 
@@ -61,7 +61,7 @@ namespace Tapa
 			//	Console.Write("\n");
 			//}
 
-			for (int i = 1; i <= 3; i++) {
+			for (int i = 1; i <= 2; i++) {
 				// 数字マス周りのパターンを管理
 				PatternAroundNumBox.managePatternAroundNumBox();
 				Console.WriteLine("{0}回目：数字マス周りの処理後", i);
@@ -69,8 +69,8 @@ namespace Tapa
 				Console.WriteLine();
 
 				// 伸び代のある黒マスから、黒マスが伸びないかを見て、可能なら実際に伸ばす。
-				Box.extendBlackBox();
-				Console.WriteLine("{0}回目：孤立する黒マスの処理後", i);
+				Box.manageBlackBox();
+				Console.WriteLine("{0}回目：黒マス関係の処理後", i);
 				Tapa.printBoard();
 				Console.WriteLine();
 			}
