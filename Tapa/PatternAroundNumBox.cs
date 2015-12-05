@@ -3220,11 +3220,6 @@ namespace Tapa
 		 * 数字マスのid_listを見て、数字マス周りで色が確定するマスを埋める。
 		 * 引数
 		 * co	: 数字マスの座標
-		 * 
-		 * 
-		 * 
-		 * うまくいかないからここから調べて！
-		 * 
 		 *   
 		 * *******************************/
 		static private void setConfirmBoxArroundNumBox(Coordinates co)

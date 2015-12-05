@@ -16,9 +16,12 @@ namespace Tapa
 		public static List<Coordinates> numbox_coord_list = new List<Coordinates>();
 		// 未定マスの座標リスト
 		public static List<Coordinates> not_deployedbox_coord_list = new List<Coordinates>();
-		// 伸び代（上下左右に未定マス）のある黒マスの座標リスト [###伸び代のない黒マスがゴミとして紛れる可能性あり]
+		// 黒マスに塗られた時点で伸び代（上下左右に未定マス）のある黒マスの座標リスト
 		public static List<Coordinates> edge_blackbox_coord_list = new List<Coordinates>();
+		// 孤立した黒マス座標群の座標リスト
+		public static List<List<Coordinates>> isolation_blackboxes_group_list = new List<List<Coordinates>>();
         public static bool DEBUG = false;
+		
 
         /// <summary>
         /// アプリケーションのメイン エントリ ポイントです。
@@ -61,17 +64,21 @@ namespace Tapa
 			//	Console.Write("\n");
 			//}
 
-			for (int i = 1; i <= 2; i++) {
+			for (int i = 1; i <= 4; i++) {
 				// 数字マス周りのパターンを管理
 				PatternAroundNumBox.managePatternAroundNumBox();
 				Console.WriteLine("{0}回目：数字マス周りの処理後", i);
 				Tapa.printBoard();
 				Console.WriteLine();
-
+				Tapa.printIsolationBlackBoxGroup();
+				Console.WriteLine();
+				
 				// 伸び代のある黒マスから、黒マスが伸びないかを見て、可能なら実際に伸ばす。
 				Box.manageBlackBox();
 				Console.WriteLine("{0}回目：黒マス関係の処理後", i);
 				Tapa.printBoard();
+				Console.WriteLine();
+				Tapa.printIsolationBlackBoxGroup();
 				Console.WriteLine();
 			}
 			
@@ -96,6 +103,8 @@ namespace Tapa
          * *******************************/
         static public void inputTapa(string in_filename)
         {
+			Box.during_make_inputbord = true;
+
             Microsoft.Office.Interop.Excel.Application ExcelApp
                 = new Microsoft.Office.Interop.Excel.Application();
             Console.Write("infilename >> " + in_filename + "\n");
@@ -191,6 +200,8 @@ namespace Tapa
             WorkBook.Close();
             //エクセルを閉じる
             ExcelApp.Quit();
+
+			Box.during_make_inputbord = false;
         }
 
         /*********************************
@@ -205,7 +216,7 @@ namespace Tapa
             Box tmp_box = new Box();
             List<Box> tmp_top_box_list = new List<Box>();	// 最上行に配置する行
 			List<Box> tmp_bot_box_list = new List<Box>();	// 最下行に配置する行
-            tmp_box.Color = Box.WHITE;   // 外側のマスは白色
+            tmp_box.Color = Box.WHITE;		// 外側のマスは白色
             for (int i = 0; i <= column_count+1; i++) {
 				tmp_box.coord = new Coordinates(0, i);
                 tmp_top_box_list.Add(new Box(tmp_box));      // 最上行に追加する空マスのリストに追加
@@ -237,5 +248,15 @@ namespace Tapa
                 Console.WriteLine();
             }
         }
+
+		private static void printIsolationBlackBoxGroup()
+		{
+			foreach (List<Coordinates> tmp_coord_list in Tapa.isolation_blackboxes_group_list) {
+				foreach (Coordinates tmp_coord in tmp_coord_list) {
+					tmp_coord.printCoordinates();
+				}
+				Console.WriteLine();
+			}
+		}
     }
 }

@@ -31,7 +31,7 @@ namespace Tapa
 		
 		// 出力用
 		public void printCoordinates() {
-			Console.WriteLine("(x,y) >> (" + this.x + "," + this.y + ")");
+			Console.Write(" (" + this.x + "," + this.y + ") ");
 		}
 	}
 }
