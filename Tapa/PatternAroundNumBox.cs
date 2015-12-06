@@ -1689,7 +1689,7 @@ namespace Tapa
 		 *   
 		 * *******************************/
 		static private void setPatternAroundNumBox(Coordinates co, byte id
-			, List<Box> clone_box_arround_numbox_list = null)
+			, List<Box> clone_box_around_numbox_list = null)
 		{
 			Box TL = new Box();		// 左上(Top-Left)
 			Box TC = new Box();		// 中上(Top-Center)
@@ -1700,7 +1700,7 @@ namespace Tapa
 			Box BC = new Box();		// 中下(Bottom-Center)
 			Box BR = new Box();	    // 右下(Bottom-Right)
 
-			if (clone_box_arround_numbox_list == null) {
+			if (clone_box_around_numbox_list == null) {
 				// 盤面の数字マス周りのマスを取得（盤面本体）
 				TL = Tapa.box[co.x - 1][co.y - 1];		// 左上(Top-Left)
 				TC = Tapa.box[co.x - 1][co.y];			// 中上(Top-Center)
@@ -1713,14 +1713,14 @@ namespace Tapa
 			}
 			else {
 				// 盤面の数字マス周りのマスを取得（盤面のコピー）
-				TL = clone_box_arround_numbox_list[0];		// 左上(Top-Left)
-				TC = clone_box_arround_numbox_list[1];      // 中上(Top-Center)
-				TR = clone_box_arround_numbox_list[2];		// 右上(Top-Right)
-				ML = clone_box_arround_numbox_list[7];		// 左中(Middle-Left)
-				MR = clone_box_arround_numbox_list[3];      // 右中(Middle-Right)
-				BL = clone_box_arround_numbox_list[6];		// 左下(Bottom-Left)
-				BC = clone_box_arround_numbox_list[5];      // 中下(Bottom-Center)
-				BR = clone_box_arround_numbox_list[4];		// 右下(Bottom-Right)
+				TL = clone_box_around_numbox_list[0];		// 左上(Top-Left)
+				TC = clone_box_around_numbox_list[1];      // 中上(Top-Center)
+				TR = clone_box_around_numbox_list[2];		// 右上(Top-Right)
+				ML = clone_box_around_numbox_list[3];		// 左中(Middle-Left)
+				MR = clone_box_around_numbox_list[4];      // 右中(Middle-Right)
+				BL = clone_box_around_numbox_list[5];		// 左下(Bottom-Left)
+				BC = clone_box_around_numbox_list[6];      // 中下(Bottom-Center)
+				BR = clone_box_around_numbox_list[7];		// 右下(Bottom-Right)
 			}
 
 			// idから数字マス周りに黒マスを配置
@@ -3201,6 +3201,124 @@ namespace Tapa
 			}
 		}
 
+
+		/*********************************
+		 * 
+		 * color_board内でcenterを中心とした3*3マスの座標の内、黒マスの団子があるか調べる。
+		 * true		: 黒マスの団子がない
+		 * false	: 黒マスの団子がある
+		 * 
+		 * 引数
+		 * center		: 3*3の中心座標
+		 * color_board	: color情報を持った配列
+		 * 
+		 * *******************************/
+		static private bool checkNotDumpling(Coordinates center, int[,] color_board)
+		{
+			// 3*3の中心が白なら黒マスの団子はない
+			if (color_board[center.x, center.y] == Box.WHITE) { return true; }
+
+			int TL = color_board[center.x - 1, center.y - 1];	// (左上)	Top-Left
+			int TC = color_board[center.x - 1, center.y];		// (上)		Top-Center
+			int TR = color_board[center.x - 1, center.y + 1];	// (右上)	Top-Right
+			int MR = color_board[center.x, center.y + 1];		// (右)		Middle-Right
+			int BR = color_board[center.x + 1, center.y + 1];	// (右下)	Bottom-Right
+			int BC = color_board[center.x + 1, center.y];		// (下)		Bottom-Center
+			int BL = color_board[center.x + 1, center.y - 1];	// (左下)	Bottom-Left
+			int ML = color_board[center.x, center.y - 1];		// (左)		Middle-Left
+
+			if (TC == Box.BLACK) {	// 上マスが黒色の場合
+				if ((ML == Box.BLACK && TL == Box.BLACK)		// 左上
+					|| (TR == Box.BLACK && MR == Box.BLACK)) {	// 右上
+					return false;
+				}
+			}
+			else if (BC == Box.BLACK) {	// 下マスが黒色の場合
+				if ((MR == Box.BLACK && BR == Box.BLACK)		// 左下
+					|| (BL == Box.BLACK && ML == Box.BLACK)) {	// 右下
+					return false;
+				}
+			}
+			return true;
+		}
+
+		/*********************************
+		 * 
+		 * idの通り設置したら黒マスの団子ができないか調べる。
+		 * true		: 団子ができない
+		 * false	: 団子ができる
+		 * 
+		 * 引数
+		 * co		: (数字)マスの座標
+		 * id		: 各パターンを識別するための数値（型はbyte）
+		 *  
+		 * 
+		 * 【無駄】同じ数字マスに対してidの数分、周囲の同じマスを作り直してる
+		 * *******************************/
+		static private bool checkNotDumplingId(Coordinates co, byte id)
+		{
+			int max_box_col = Tapa.box[0].Count - 1;	// 列の添字の最大値
+			int max_box_row = Tapa.box.Count;			// 行の添字の最大値
+			const int MAX_CLONE_ROW = 5;
+			const int MAX_CLONE_COL = 5;
+			Coordinates center = new Coordinates(2, 2);
+
+			int[,] clone_color_55 = new int[MAX_CLONE_ROW, MAX_CLONE_COL];	// 数字マス周りの5*5マスのcolorを格納する配列
+			
+			// 数字マス周り5*5マスの色を取得
+			for (int i_box = co.x - 2, i_color = 0; i_color < MAX_CLONE_ROW; i_box++, i_color++) {
+				for (int j_box = co.y - 2, j_color = 0; j_color < MAX_CLONE_COL; j_box++, j_color++) {
+					// 外周かそれより外側の要素番号の場合、白色とする。
+					if (i_box <= 0 || max_box_row <= i_box || j_box <= 0 || max_box_col <= j_box) {
+						clone_color_55[i_color,j_color] = Box.WHITE;
+					}
+					else {
+						clone_color_55[i_color,j_color] = Tapa.box[i_box][j_box].Color;
+					}
+				}
+			}
+
+			// 数字マス周りのクローンを作成
+			List<Box> clonebox_around_numbox_list = new List<Box> {	
+					new Box(Tapa.box[co.x-1][co.y-1]),	// 左上
+					new Box(Tapa.box[co.x-1][co.y]),	// 上
+					new Box(Tapa.box[co.x-1][co.y+1]),	// 右上
+					new Box(Tapa.box[co.x][co.y-1]),	// 左
+					new Box(Tapa.box[co.x][co.y+1]),	// 右
+					new Box(Tapa.box[co.x+1][co.y-1]),	// 左下
+					new Box(Tapa.box[co.x+1][co.y]),	// 下
+					new Box(Tapa.box[co.x+1][co.y+1])	// 右下
+				};
+
+			// ######## <begin> クローン処理中はリスト関係の処理をしない
+			Box.during_clone = true;
+			// クローンに色を塗る
+			PatternAroundNumBox.setPatternAroundNumBox(co, id, clonebox_around_numbox_list);
+			Box.during_clone = false;
+			// ######## <end> クローン処理中はリスト関係の処理をしない
+
+			// 数字マス周りにある黒色のマスを格納
+			List<Coordinates> blackbox_coord_list = new List<Coordinates>();
+			// 数字マス周り8マスをidで埋めた場合の色で塗る。
+			int ite_clonebox_list = 0;
+			for(int i = center.x-1; i <= center.x+1; i++) {
+				for(int j = center.y-1; j <= center.y+1; j++) {
+					if(i == center.x && j == center.y) { continue; } // clonebox_around_numbox_listに中心の数字マスが含まれないため
+					// idで塗られた色が黒だった場合リストに追加
+					else if((clone_color_55[i,j] = clonebox_around_numbox_list[ite_clonebox_list++].Color) == Box.BLACK) {
+						blackbox_coord_list.Add(new Coordinates(i, j));
+					}
+				}
+			}
+			// 数字マス周りの黒マス周りで団子ができないか調べる。
+			foreach (Coordinates tmp_co in blackbox_coord_list) {
+				if (!checkNotDumpling(tmp_co, clone_color_55)) {
+					return false;
+				}
+			}
+			return true;
+		}
+
 		/*********************************
 		 * 
 		 * 数字マスリストの各数字マスにidをセットする。
@@ -3225,15 +3343,15 @@ namespace Tapa
 		static private void setConfirmBoxArroundNumBox(Coordinates co)
 		{
 			// 数字マス周りのクローンを作成
-			List<Box> clonebox_arround_numbox_list = new List<Box> {	
+			List<Box> clonebox_around_numbox_list = new List<Box> {	
 					new Box(Tapa.box[co.x-1][co.y-1]),	// 左上
 					new Box(Tapa.box[co.x-1][co.y]),	// 上
 					new Box(Tapa.box[co.x-1][co.y+1]),	// 右上
+					new Box(Tapa.box[co.x][co.y-1]),	// 左
 					new Box(Tapa.box[co.x][co.y+1]),	// 右
-					new Box(Tapa.box[co.x+1][co.y+1]),	// 右下
+					new Box(Tapa.box[co.x+1][co.y-1]),	// 左下					
 					new Box(Tapa.box[co.x+1][co.y]),	// 下
-					new Box(Tapa.box[co.x+1][co.y-1]),	// 左下
-					new Box(Tapa.box[co.x][co.y-1])		// 左
+					new Box(Tapa.box[co.x+1][co.y+1])	// 右下				
 				};
 
 			// クローンのマス色変更回数を0にする。
@@ -3248,13 +3366,13 @@ namespace Tapa
 			Box.during_clone = true;
 			// クローンのマス色が何回変化するか調べる。
 			foreach (byte tmp_id in Tapa.box[co.x][co.y].id_list) {	// id_list(配置可能なパターン)
-				PatternAroundNumBox.setPatternAroundNumBox(co, tmp_id, clonebox_arround_numbox_list);
+				PatternAroundNumBox.setPatternAroundNumBox(co, tmp_id, clonebox_around_numbox_list);
 			}
 			Box.during_clone = false;
 			// ######## <end> クローン処理中はリスト関係の処理をしない
 
 			// クローンのマス色変更回数が1回なら、そのマスをその色で埋める。
-			foreach (Box tmp_box in clonebox_arround_numbox_list) {
+			foreach (Box tmp_box in clonebox_around_numbox_list) {
 				if (tmp_box.changed_count_in_search_confirm_box == 1) {
 					Tapa.box[tmp_box.coord.x][tmp_box.coord.y].Color = tmp_box.Color;
 				}
@@ -3275,8 +3393,9 @@ namespace Tapa
 				Coordinates tmp_co = new Coordinates(Tapa.numbox_coord_list[ite_coord]);
 				for (int ite_id = Tapa.box[tmp_co.x][tmp_co.y].id_list.Count - 1; ite_id >= 0; ite_id--) {	// id_list
 					byte tmp_id = Tapa.box[tmp_co.x][tmp_co.y].id_list[ite_id];
-					// idのパターンが配置できなければそのidをid_listから除外
-					if (!PatternAroundNumBox.checkPatternAroundNumBox(tmp_co, tmp_id)) {
+					// 条件に一致したidをid_listから除外
+					if (!PatternAroundNumBox.checkPatternAroundNumBox(tmp_co, tmp_id)	// idのパターンが配置できない
+						|| !PatternAroundNumBox.checkNotDumplingId(tmp_co, tmp_id)) {	// またはidの通り配置したら黒マスの団子ができてしまう。
 						if (Tapa.DEBUG) {
 							tmp_co.printCoordinates();
 							Console.Write(" " + Tapa.box[tmp_co.x][tmp_co.y].id_list[ite_id].ToString() + "\n");

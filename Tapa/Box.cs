@@ -142,7 +142,7 @@ namespace Tapa
 		public void printIdList()
 		{
 			if (!this.has_num) {
-				Console.WriteLine("Error: id_listの内マスからid_listを出力しようとしています。");
+				Console.WriteLine("Error: id_listのないマスからid_listを出力しようとしています。");
 				Application.Exit();
 			}
 			else {

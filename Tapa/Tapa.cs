@@ -64,22 +64,22 @@ namespace Tapa
 			//	Console.Write("\n");
 			//}
 
-			for (int i = 1; i <= 4; i++) {
+			for (int i = 1; i <= 10; i++) {
 				// 数字マス周りのパターンを管理
 				PatternAroundNumBox.managePatternAroundNumBox();
 				Console.WriteLine("{0}回目：数字マス周りの処理後", i);
 				Tapa.printBoard();
 				Console.WriteLine();
-				Tapa.printIsolationBlackBoxGroup();
-				Console.WriteLine();
+				//Tapa.printIsolationBlackBoxGroup();
+				//Console.WriteLine();
 				
 				// 伸び代のある黒マスから、黒マスが伸びないかを見て、可能なら実際に伸ばす。
 				Box.manageBlackBox();
 				Console.WriteLine("{0}回目：黒マス関係の処理後", i);
 				Tapa.printBoard();
 				Console.WriteLine();
-				Tapa.printIsolationBlackBoxGroup();
-				Console.WriteLine();
+				//Tapa.printIsolationBlackBoxGroup();
+				//Console.WriteLine();
 			}
 			
             // 数字マス周りのチェック
