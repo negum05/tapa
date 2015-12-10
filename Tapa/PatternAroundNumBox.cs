@@ -201,7 +201,7 @@ namespace Tapa
 			// [0] id=0
 			if (id == HEAD_BN_0) {
 				if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.BLACK
-					&& ML != Box.BLACK && MR != Box.BLACK
+					&& ML != Box.BLACK/*				*/&& MR != Box.BLACK
 					&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 				else { return false; }
 			}
@@ -210,42 +210,42 @@ namespace Tapa
 				switch (id) {
 					case (byte)1:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)2:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)3:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)4:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)5:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)6:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)7:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)8:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					default:
@@ -1727,7 +1727,7 @@ namespace Tapa
 			// [0] id=0
 			if (id == HEAD_BN_0) {
 				TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-				ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+				ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 				BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 			}
 			// [1] id=1~8
@@ -1735,42 +1735,42 @@ namespace Tapa
 				switch (id) {
 					case (byte)1:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)2:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)3:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)4:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)5:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)6:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)7:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)8:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					default:
@@ -3201,7 +3201,6 @@ namespace Tapa
 			}
 		}
 
-
 		/*********************************
 		 * 
 		 * color_board内でcenterを中心とした3*3マスの座標の内、黒マスの団子があるか調べる。
@@ -3377,8 +3376,45 @@ namespace Tapa
 					Tapa.box[tmp_box.coord.x][tmp_box.coord.y].Color = tmp_box.Color;
 				}
 			}
-			
+		}
 
+		/*********************************
+		 * 
+		 * 1. 呼ばれた時の状態を保存する。
+		 * 2. co座標のid_listからidを取り出し、配置する。
+		 * 3. 黒マスの孤立を調べ、孤立していればidを除外する。
+		 * 4. 状態を元に戻す。
+		 * 5. 2-4をid_list内のid全てに対して行う。
+		 * 
+		 * 引数
+		 * co		: 数字マスの座標
+		 * id_list	: idのリスト
+		 *   
+		 * *******************************/
+		static private void removeMakeIsolationBlackBoxGroupId(Coordinates co, List<byte> id_list)
+		{
+			StateSave save_point = new StateSave();
+			// 現在の状態を保存
+			save_point.saveNowState();
+
+			// 孤立するidのid_listでの要素番号を保存する
+			List<int> iso_id_ite_list = new List<int>();
+			for (int i = id_list.Count - 1; i >= 0; i--) {
+				PatternAroundNumBox.setPatternAroundNumBox(co, id_list[i]);
+				// Tapa.printIsolationBlackBoxGroup();
+				// Console.WriteLine();
+				// Tapa.printBoard();
+				if (!Box.checkNotIsolationBlackBoxGroup()) {	// 盤面に孤立した黒マス群がないか調べる
+					iso_id_ite_list.Add(i);
+				}
+				StateSave.setSavedState(save_point);
+			}
+
+			// 孤立したidをid_listから削除
+			foreach (int tmp_ite in iso_id_ite_list) {
+				// id_list.RemoveAt(tmp_ite);
+				Tapa.box[co.x][co.y].id_list.RemoveAt(tmp_ite);
+			}
 		}
 
 		/*********************************
@@ -3401,9 +3437,11 @@ namespace Tapa
 							Console.Write(" " + Tapa.box[tmp_co.x][tmp_co.y].id_list[ite_id].ToString() + "\n");
 						}
 						Tapa.box[tmp_co.x][tmp_co.y].id_list.RemoveAt(ite_id);
-					}
+					}	
 				}
+
 				// id_listが一意ならそれを配置して数字マスリストから除外
+				Tapa.NOW_STATE_PROCESS = Tapa.STATE_ID_LIST_ONLY_ONE;
 				if (Tapa.box[tmp_co.x][tmp_co.y].id_list.Count == 1) {
 					PatternAroundNumBox.setPatternAroundNumBox(tmp_co, Tapa.box[tmp_co.x][tmp_co.y].id_list[0]);
 					Tapa.numbox_coord_list.RemoveAt(ite_coord);
@@ -3415,7 +3453,11 @@ namespace Tapa
 					Application.Exit();
 				}
 				// tmp_coのid_listを見て数字周りで色が確定しているマスを埋める。
+				Tapa.NOW_STATE_PROCESS = Tapa.STATE_CONFIRM_BOX_COLOR_FROM_ID_LIST;
 				setConfirmBoxArroundNumBox(tmp_co);
+
+				// id_listのうち、孤立する黒マス群を作るidを除外（id_listごとに処理したほうが効率的）
+				// removeMakeIsolationBlackBoxGroupId(tmp_co, Tapa.box[tmp_co.x][tmp_co.y].id_list);
 			}
 		}
 	}

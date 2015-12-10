@@ -56,7 +56,13 @@ namespace Tapa
 								this.can_extend_blackbox = true;
 								Tapa.edge_blackbox_coord_list.Add(this.coord);
 							}
-							Tapa.not_deployedbox_coord_list.Remove(this.coord);
+						}
+						Tapa.not_deployedbox_coord_list.Remove(this.coord);	// 未定マスリストから除外
+						if (Tapa.DEBUG_PRINT_PROCESS) {
+							this.coord.printCoordinates();
+							Console.Write(" : ");
+							Tapa.printNowStateProcess();
+							Console.WriteLine();
 						}
 					}
 				}
@@ -120,17 +126,23 @@ namespace Tapa
 		 * 数字マスの数字の表示
 		 *   
 		 * *******************************/
+		static string wb = "□";
+		static string bb = "■";
+		static string non = "－";
 		public void printBoxNum()
 		{
 			if (!this.has_num) {
-				if (this.color == Box.WHITE) { Console.Write("==== "); }
-				else if (this.color == Box.BLACK) { Console.Write("**** "); }
-				else { Console.Write("---- "); }
+				if (this.color == Box.WHITE) { Console.Write(wb + wb + "　"); }
+				else if (this.color == Box.BLACK) { Console.Write(bb + bb + "　"); }
+				else { Console.Write(non + non + "　"); }
 			}
 			else {
-				int rest = 5 - this.box_num.ToString().Length;
+				int space = this.box_num.ToString().Length;
+				int rest = 4 - space;
 				Console.Write(this.box_num);
+				// while (space-- > 0) { Console.Write(" "); }
 				while (rest-- > 0) { Console.Write(" "); }
+				Console.Write("　");
 			}
 		}
 
@@ -222,14 +234,14 @@ namespace Tapa
 			if (count_arround_box_coord == 0) {
 				Tapa.isolation_blackboxes_group_list.Add(new List<Coordinates>(){ co });
 
-				Console.Write("divide(孤立):");
-				co.printCoordinates();
-				Console.Write("\n");
+				//Console.Write("divide(孤立):");
+				//co.printCoordinates();
+				//Console.Write("\n");
 			}
 			else {
-				Console.Write("divide(結合):");
-				co.printCoordinates();
-				Console.Write("\n");
+				//Console.Write("divide(結合):");
+				//co.printCoordinates();
+				//Console.Write("\n");
 
 				List<Coordinates> merged_group_list = new List<Coordinates>() { co };	// 結合したリストの保存用
 				// true:添字番目の黒マスのリストを結合済み（添字がarround_box_coordと対応）
@@ -510,26 +522,51 @@ namespace Tapa
 			}
 		}
 
+		/*********************************
+		 * 
+		 * 盤面に孤立した黒マス群がないか調べる
+		 * true		: ない
+		 * false	: ある
+		 *   
+		 * *******************************/
+		public static bool checkNotIsolationBlackBoxGroup()
+		{
+			for (int ite_iso_group_list = Tapa.isolation_blackboxes_group_list.Count - 1; ite_iso_group_list >= 0; ite_iso_group_list--) {
+				bool is_not_iso = false;
+				// List<Coordinates> tmp_iso_group = Tapa.isolation_blackboxes_group_list[ite_iso_group_list];
+				foreach (Coordinates tmp_co in Tapa.isolation_blackboxes_group_list[ite_iso_group_list]) {
+					// 伸び代のある黒マスがあれば次の黒マス群を見に行く
+					tmp_co.printCoordinates();
+					// Console.Write(" >> " + Tapa.box[tmp_co.x][tmp_co.y].can_extend_blackbox + "\n");
+					if (Tapa.box[tmp_co.x][tmp_co.y].can_extend_blackbox) {
+						is_not_iso = true;
+						break; 
+					}
+				}
+				if (!is_not_iso) { return false; }
+			}
+			return true;
+		}
+
+		/*********************************
+		 * 
+		 * 黒マス周りの処理
+		 *   
+		 * *******************************/
 		public static void manageBlackBox()
 		{
+			Tapa.NOW_STATE_PROCESS = Tapa.STATE_AVOID_DUMPLING_AROUND_BLACK_BOX;
 			for (int ite_coord = Tapa.edge_blackbox_coord_list.Count - 1; ite_coord >= 0; ite_coord--) {
 				Coordinates tmp_co = Tapa.edge_blackbox_coord_list[ite_coord];	// ###浅いコピー
 				if (Tapa.box[tmp_co.x][tmp_co.y].Color != Box.BLACK) {
 					Console.WriteLine("Error: 黒マスでないマスがedge_blackbox_coord_listに入っています ({0},{1})", tmp_co.x, tmp_co.y);
 				}
 				avoidDumpling(tmp_co);
-				// extendBlackBox(ite_coord);
-				// 伸び代がなければ、その座標をリストから除外
-				//if (!canExtendBlackBox(Tapa.edge_blackbox_coord_list[ite_coord])) {
-				//	Tapa.edge_blackbox_coord_list.RemoveAt(ite_coord);
-				//}
 			}
 			// 孤立した黒マス群のリストを見て、伸び代が1つしかない黒マス群があればそこを黒に塗る。
+			Tapa.NOW_STATE_PROCESS = Tapa.STATE_ISOLATION_BLACK_BOXES_ONLY_EXTENDABLE;
 			extendIsolationBlackBoxGroup();
 		}
-
-
-
 
 		// 1000 ~ 9999 の乱数を返す
 		// 黒マス群のリストにidを設定するために作ったけどいらないかも
