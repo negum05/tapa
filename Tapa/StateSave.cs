@@ -23,18 +23,18 @@ namespace Tapa
 		 *   リストや盤面の状態を保存
 		 *  
 		 * *******************************/
-		public void saveNowState()
+		public static void saveNowState(StateSave save_point)
 		{
 			// 呼びだされた時点での盤面の全てのマス
-			saved_box = StateSave.getStateBoard();
+			save_point.saved_box = StateSave.getStateBoard();
 			// 呼びだされた時点での数字マスの座標のリスト
-			saved_numbox_coord_list = getStateCoordList(Tapa.numbox_coord_list);
+			save_point.saved_numbox_coord_list = getStateCoordList(Tapa.numbox_coord_list);
 			// 呼びだされた時点での未定マスの座標リスト
-			saved_not_deployedbox_coord_list = getStateCoordList(Tapa.not_deployedbox_coord_list);
+			save_point.saved_not_deployedbox_coord_list = getStateCoordList(Tapa.not_deployedbox_coord_list);
 			// 呼びだされた時点での伸び代のある黒マスの座標リスト
-			saved_edge_blackbox_coord_list = getStateCoordList(Tapa.edge_blackbox_coord_list);
+			save_point.saved_edge_blackbox_coord_list = getStateCoordList(Tapa.edge_blackbox_coord_list);
 			// 呼びだされた時点での一繋がりの黒マス群の座標リスト
-			saved_isolation_blackboxes_group_list = getStateIsolationBlackBoxesGroupList();
+			save_point.saved_isolation_blackboxes_group_list = getStateIsolationBlackBoxesGroupList();
 		}
 
 		/*********************************

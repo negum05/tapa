@@ -536,7 +536,6 @@ namespace Tapa
 				// List<Coordinates> tmp_iso_group = Tapa.isolation_blackboxes_group_list[ite_iso_group_list];
 				foreach (Coordinates tmp_co in Tapa.isolation_blackboxes_group_list[ite_iso_group_list]) {
 					// 伸び代のある黒マスがあれば次の黒マス群を見に行く
-					tmp_co.printCoordinates();
 					// Console.Write(" >> " + Tapa.box[tmp_co.x][tmp_co.y].can_extend_blackbox + "\n");
 					if (Tapa.box[tmp_co.x][tmp_co.y].can_extend_blackbox) {
 						is_not_iso = true;

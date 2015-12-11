@@ -74,6 +74,66 @@ namespace Tapa
 				//Console.WriteLine();
 			}
 
+			/*
+			// boxとsaveの参照確認用（一方の変化が他方に影響しないことを確認）
+			StateSave test_state_save = new StateSave();
+			StateSave.saveNowState(test_state_save);
+			Console.WriteLine("######################");
+			Console.WriteLine("box >> ");
+			Tapa.printBoard();
+			Console.WriteLine();
+			Console.WriteLine("saved_box >> ");
+			Tapa.printBoard(test_state_save.saved_box);
+			Console.WriteLine();
+
+			Console.WriteLine("box.[7][1] = BLACK>> ");
+			Tapa.box[7][1].Color = Box.BLACK;
+			Console.WriteLine("box >> ");
+			Tapa.printBoard();
+			Console.WriteLine();
+			Console.WriteLine("saved_box >> ");
+			Tapa.printBoard(test_state_save.saved_box);
+			Console.WriteLine();
+
+			Console.WriteLine("test_save[6][1].Color = Box.BLACK");
+			test_state_save.saved_box[6][1].Color = Box.BLACK;
+			Console.WriteLine("box >> ");
+			Tapa.printBoard();
+			Console.WriteLine();
+			Console.WriteLine("saved_box >> ");
+			Tapa.printBoard(test_state_save.saved_box);
+			Console.WriteLine();
+
+			Console.WriteLine("set");
+			StateSave.setSavedState(test_state_save);
+			Console.WriteLine("num_box >> ");
+			Tapa.printBoard();
+			Console.WriteLine();
+			Console.WriteLine("saved_box >> ");
+			Tapa.printBoard(test_state_save.saved_box);
+			Console.WriteLine();
+
+			Console.WriteLine("box[1][7].Color = Box.BLACK");
+			box[1][7].Color = Box.BLACK;
+			Console.WriteLine("box >> ");
+			Tapa.printBoard();
+			Console.WriteLine();
+			Console.WriteLine("saved_box >> ");
+			Tapa.printBoard(test_state_save.saved_box);
+			Console.WriteLine();
+
+			Console.WriteLine("set");
+			StateSave.setSavedState(test_state_save);
+			Console.WriteLine("num_box >> ");
+			Tapa.printBoard();
+			Console.WriteLine();
+			Console.WriteLine("saved_box >> ");
+			Tapa.printBoard(test_state_save.saved_box);
+			Console.WriteLine();
+			return;
+			 * */
+			
+			
 
 			// 数字マス周りのチェック
 			// PatternAroundNumBox.checkPatternAroundNumBox();
