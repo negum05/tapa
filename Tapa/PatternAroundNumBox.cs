@@ -3397,48 +3397,54 @@ namespace Tapa
 			// 現在の状態を保存
 			StateSave.saveNowState(save_point);
 
-			Console.Write("数字座標 >> ");
-			co.printCoordinates();
-			Console.WriteLine("############################");
-			Console.WriteLine("調査開始時の黒マス群リスト >> ");
-			Console.WriteLine();
-			Tapa.printIsolationBlackBoxGroup();
-			Console.WriteLine();
-			Console.WriteLine("残りid >> ");
-			Tapa.box[co.x][co.y].printIdList();
-			Console.WriteLine();
-			Tapa.printBoard();
-			Console.WriteLine();
+			//Console.Write("数字座標 >> ");
+			//co.printCoordinates();
+			//Console.WriteLine("############################");
+			//Console.WriteLine("調査開始時の黒マス群リスト >> ");
+			//Tapa.printIsolationBlackBoxGroup();
+			//Console.WriteLine();
+			//Console.WriteLine("調査開始時の伸び代リスト >> ");
+			//Tapa.printCoordList(Tapa.edge_blackbox_coord_list);
+			//Console.WriteLine();
+			//Console.Write("残りid >> ");
+			//Tapa.box[co.x][co.y].printIdList();
+			//Console.WriteLine();
+			//Tapa.printBoard();
+			//Console.WriteLine();
 
-			// 孤立するidのid_listでの要素番号を保存する
+			// 孤立するidのid_listでの要素番号を保存するリスト
 			List<int> iso_id_ite_list = new List<int>();
 			for (int i = id_list.Count - 1; i >= 0; i--) {
 				PatternAroundNumBox.setPatternAroundNumBox(co, id_list[i]);
 
-				Console.WriteLine("臨時id設置後の黒マス群リスト >> ");
-				Tapa.printIsolationBlackBoxGroup();
-				Console.WriteLine();
-				Console.WriteLine("調査対象id >> " + id_list[i] + "\n");
-				Console.WriteLine();
-				Tapa.printBoard();
-				Console.WriteLine();
+				//Console.WriteLine("臨時id設置後の黒マス群リスト >> ");
+				//Tapa.printIsolationBlackBoxGroup();
+				//Console.WriteLine();
+				//Console.WriteLine("調査対象id >> " + id_list[i] + "\n");
+				//Console.WriteLine();
+				//Tapa.printBoard();
+				//Console.WriteLine();
 
 				// Tapa.printIsolationBlackBoxGroup();
 				// Console.WriteLine();
 				// Tapa.printBoard();
 				if (!Box.checkNotIsolationBlackBoxGroup()) {	// 盤面に孤立した黒マス群がないか調べる
+					
+					//Console.WriteLine("除外するid >> " + id_list[i]);
+					//Console.WriteLine();
+					
 					iso_id_ite_list.Add(i);
 				}
 				StateSave.setSavedState(save_point);
 
-				Console.WriteLine("元の黒マス群リストになっててほしい >> ");
-				Tapa.printIsolationBlackBoxGroup();
-				Console.WriteLine();
-				Console.WriteLine("残りid >> ");
-				Tapa.box[co.x][co.y].printIdList();
-				Console.WriteLine();
-				Tapa.printBoard();
-				Console.WriteLine();
+				//Console.WriteLine("元の黒マス群リストになっててほしい >> ");
+				//Tapa.printIsolationBlackBoxGroup();
+				//Console.WriteLine();
+				//Console.WriteLine("（idチェック後）元の伸び代リストになっててほしい >> ");
+				//Tapa.printCoordList(Tapa.edge_blackbox_coord_list);
+				//Console.WriteLine();
+				//Tapa.printBoard();
+				//Console.WriteLine();
 			}
 
 			// 孤立したidをid_listから削除
@@ -3446,7 +3452,10 @@ namespace Tapa
 				// id_list.RemoveAt(tmp_ite);
 				Tapa.box[co.x][co.y].id_list.RemoveAt(tmp_ite);
 			}
-			Console.WriteLine("############################\n");
+			//Console.Write("残りid >> ");
+			//Tapa.box[co.x][co.y].printIdList();
+			//Console.WriteLine();
+			//Console.WriteLine("############################\n");
 		}
 
 		/*********************************

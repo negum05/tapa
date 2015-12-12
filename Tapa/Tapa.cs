@@ -56,7 +56,7 @@ namespace Tapa
 			// 準備：数字マスにidのリストを追加
 			PatternAroundNumBox.preparePatternArroundNumBox();
 
-			for (int i = 1; i <= 1; i++) {
+			for (int i = 1; i <= 7; i++) {
 				// 数字マス周りのパターンを管理
 				PatternAroundNumBox.managePatternAroundNumBox();
 				Console.WriteLine("{0}回目：数字マス周りの処理後", i);

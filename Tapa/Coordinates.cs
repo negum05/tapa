@@ -28,10 +28,23 @@ namespace Tapa
 			this.x = co.x;
 			this.y = co.y;
 		}
-		
+
+		public override bool Equals(object obj)
+		{
+			if (obj == null || GetType() != obj.GetType()) { return false; }
+
+			Coordinates co = (Coordinates)obj;
+			return (this.x == co.x) && (this.y == co.y);
+		}
+
+		public override int GetHashCode()
+		{
+			return x ^ y;
+		}
+
 		// 出力用
 		public void printCoordinates() {
-			Console.Write(" (" + this.x + "," + this.y + ") ");
+			Console.Write(" (" + this.x + "," + this.y + ")" + Tapa.box[this.x][this.y].can_extend_blackbox + " ");
 		}
 	}
 }

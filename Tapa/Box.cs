@@ -25,7 +25,7 @@ namespace Tapa
 			get { return this.has_num; }
 			set
 			{
-				if (value == true) { this.Color = Box.WHITE; }			// 数字マスは白色
+				if (value) { this.Color = Box.WHITE; }			// 数字マスは白色
 				this.has_num = value;
 			}
 		}
@@ -38,25 +38,24 @@ namespace Tapa
 			set
 			{
 				// 異なる色に変更されそうになればインクリメント (id_listから色の確定するマスを探す際に使用)
-				if (this.color != value) { changed_count_in_search_confirm_box++; }	
+				if (this.color != value) { changed_count_in_search_confirm_box++; }
 				if (this.color == Box.NOCOLOR) {
 					this.color = value;
-					if (!during_clone) {	// クローン処理中はマスをリストに追加しない
-						// 白マスが塗られたことで伸び代がなくなった黒マスの伸び代フラグをオフにする。
-						if (!Box.during_make_inputbord && value == Box.WHITE) {
-							resetExtendableBlackBoxAroundWhiteBox(this.coord);
-						}
+					if (!during_clone && !Box.during_make_inputbord) {	// (クローン処理中 or 盤面入力中)はマスをリストに追加しない
 						// 塗る色が黒かつ伸び代があれば、伸び代のある黒マスリストに追加
-						else if (value == Box.BLACK) {
-							//Console.Write("Color:");
+						if (this.color == Box.BLACK) {
 							//this.coord.printCoordinates();
+							//Console.Write(" Color: " + this.color + " value:" + value);
 							//Console.Write("\n");
-							Box.divideBlackBoxToGroup(this.coord);	// 接している孤立した黒マス群に追加
 							if (canExtendBlackBox(this.coord)) {
 								this.can_extend_blackbox = true;
 								Tapa.edge_blackbox_coord_list.Add(this.coord);
 							}
+							// 接している一繋がりの黒マス群に追加/結合
+							Box.divideBlackBoxToGroup(this.coord);	
 						}
+						// 色の塗られたマスの上下左右の黒マスの伸び代をチェック/変更する
+						resetExtendableBlackBoxAround(this.coord);
 						Tapa.not_deployedbox_coord_list.Remove(this.coord);	// 未定マスリストから除外
 						if (Tapa.DEBUG_PRINT_PROCESS) {
 							this.coord.printCoordinates();
@@ -175,16 +174,16 @@ namespace Tapa
 		* co	: 白マスの座標
 		*   
 		* *******************************/
-		private static void resetExtendableBlackBoxAroundWhiteBox(Coordinates co)
+		private static void resetExtendableBlackBoxAround(Coordinates co)
 		{
 			// [浅いコピー]	上下左右のBoxのリスト
-				List<Box> around_box = new List<Box> {
+			List<Box> around_box = new List<Box> {
 				Tapa.box[co.x-1][co.y],		// 上
 				Tapa.box[co.x][co.y+1],		// 右
 				Tapa.box[co.x+1][co.y],		// 下
 				Tapa.box[co.x][co.y-1]		// 左
 			};
-			
+
 			foreach (Box tmp_box in around_box) {
 				// 伸び代のflagがオン、かつ四方のマスが配色済みなら、
 				// 伸び代のflagをオフにし、伸び代のある黒マスリストから除外する。
@@ -222,46 +221,58 @@ namespace Tapa
 			};
 
 			// 上下左右にある黒マスの座標リスト
-			List<Coordinates> arround_box_coord = new List<Coordinates>();
+			List<Coordinates> around_box_coord = new List<Coordinates>();
 			foreach (Box tmp_box in around_box) {
 				if (tmp_box.Color == Box.BLACK) {
-					arround_box_coord.Add(tmp_box.coord);
+					around_box_coord.Add(tmp_box.coord);
 				}
 			}
 
-			int count_arround_box_coord = arround_box_coord.Count;
+			//Console.Write("上下左右の黒マス >> ");
+			//Tapa.printCoordList(around_box_coord);
+
+			int count_arround_box_coord = around_box_coord.Count;
 			// 上下左右に黒マスがない場合、自身を新しい孤立した黒マス群としてリストに追加
 			if (count_arround_box_coord == 0) {
-				Tapa.isolation_blackboxes_group_list.Add(new List<Coordinates>(){ co });
+				Tapa.isolation_blackboxes_group_list.Add(new List<Coordinates>() { co });
 
-				//Console.Write("divide(孤立):");
+				//Console.Write("divide(孤立): " + count_arround_box_coord);
 				//co.printCoordinates();
 				//Console.Write("\n");
 			}
 			else {
-				//Console.Write("divide(結合):");
+				//Console.Write("divide(結合):" + count_arround_box_coord);
 				//co.printCoordinates();
 				//Console.Write("\n");
 
 				List<Coordinates> merged_group_list = new List<Coordinates>() { co };	// 結合したリストの保存用
-				// true:添字番目の黒マスのリストを結合済み（添字がarround_box_coordと対応）
+				// true:（上下左右の黒マスの）添字番目の黒マスのリストを結合済み（添字がarround_box_coordと対応）
 				bool[] was_checked_co = Enumerable.Repeat<bool>(false, count_arround_box_coord).ToArray();
-				
-				for (int ite_iso_group = Tapa.isolation_blackboxes_group_list.Count-1; ite_iso_group >= 0; ite_iso_group--) {
+
+				for (int ite_iso_group = Tapa.isolation_blackboxes_group_list.Count - 1; ite_iso_group >= 0; ite_iso_group--) {
 					for (int ite_arround_box = count_arround_box_coord - 1; ite_arround_box >= 0; ite_arround_box--) {
+						
+						//Console.Write("[1]");
+						//around_box_coord[ite_arround_box].printCoordinates();
+
 						if (!was_checked_co[ite_arround_box]
-							&& Tapa.isolation_blackboxes_group_list[ite_iso_group].Contains(arround_box_coord[ite_arround_box])) {
+							&& Tapa.isolation_blackboxes_group_list[ite_iso_group].Contains(around_box_coord[ite_arround_box])) {
+
+							//Console.Write("[2]");
+							//around_box_coord[ite_arround_box].printCoordinates();
+
 							// 新たに結合されるリストに孤立していた黒マス群を追加
 							merged_group_list.AddRange(new List<Coordinates>(Tapa.isolation_blackboxes_group_list[ite_iso_group]));
-							// 直前でmerged_group_listに追加した元のリストを孤立する黒マス群から削除
+							// 直前でmerged_group_listに追加したリストの元を孤立する黒マス群から削除
 							Tapa.isolation_blackboxes_group_list.RemoveAt(ite_iso_group);
 							// ite_arround_box番目の黒マスのリストを結合したのでtrueにする。
-							was_checked_co[ite_arround_box] = true;							
+							was_checked_co[ite_arround_box] = true;
 							break;
 						}
 					}
 				}
 				// 今回の結合で伸び代の無くなった黒マスを伸び代のある黒マスリストから除外
+				// resetExtendableBlackBoxAround(co);
 				for (int i = Tapa.edge_blackbox_coord_list.Count - 1; i >= 0; i--) {
 					Coordinates tmp_co = Tapa.edge_blackbox_coord_list[i];
 					if (!Box.canExtendBlackBox(tmp_co)) {
@@ -270,7 +281,7 @@ namespace Tapa
 					}
 				}
 				// 今回新たに結合された孤立した黒マスリストを、孤立した黒マス群リストに追加。
-				Tapa.isolation_blackboxes_group_list.Add(merged_group_list);	
+				Tapa.isolation_blackboxes_group_list.Add(new List<Coordinates>(merged_group_list));
 			}
 		}
 
@@ -468,9 +479,9 @@ namespace Tapa
 			Box ML = Tapa.box[co.x][co.y - 1];		// (左)		Middle-Left
 
 			if (TC.Color == Box.NOCOLOR) {	// 上マスが黒になると団子になるか
-				if( (ML.Color == Box.BLACK && TL.Color == Box.BLACK)
+				if ((ML.Color == Box.BLACK && TL.Color == Box.BLACK)
 					|| (TR.Color == Box.BLACK && MR.Color == Box.BLACK)) {
-						TC.Color = Box.WHITE;
+					TC.Color = Box.WHITE;
 				}
 			}
 			else if (MR.Color == Box.NOCOLOR) {	// 右マスが黒になると団子になるか
@@ -539,7 +550,7 @@ namespace Tapa
 					// Console.Write(" >> " + Tapa.box[tmp_co.x][tmp_co.y].can_extend_blackbox + "\n");
 					if (Tapa.box[tmp_co.x][tmp_co.y].can_extend_blackbox) {
 						is_not_iso = true;
-						break; 
+						break;
 					}
 				}
 				if (!is_not_iso) { return false; }

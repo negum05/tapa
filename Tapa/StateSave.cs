@@ -96,7 +96,7 @@ namespace Tapa
 					tmp_list.Add(new Coordinates(Tapa.isolation_blackboxes_group_list[i][j]));
 				}
 				tmp_iso_group_list.Add(new List<Coordinates>(tmp_list));
-				tmp_iso_group_list.Clear();
+				tmp_list.Clear();
 			}
 			return tmp_iso_group_list;
 		}
@@ -107,19 +107,25 @@ namespace Tapa
 		{
 			if (co_list == null) { return; }
 			Tapa.numbox_coord_list.Clear();
-			Tapa.numbox_coord_list = new List<Coordinates>(co_list);
+			foreach (Coordinates tmp_co in co_list) {
+				Tapa.numbox_coord_list.Add(new Coordinates(tmp_co));
+			}
 		}
 		public static void setSavedStateNotDeployedBoxCoordList(List<Coordinates> co_list)
 		{
 			if (co_list == null) { return; }
 			Tapa.not_deployedbox_coord_list.Clear();
-			Tapa.not_deployedbox_coord_list = new List<Coordinates>(co_list);
+			foreach (Coordinates tmp_co in co_list) {
+				Tapa.not_deployedbox_coord_list.Add(new Coordinates(tmp_co));
+			}
 		}
 		public static void setSavedStateEdgeBlackBoxCoordList(List<Coordinates> co_list)
 		{
 			if (co_list == null) { return; }
 			Tapa.edge_blackbox_coord_list.Clear();
-			Tapa.edge_blackbox_coord_list = new List<Coordinates>(co_list);
+			foreach (Coordinates tmp_co in co_list) {
+				Tapa.edge_blackbox_coord_list.Add(new Coordinates(tmp_co));
+			}
 		}
 		public static void setSavedStateBoard(List<List<Box>> saved_board)
 		{
@@ -143,13 +149,6 @@ namespace Tapa
 			List<List<Coordinates>> tmp_iso_group_list = new List<List<Coordinates>>();
 			int max_row = Tapa.isolation_blackboxes_group_list.Count;
 
-			// リストの中を確実に削除
-			//for(int i = max_row - 1; i >= 0; i--) {
-			//	for (int j = Tapa.isolation_blackboxes_group_list[i].Count - 1; j >= 0; j--) {
-			//		Tapa.isolation_blackboxes_group_list[i].RemoveAt(j);
-			//	}
-			//	Tapa.isolation_blackboxes_group_list.RemoveAt(i);
-			//}
 			Tapa.isolation_blackboxes_group_list.Clear();
 
 			for (int ite_iso_group_list = 0; ite_iso_group_list < saved_iso_group_list.Count; ite_iso_group_list++) {
