@@ -3430,16 +3430,16 @@ namespace Tapa
 					iso_id_ite_list.Add(i);
 				}
 				StateSave.setSavedState(save_point);
-
-				Console.WriteLine("元の黒マス群リストになっててほしい >> ");
-				Tapa.printIsolationBlackBoxGroup();
-				Console.WriteLine();
-				Console.WriteLine("残りid >> ");
-				Tapa.box[co.x][co.y].printIdList();
-				Console.WriteLine();
-				Tapa.printBoard();
-				Console.WriteLine();
 			}
+
+			Console.WriteLine("元の黒マス群リストになっててほしい >> ");
+			Tapa.printIsolationBlackBoxGroup();
+			Console.WriteLine();
+			Console.WriteLine("残りid >> ");
+			Tapa.box[co.x][co.y].printIdList();
+			Console.WriteLine();
+			Tapa.printBoard();
+			Console.WriteLine();
 
 			// 孤立したidをid_listから削除
 			foreach (int tmp_ite in iso_id_ite_list) {
