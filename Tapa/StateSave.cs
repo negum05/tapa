@@ -8,15 +8,15 @@ namespace Tapa
 {
 	class StateSave
 	{
-		public List<List<Box>> saved_box;
+		private List<List<Box>> saved_box;
 		// 呼びだされた時点での数字マスの座標のリスト
-		public List<Coordinates> saved_numbox_coord_list;
+		private List<Coordinates> saved_numbox_coord_list;
 		// 呼びだされた時点での未定マスの座標リスト
-		public List<Coordinates> saved_not_deployedbox_coord_list;
+		private List<Coordinates> saved_not_deployedbox_coord_list;
 		// 呼びだされた時点での伸び代のある黒マスの座標リスト
-		public List<Coordinates> saved_edge_blackbox_coord_list;
+		private List<Coordinates> saved_edge_blackbox_coord_list;
 		// 呼びだされた時点での一繋がりの黒マス群の座標リスト
-		public List<List<Coordinates>> saved_isolation_blackboxes_group_list;
+		private List<List<Coordinates>> saved_isolation_blackboxes_group_list;
 
 		/*********************************
 		 * 
@@ -52,7 +52,7 @@ namespace Tapa
 		}
 
 		/*** (begin) save ***/
-		public static List<Coordinates> getStateCoordList(List<Coordinates> coord_list)
+		private static List<Coordinates> getStateCoordList(List<Coordinates> coord_list)
 		{
 			if (coord_list == null) { return null; }
 			List<Coordinates> tmp_co_list = new List<Coordinates>();
@@ -62,7 +62,7 @@ namespace Tapa
 			}
 			return tmp_co_list;
 		}
-		public static List<List<Box>> getStateBoard()
+		private static List<List<Box>> getStateBoard()
 		{
 			if (Tapa.box == null) { return null; }
 
@@ -81,7 +81,7 @@ namespace Tapa
 			}
 			return tmp_board;
 		}
-		public static List<List<Coordinates>> getStateIsolationBlackBoxesGroupList()
+		private static List<List<Coordinates>> getStateIsolationBlackBoxesGroupList()
 		{
 			if (Tapa.isolation_blackboxes_group_list == null) { return null; }
 
@@ -103,7 +103,7 @@ namespace Tapa
 		/*** (end) save ***/
 
 		/*** (begin) set ***/
-		public static void setSavedStateNumBoxCoordList(List<Coordinates> co_list)
+		private static void setSavedStateNumBoxCoordList(List<Coordinates> co_list)
 		{
 			if (co_list == null) { return; }
 			Tapa.numbox_coord_list.Clear();
@@ -111,7 +111,7 @@ namespace Tapa
 				Tapa.numbox_coord_list.Add(new Coordinates(tmp_co));
 			}
 		}
-		public static void setSavedStateNotDeployedBoxCoordList(List<Coordinates> co_list)
+		private static void setSavedStateNotDeployedBoxCoordList(List<Coordinates> co_list)
 		{
 			if (co_list == null) { return; }
 			Tapa.not_deployedbox_coord_list.Clear();
@@ -119,7 +119,7 @@ namespace Tapa
 				Tapa.not_deployedbox_coord_list.Add(new Coordinates(tmp_co));
 			}
 		}
-		public static void setSavedStateEdgeBlackBoxCoordList(List<Coordinates> co_list)
+		private static void setSavedStateEdgeBlackBoxCoordList(List<Coordinates> co_list)
 		{
 			if (co_list == null) { return; }
 			Tapa.edge_blackbox_coord_list.Clear();
@@ -127,7 +127,7 @@ namespace Tapa
 				Tapa.edge_blackbox_coord_list.Add(new Coordinates(tmp_co));
 			}
 		}
-		public static void setSavedStateBoard(List<List<Box>> saved_board)
+		private static void setSavedStateBoard(List<List<Box>> saved_board)
 		{
 			if (saved_board == null) { return; }
 
@@ -141,7 +141,7 @@ namespace Tapa
 				}
 			}
 		}
-		public static void setSavedStateIsolationBlackBoxesGroupList(List<List<Coordinates>> saved_iso_group_list)
+		private static void setSavedStateIsolationBlackBoxesGroupList(List<List<Coordinates>> saved_iso_group_list)
 		{
 			if (Tapa.isolation_blackboxes_group_list.Count == 0) { return; }
 			if (saved_iso_group_list == null) { return; }

@@ -10,8 +10,8 @@ namespace Tapa
 {
 	class Box
 	{
-		public static readonly int NOCOLOR = -1;    // 色未定
-		public static readonly int WHITE = 0;       // 白色
+		public static readonly int NOCOLOR = 0;    // 色未定
+		public static readonly int WHITE = -1;       // 白色
 		public static readonly int BLACK = 1;       // 黒色
 
 		public static bool during_clone = false;	// true:クローン処理中
@@ -41,9 +41,12 @@ namespace Tapa
 				if (this.color != value) { changed_count_in_search_confirm_box++; }
 				if (this.color == Box.NOCOLOR) {
 					this.color = value;
+					Tapa.was_change_board = true;
 					if (!during_clone && !Box.during_make_inputbord) {	// (クローン処理中 or 盤面入力中)はマスをリストに追加しない
 						// 塗る色が黒かつ伸び代があれば、伸び代のある黒マスリストに追加
 						if (this.color == Box.BLACK) {
+							// 塗られたマス周りで黒マスの団子ができないよう白マスを配置
+							avoidDumpling(Tapa.box[this.coord.x][this.coord.y].coord);
 							//this.coord.printCoordinates();
 							//Console.Write(" Color: " + this.color + " value:" + value);
 							//Console.Write("\n");
@@ -52,7 +55,7 @@ namespace Tapa
 								Tapa.edge_blackbox_coord_list.Add(this.coord);
 							}
 							// 接している一繋がりの黒マス群に追加/結合
-							Box.divideBlackBoxToGroup(this.coord);	
+							Box.divideBlackBoxToGroup(this.coord);
 						}
 						// 色の塗られたマスの上下左右の黒マスの伸び代をチェック/変更する
 						resetExtendableBlackBoxAround(this.coord);
@@ -68,6 +71,7 @@ namespace Tapa
 			}
 		}
 		public bool can_extend_blackbox { get; set; }			// true:伸び代のある黒マス
+		public int id_not_deployedbox_group { get; set; }	// 一繋がりの未定マス群のid
 
 		public Box()
 		{
@@ -78,6 +82,7 @@ namespace Tapa
 			this.id_list = new List<byte>();
 			this.color = Box.NOCOLOR;
 			this.can_extend_blackbox = false;
+			this.id_not_deployedbox_group = 0;
 		}
 
 		public Box(Box origin_box)
@@ -94,6 +99,7 @@ namespace Tapa
 			}
 			this.color = origin_box.color;
 			this.can_extend_blackbox = origin_box.can_extend_blackbox;
+			this.id_not_deployedbox_group = origin_box.id_not_deployedbox_group;
 		}
 
 		/*********************************
@@ -107,6 +113,7 @@ namespace Tapa
 		 * id_list	: null
 		 * color	: Box.NOCOLOR
 		 * can_extend_blackbox	: false
+		 * id_not_deployedbox_group	: 0
 		 *   
 		 * *******************************/
 		public void clear()
@@ -118,6 +125,7 @@ namespace Tapa
 			this.id_list.Clear();
 			this.Color = Box.NOCOLOR;
 			this.can_extend_blackbox = false;
+			this.id_not_deployedbox_group = 0;
 		}
 
 		/*********************************
@@ -251,7 +259,7 @@ namespace Tapa
 
 				for (int ite_iso_group = Tapa.isolation_blackboxes_group_list.Count - 1; ite_iso_group >= 0; ite_iso_group--) {
 					for (int ite_arround_box = count_arround_box_coord - 1; ite_arround_box >= 0; ite_arround_box--) {
-						
+
 						//Console.Write("[1]");
 						//around_box_coord[ite_arround_box].printCoordinates();
 
@@ -363,14 +371,15 @@ namespace Tapa
 
 		/*********************************
 		* 
-		* 座標coのマスの上下左右にある未定マスの座標を返す。
-		* （上右下左の順に先に見つけた未定マスを返す。）
+		* 座標coのマスの上下左右にある未定マスの座標をリストで返す。
 		* 引数
 		* co	: マスの座標
 		*   
 		* *******************************/
-		private static Coordinates getNoColorBoxCoordinatesAround(Coordinates co)
+		private static List<Coordinates> getNoColorBoxCoordinatesAround(Coordinates co)
 		{
+			List<Coordinates> tmp_coord_list = new List<Coordinates>();
+
 			List<Box> around_box = new List<Box> {
 				Tapa.box[co.x-1][co.y],
 				Tapa.box[co.x][co.y+1],
@@ -381,12 +390,10 @@ namespace Tapa
 			// [色と定数の関係] Box.WHITE : 0	Box.BLACK : 1	Box.NOCOLOR : -1
 			foreach (Box tmp_box in around_box) {
 				if (tmp_box.Color == Box.NOCOLOR) {
-					return tmp_box.coord;
+					tmp_coord_list.Add(new Coordinates(tmp_box.coord));
 				}
 			}
-			Console.WriteLine("Error: getNoColorBoxCoordinatesAroundの引数の上下左右に未定マスが存在しません。");
-			Application.Exit();
-			return null;
+			return tmp_coord_list;
 		}
 
 		/*********************************
@@ -458,8 +465,7 @@ namespace Tapa
 		/*********************************
 		 * 
 		 * 黒マスが2*2の四角（団子、Dumpling）にならないように白マスを配置するメソッド
-		 * 
-		 * 黒マスの上下左右の未定マスに注目し、
+		 * 、
 		 * 黒マスの周囲8マスを見てその未定マスが黒になると団子になってしまう場合、
 		 * そのマスを白マスにする。
 		 * 引数
@@ -472,36 +478,62 @@ namespace Tapa
 			Box TL = Tapa.box[co.x - 1][co.y - 1];	// (左上)	Top-Left
 			Box TC = Tapa.box[co.x - 1][co.y];		// (上)		Top-Center
 			Box TR = Tapa.box[co.x - 1][co.y + 1];	// (右上)	Top-Right
+			Box ML = Tapa.box[co.x][co.y - 1];		// (左)		Middle-Left
+			Box MC = Tapa.box[co.x][co.y];			// (真ん中)	Middle-Center
 			Box MR = Tapa.box[co.x][co.y + 1];		// (右)		Middle-Right
 			Box BR = Tapa.box[co.x + 1][co.y + 1];	// (右下)	Bottom-Right
 			Box BC = Tapa.box[co.x + 1][co.y];		// (下)		Bottom-Center
 			Box BL = Tapa.box[co.x + 1][co.y - 1];	// (左下)	Bottom-Left
-			Box ML = Tapa.box[co.x][co.y - 1];		// (左)		Middle-Left
 
-			if (TC.Color == Box.NOCOLOR) {	// 上マスが黒になると団子になるか
-				if ((ML.Color == Box.BLACK && TL.Color == Box.BLACK)
-					|| (TR.Color == Box.BLACK && MR.Color == Box.BLACK)) {
-					TC.Color = Box.WHITE;
-				}
+			if (TL.Color + TC.Color + ML.Color + MC.Color == 3) {			// 左上
+				if (TL.Color == Box.NOCOLOR) { TL.Color = Box.WHITE; }
+				else if (TC.Color == Box.NOCOLOR) { TC.Color = Box.WHITE; }
+				else if (ML.Color == Box.NOCOLOR) { ML.Color = Box.WHITE; }
+				else if (MC.Color == Box.NOCOLOR) { MC.Color = Box.WHITE; }
 			}
-			else if (MR.Color == Box.NOCOLOR) {	// 右マスが黒になると団子になるか
-				if ((TC.Color == Box.BLACK && TR.Color == Box.BLACK)
-					|| (BR.Color == Box.BLACK && BC.Color == Box.BLACK)) {
-					MR.Color = Box.WHITE;
-				}
+			else if (TC.Color + TR.Color + MC.Color + MR.Color == 3) {		// 右上
+				if (TC.Color == Box.NOCOLOR) { TC.Color = Box.WHITE; }
+				else if (TR.Color == Box.NOCOLOR) { TR.Color = Box.WHITE; }
+				else if (MC.Color == Box.NOCOLOR) { MC.Color = Box.WHITE; }
+				else if (MR.Color == Box.NOCOLOR) { MR.Color = Box.WHITE; }
 			}
-			else if (BC.Color == Box.NOCOLOR) {	// 下マスが黒になると団子になるか
-				if ((MR.Color == Box.BLACK && BR.Color == Box.BLACK)
-					|| (BL.Color == Box.BLACK && ML.Color == Box.BLACK)) {
-					BC.Color = Box.WHITE;
-				}
+			else if (ML.Color + MC.Color + BL.Color + BC.Color == 3) {		// 左下
+				if (ML.Color == Box.NOCOLOR) { ML.Color = Box.WHITE; }
+				else if (MC.Color == Box.NOCOLOR) { MC.Color = Box.WHITE; }
+				else if (BL.Color == Box.NOCOLOR) { BL.Color = Box.WHITE; }
+				else if (BC.Color == Box.NOCOLOR) { BC.Color = Box.WHITE; }
 			}
-			else if (ML.Color == Box.NOCOLOR) {	// 左マスが黒になると団子になるか
-				if ((BC.Color == Box.BLACK && BL.Color == Box.BLACK)
-					|| (TL.Color == Box.BLACK && TC.Color == Box.BLACK)) {
-					ML.Color = Box.WHITE;
-				}
+			else if (MC.Color + MR.Color + BC.Color + BR.Color == 3) {		// 右下
+				if (MC.Color == Box.NOCOLOR) { MC.Color = Box.WHITE; }
+				else if (MR.Color == Box.NOCOLOR) { MR.Color = Box.WHITE; }
+				else if (BC.Color == Box.NOCOLOR) { BC.Color = Box.WHITE; }
+				else if (BR.Color == Box.NOCOLOR) { BR.Color = Box.WHITE; }
 			}
+
+			//if (TC.Color == Box.NOCOLOR) {	// 上マスが黒になると団子になるか
+			//	if ((ML.Color == Box.BLACK && TL.Color == Box.BLACK)
+			//		|| (TR.Color == Box.BLACK && MR.Color == Box.BLACK)) {
+			//		TC.Color = Box.WHITE;
+			//	}
+			//}
+			//else if (MR.Color == Box.NOCOLOR) {	// 右マスが黒になると団子になるか
+			//	if ((TC.Color == Box.BLACK && TR.Color == Box.BLACK)
+			//		|| (BR.Color == Box.BLACK && BC.Color == Box.BLACK)) {
+			//		MR.Color = Box.WHITE;
+			//	}
+			//}
+			//else if (BC.Color == Box.NOCOLOR) {	// 下マスが黒になると団子になるか
+			//	if ((MR.Color == Box.BLACK && BR.Color == Box.BLACK)
+			//		|| (BL.Color == Box.BLACK && ML.Color == Box.BLACK)) {
+			//		BC.Color = Box.WHITE;
+			//	}
+			//}
+			//else if (ML.Color == Box.NOCOLOR) {	// 左マスが黒になると団子になるか
+			//	if ((BC.Color == Box.BLACK && BL.Color == Box.BLACK)
+			//		|| (TL.Color == Box.BLACK && TC.Color == Box.BLACK)) {
+			//		ML.Color = Box.WHITE;
+			//	}
+			//}
 		}
 
 		/*********************************
@@ -513,7 +545,7 @@ namespace Tapa
 		 * *******************************/
 		private static void extendIsolationBlackBoxGroup()
 		{
-			for (int ite_iso_group_list = Tapa.isolation_blackboxes_group_list.Count - 1; ite_iso_group_list >= 0; ite_iso_group_list--) {
+			for (int ite_iso_group_list = 0; ite_iso_group_list < Tapa.isolation_blackboxes_group_list.Count; ite_iso_group_list++) {
 				List<Coordinates> tmp_iso_group = Tapa.isolation_blackboxes_group_list[ite_iso_group_list];
 				int count_extendable_blackbox = 0;						// 孤立した黒マス群にある伸び代のある黒マスの数
 				Coordinates last_extendable_coord = new Coordinates();	// 孤立した黒マス群にある伸び代のある黒マスの内、リストの最も後ろにある座標。
@@ -527,8 +559,9 @@ namespace Tapa
 				// かつその黒マスの周りに未定のマスが1つだけの場合、その未定マスを黒に塗る。
 				if (count_extendable_blackbox == 1 && Box.countNoColorBoxAround(last_extendable_coord) == 1) {
 					// 未定マスの座標を取得
-					Coordinates undeployed_coord = Box.getNoColorBoxCoordinatesAround(last_extendable_coord);
-					Tapa.box[undeployed_coord.x][undeployed_coord.y].Color = Box.BLACK;
+					List<Coordinates> around_undeployed_coord = Box.getNoColorBoxCoordinatesAround(last_extendable_coord);
+					Tapa.box[around_undeployed_coord[0].x][around_undeployed_coord[0].y].Color = Box.BLACK;
+					extendIsolationBlackBoxGroup();
 				}
 			}
 		}
@@ -558,6 +591,106 @@ namespace Tapa
 			return true;
 		}
 
+
+		 /*********************************
+		 * 
+		 * 隣り合った未定マスをリストにして返す。
+		 * 引数
+		 * notdeployed_id	: 未定マス群毎に振り分けられたid
+		 * co	: 未定マスの座標
+		 * remaining_not_deployedbox_list	: 一繋がりの未定マス群に登録されていない未定マスリスト
+		 *   
+		 * *******************************/
+		private static List<Coordinates> uniteAdjacentNotDeployedBox(int notdeployed_id, Coordinates co, List<Coordinates> remaining_not_deployedbox_list)
+		{
+			// 未定マス群のidを登録
+			Tapa.box[co.x][co.y].id_not_deployedbox_group = notdeployed_id;
+			// 自身の入ったリスト
+			List<Coordinates> tmp_coord_list = new List<Coordinates> { co };
+			// 一繋がりの未定マス群に登録されていない未定マスリストから自身を除外
+			remaining_not_deployedbox_list.Remove(co);
+
+			// 上下左右のマス
+			List<Box> adjacent_box_list = new List<Box> {
+				Tapa.box[co.x - 1][co.y],
+				Tapa.box[co.x][co.y + 1],
+				Tapa.box[co.x + 1][co.y],
+				Tapa.box[co.x][co.y - 1]
+			};
+
+			foreach (Box tmp_box in adjacent_box_list) {
+				if (tmp_box.Color == Box.NOCOLOR && remaining_not_deployedbox_list.Contains(tmp_box.coord)) {
+					tmp_coord_list.AddRange(
+						uniteAdjacentNotDeployedBox(notdeployed_id, tmp_box.coord, remaining_not_deployedbox_list));
+				}
+			}
+
+			return tmp_coord_list;
+		}
+
+		/*********************************
+		* 
+		* 一繋がりの未定マス群のリストを作成する
+		*   
+		* *******************************/
+		private static void divideNotDeployedBoxToGroup()
+		{
+			// 未定マス群リストをリセット
+			Tapa.isolation_not_deployedbox_group_list.Clear();
+			// 未定マスのリストをコピー
+			List<Coordinates> remaining_not_deployedbox_list = new List<Coordinates>(Tapa.not_deployedbox_coord_list);
+
+			for (int i = 0; i < remaining_not_deployedbox_list.Count; i++) {
+				Tapa.isolation_not_deployedbox_group_list.Add(
+					uniteAdjacentNotDeployedBox(i, remaining_not_deployedbox_list[i], remaining_not_deployedbox_list));
+			}
+		}
+
+		/*********************************
+		 * 
+		 * 黒マス群のうち、ある未定マス群に接している黒マスが1つ
+		 * かつ接している辺が1つのみのとき、接している未定マスを黒マスにする。
+		 * 
+		 * *******************************/
+		private static void extendBlackBoxOnlyOneAdjacentIsolationNotDeployedBoxGroup()
+		{
+			// 一繋がりの未定マス群（not_deployedbox_group）の数
+			int ndbg_size = Tapa.isolation_not_deployedbox_group_list.Count;
+
+			for (int i = 0; i < Tapa.isolation_not_deployedbox_group_list.Count; i++ ) {
+				List<Coordinates> tmp_bb_coord_list = Tapa.isolation_blackboxes_group_list[i];
+				// 今回調べている一繋がりの黒マス群と接している未定マスを保存するリスト
+				List<Coordinates> local_adjacent_not_deployedbox_list = new List<Coordinates>();
+				int[] count_adjacent_group = new int[ndbg_size];
+				for (int j = 0; j < tmp_bb_coord_list.Count; j++ ) {
+					Coordinates tmp_bb_coord = tmp_bb_coord_list[j];
+					if (Tapa.box[tmp_bb_coord.x][tmp_bb_coord.y].can_extend_blackbox) {
+						// 上下左右にある未定マスをリストで取得
+						List<Coordinates> around_not_deployedcoord_list = Box.getNoColorBoxCoordinatesAround(tmp_bb_coord);
+						// 接している未定マスを追加
+						local_adjacent_not_deployedbox_list.AddRange(new List<Coordinates>(around_not_deployedcoord_list));
+						// 黒マスに接している未定マス群の数を種類別に（重複も含め）数える
+						foreach (Coordinates tmp_around_not_coord in around_not_deployedcoord_list) {
+							count_adjacent_group[
+								Tapa.box[tmp_around_not_coord.x][tmp_around_not_coord.y].id_not_deployedbox_group]++;
+						}
+					}
+				}
+				// 接している種類別の未定マス群の数を見る
+				for (int k = 0; k < count_adjacent_group.Count(); k++) {
+					if (count_adjacent_group[k] == 1) {
+						foreach (Coordinates tmp_co in local_adjacent_not_deployedbox_list) {
+							if (Tapa.box[tmp_co.x][tmp_co.y].id_not_deployedbox_group == k) {
+								Tapa.box[tmp_co.x][tmp_co.y].Color = Box.BLACK;
+								// 一箇所黒色になったら、このメソッドの処理を初めから行う
+								extendBlackBoxOnlyOneAdjacentIsolationNotDeployedBoxGroup();
+							}
+						}
+					}
+				}
+			}
+		}
+
 		/*********************************
 		 * 
 		 * 黒マス周りの処理
@@ -566,16 +699,26 @@ namespace Tapa
 		public static void manageBlackBox()
 		{
 			Tapa.NOW_STATE_PROCESS = Tapa.STATE_AVOID_DUMPLING_AROUND_BLACK_BOX;
-			for (int ite_coord = Tapa.edge_blackbox_coord_list.Count - 1; ite_coord >= 0; ite_coord--) {
-				Coordinates tmp_co = Tapa.edge_blackbox_coord_list[ite_coord];	// ###浅いコピー
-				if (Tapa.box[tmp_co.x][tmp_co.y].Color != Box.BLACK) {
-					Console.WriteLine("Error: 黒マスでないマスがedge_blackbox_coord_listに入っています ({0},{1})", tmp_co.x, tmp_co.y);
-				}
-				avoidDumpling(tmp_co);
-			}
+
+			//for (int ite_coord = 0; ite_coord < Tapa.edge_blackbox_coord_list.Count; ite_coord++) {
+			//	Coordinates tmp_co = Tapa.edge_blackbox_coord_list[ite_coord];	// ###浅いコピー
+			//	if (Tapa.box[tmp_co.x][tmp_co.y].Color != Box.BLACK) {
+			//		Console.WriteLine("Error: 黒マスでないマスがedge_blackbox_coord_listに入っています ({0},{1})", tmp_co.x, tmp_co.y);
+			//	}
+			//	avoidDumpling(tmp_co);
+			//}
+
 			// 孤立した黒マス群のリストを見て、伸び代が1つしかない黒マス群があればそこを黒に塗る。
 			Tapa.NOW_STATE_PROCESS = Tapa.STATE_ISOLATION_BLACK_BOXES_ONLY_EXTENDABLE;
 			extendIsolationBlackBoxGroup();
+
+			// 数字周り、黒マス周りの処理で一度もマス色が変化しなかった場合
+			if (!Tapa.was_change_board) {
+				// 一繋がりの未定マス群リストを作成する
+				divideNotDeployedBoxToGroup();
+				// 黒マス群がある未定マス群に一箇所のみ接していた場合、そこに黒マスを伸ばす
+				extendBlackBoxOnlyOneAdjacentIsolationNotDeployedBoxGroup();
+			}
 		}
 
 		// 1000 ~ 9999 の乱数を返す

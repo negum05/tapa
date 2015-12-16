@@ -44,7 +44,7 @@ namespace Tapa
 
 		// 出力用
 		public void printCoordinates() {
-			Console.Write(" (" + this.x + "," + this.y + ")" + Tapa.box[this.x][this.y].can_extend_blackbox + " ");
+			Console.Write(" (" + this.x + "," + this.y + ") ");
 		}
 	}
 }

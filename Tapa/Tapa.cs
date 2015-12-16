@@ -16,6 +16,8 @@ namespace Tapa
 		public static List<Coordinates> numbox_coord_list = new List<Coordinates>();
 		// 未定マスの座標リスト
 		public static List<Coordinates> not_deployedbox_coord_list = new List<Coordinates>();
+		// 一繋がりの未定マス群の座標リスト
+		public static List<List<Coordinates>> isolation_not_deployedbox_group_list = new List<List<Coordinates>>();
 		// 伸び代のある黒マスの座標リスト
 		public static List<Coordinates> edge_blackbox_coord_list = new List<Coordinates>();
 		// 一繋がりの黒マス群の座標リスト
@@ -32,7 +34,7 @@ namespace Tapa
 		public static int MAX_BOARD_ROW = 0;
 		public static int MAX_BOARD_COL = 0;
 
-
+		public static bool was_change_board;
 
 		/// <summary>
 		/// アプリケーションのメイン エントリ ポイントです。
@@ -56,13 +58,15 @@ namespace Tapa
 			// 準備：数字マスにidのリストを追加
 			PatternAroundNumBox.preparePatternArroundNumBox();
 
-			for (int i = 1; i <= 7; i++) {
+
+			for (int i = 1; i <= 5; i++) {
+				was_change_board = false;
 				// 数字マス周りのパターンを管理
 				PatternAroundNumBox.managePatternAroundNumBox();
 				Console.WriteLine("{0}回目：数字マス周りの処理後", i);
 				Tapa.printBoard();
 				Console.WriteLine();
-				//Tapa.printIsolationBlackBoxGroup();
+				//Tapa.printCoordList(Tapa.edge_blackbox_coord_list);
 				//Console.WriteLine();
 
 				// 伸び代のある黒マスから、黒マスが伸びないかを見て、可能なら実際に伸ばす。
@@ -70,9 +74,13 @@ namespace Tapa
 				Console.WriteLine("{0}回目：黒マス関係の処理後", i);
 				Tapa.printBoard();
 				Console.WriteLine();
-				//Tapa.printIsolationBlackBoxGroup();
+				//Tapa.printCoordList(Tapa.edge_blackbox_coord_list);
 				//Console.WriteLine();
+				if (!was_change_board) { break; }
 			}
+
+			printMultiCoordList(Tapa.isolation_not_deployedbox_group_list);
+			return;
 
 			/*
 			// boxとsaveの参照確認用（一方の変化が他方に影響しないことを確認）
@@ -312,12 +320,12 @@ namespace Tapa
 
 		/*********************************
 		 * 
-		 *   一繋がりの黒マス群リストの出力
+		 *   Coordinates型の2次元リストを出力
 		 *  
 		 * *******************************/
-		public static void printIsolationBlackBoxGroup()
+		public static void printMultiCoordList(List<List<Coordinates>> multi_coord_list)
 		{
-			foreach (List<Coordinates> tmp_coord_list in Tapa.isolation_blackboxes_group_list) {
+			foreach (List<Coordinates> tmp_coord_list in multi_coord_list) {
 				foreach (Coordinates tmp_coord in tmp_coord_list) {
 					tmp_coord.printCoordinates();
 				}
