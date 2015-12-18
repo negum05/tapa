@@ -360,7 +360,7 @@ namespace Tapa
 			};
 
 			int count = 0;
-			// [色と定数の関係] Box.WHITE : 0	Box.BLACK : 1	Box.NOCOLOR : -1
+			// [色と定数の関係] Box.WHITE : -1	Box.BLACK : 1	Box.NOCOLOR : 0
 			foreach (int tmp_color in around_colors) {
 				if (tmp_color == Box.NOCOLOR) {
 					count++;
@@ -387,7 +387,7 @@ namespace Tapa
 				Tapa.box[co.x][co.y-1]
 			};
 
-			// [色と定数の関係] Box.WHITE : 0	Box.BLACK : 1	Box.NOCOLOR : -1
+			// [色と定数の関係] Box.WHITE : -1	Box.BLACK : 1	Box.NOCOLOR : 0
 			foreach (Box tmp_box in around_box) {
 				if (tmp_box.Color == Box.NOCOLOR) {
 					tmp_coord_list.Add(new Coordinates(tmp_box.coord));
@@ -414,6 +414,24 @@ namespace Tapa
 				&& Tapa.box[co.x][co.y + 1].Color != Box.NOCOLOR	// 右のマス色
 				&& Tapa.box[co.x + 1][co.y].Color != Box.NOCOLOR	// 下のマス色
 				&& Tapa.box[co.x][co.y - 1].Color != Box.NOCOLOR) {	// 左のマス色
+				return false;
+			}
+			return true;
+		}
+
+		/*********************************
+		 * 
+		 * 座標coのマスの上下左右に１つでも黒マスがあればtrueを返す。
+		 * 引数
+		 * co	: 黒マスの座標
+		 *   
+		 * *******************************/
+		public static bool existBlackBoxAround(Coordinates co)
+		{
+			if (Tapa.box[co.x - 1][co.y].Color != Box.BLACK		// 上のマス色
+				&& Tapa.box[co.x][co.y + 1].Color != Box.BLACK	// 右のマス色
+				&& Tapa.box[co.x + 1][co.y].Color != Box.BLACK	// 下のマス色
+				&& Tapa.box[co.x][co.y - 1].Color != Box.BLACK) {	// 左のマス色
 				return false;
 			}
 			return true;
@@ -591,6 +609,25 @@ namespace Tapa
 			return true;
 		}
 
+		/*********************************
+		 * 
+		 * 盤面に黒マスの団子がないか調べる
+		 * true		: ない
+		 * false	: ある
+		 *   
+		 * *******************************/
+		public static bool checkNotDumplingBlackBox()
+		{
+			foreach (List<Coordinates> tmp_coord_list in Tapa.isolation_blackboxes_group_list) {
+				foreach (Coordinates tmp_coord in tmp_coord_list) {
+					if(Tapa.box[tmp_coord.x-1][tmp_coord.y-1].Color
+						+ Tapa.box[tmp_coord.x-1][tmp_coord.y].Color
+						+ Tapa.box[tmp_coord.x][tmp_coord.y].Color
+						+ Tapa.box[tmp_coord.x][tmp_coord.y - 1].Color == 4) { return false; }
+				}
+			}
+			return true;
+		}
 
 		 /*********************************
 		 * 
@@ -657,7 +694,7 @@ namespace Tapa
 			// 一繋がりの未定マス群（not_deployedbox_group）の数
 			int ndbg_size = Tapa.isolation_not_deployedbox_group_list.Count;
 
-			for (int i = 0; i < Tapa.isolation_not_deployedbox_group_list.Count; i++ ) {
+			for (int i = 0; i < Tapa.isolation_blackboxes_group_list.Count; i++ ) {
 				List<Coordinates> tmp_bb_coord_list = Tapa.isolation_blackboxes_group_list[i];
 				// 今回調べている一繋がりの黒マス群と接している未定マスを保存するリスト
 				List<Coordinates> local_adjacent_not_deployedbox_list = new List<Coordinates>();

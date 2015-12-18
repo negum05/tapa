@@ -12,7 +12,7 @@ namespace Tapa
 	{
 		// 盤面の全てのマス
 		public static List<List<Box>> box = new List<List<Box>>();
-		// 数字マスの座標のリスト
+		// idの残っている数字マスの座標のリスト
 		public static List<Coordinates> numbox_coord_list = new List<Coordinates>();
 		// 未定マスの座標リスト
 		public static List<Coordinates> not_deployedbox_coord_list = new List<Coordinates>();
@@ -22,6 +22,7 @@ namespace Tapa
 		public static List<Coordinates> edge_blackbox_coord_list = new List<Coordinates>();
 		// 一繋がりの黒マス群の座標リスト
 		public static List<List<Coordinates>> isolation_blackboxes_group_list = new List<List<Coordinates>>();
+		
 		public static bool DEBUG = false;
 		public static bool DEBUG_PRINT_PROCESS = false;
 
@@ -79,7 +80,23 @@ namespace Tapa
 				if (!was_change_board) { break; }
 			}
 
+			BackTrack backtrack = new BackTrack();
+			backtrack.doBackTrack();
+
+			StateSave.setSavedState(BackTrack.correct_save_point);
+			printBoard();
+
+			Console.WriteLine("深さ >> " + BackTrack.min_depth);
+			Console.WriteLine("notdeployedbox_list >> " + Tapa.not_deployedbox_coord_list.Count);
+			Console.WriteLine("numbox_coord_list >> " + Tapa.numbox_coord_list.Count);
+			Console.WriteLine("edge_blackbox_coordlist >> " + Tapa.edge_blackbox_coord_list.Count);
+			Console.WriteLine("isolation_blackboxes_group_list >> " + Tapa.isolation_blackboxes_group_list.Count);
+
 			printMultiCoordList(Tapa.isolation_not_deployedbox_group_list);
+
+			if (isCorrectAnswer()) { Console.WriteLine("正解！！"); }
+			else { Console.WriteLine("不正解"); }
+
 			return;
 
 			/*
@@ -345,6 +362,24 @@ namespace Tapa
 				Console.Write(" ");
 			}
 			Console.WriteLine();
+		}
+
+		/*********************************
+		 * 
+		 *   盤面がTapaの解答として正しいか返す
+		 *   true	:	正しい
+		 *   false	:	正しくない
+		 *  
+		 * *******************************/
+		public static bool isCorrectAnswer()
+		{
+			if(Tapa.not_deployedbox_coord_list.Count == 0			// 未定マスがない
+				&& Tapa.numbox_coord_list.Count == 0				// idが一意に定まらなかった数字マスがない
+				&& Tapa.isolation_blackboxes_group_list.Count == 1	// 黒マスが一繋がり
+				&& Box.checkNotDumplingBlackBox() ) {				// 黒マスの団子がない
+					return true;
+			}
+			return false;
 		}
 
 		/*********************************

@@ -3543,11 +3543,7 @@ namespace Tapa
 						Tapa.box[tmp_co.x][tmp_co.y].id_list.RemoveAt(ite_id);
 					}
 				}
-				// id_listのうち、孤立する黒マス群を作るidを除外（id_listごとに処理したほうが効率的）
-				excludeIdToMakeIsolationBlackBoxGroup(tmp_co, Tapa.box[tmp_co.x][tmp_co.y].id_list);
-				// id_listのうち、idを配置して別の数字マスのid_listの大きさが0になるようなidを除外する。
-				excludeIdToKillOtherNameBoxAllId(tmp_co, Tapa.box[tmp_co.x][tmp_co.y].id_list);
-
+				
 				// id_listが一意ならそれを配置して数字マスリストから除外
 				Tapa.NOW_STATE_PROCESS = Tapa.STATE_ID_LIST_ONLY_ONE;
 				if (Tapa.box[tmp_co.x][tmp_co.y].id_list.Count == 1) {
@@ -3564,6 +3560,11 @@ namespace Tapa
 				// tmp_coのid_listを見て数字周りで色が確定しているマスを埋める。
 				Tapa.NOW_STATE_PROCESS = Tapa.STATE_CONFIRM_BOX_COLOR_FROM_ID_LIST;
 				setConfirmBoxArroundNumBox(tmp_co);
+
+				// id_listのうち、孤立する黒マス群を作るidを除外（id_listごとに処理したほうが効率的）
+				excludeIdToMakeIsolationBlackBoxGroup(tmp_co, Tapa.box[tmp_co.x][tmp_co.y].id_list);
+				// id_listのうち、idを配置して別の数字マスのid_listの大きさが0になるようなidを除外する。
+				excludeIdToKillOtherNameBoxAllId(tmp_co, Tapa.box[tmp_co.x][tmp_co.y].id_list);
 			}
 		}
 	}

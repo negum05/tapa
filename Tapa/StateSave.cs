@@ -8,7 +8,7 @@ namespace Tapa
 {
 	class StateSave
 	{
-		private List<List<Box>> saved_box;
+		public List<List<Box>> saved_box;
 		// 呼びだされた時点での数字マスの座標のリスト
 		private List<Coordinates> saved_numbox_coord_list;
 		// 呼びだされた時点での未定マスの座標リスト
@@ -17,6 +17,29 @@ namespace Tapa
 		private List<Coordinates> saved_edge_blackbox_coord_list;
 		// 呼びだされた時点での一繋がりの黒マス群の座標リスト
 		private List<List<Coordinates>> saved_isolation_blackboxes_group_list;
+
+		public StateSave()
+		{
+			List<List<Box>> saved_box = new List<List<Box>>();
+			List<Coordinates> saved_numbox_coord_list = new List<Coordinates>();
+			List<Coordinates> saved_not_deployedbox_coord_list = new List<Coordinates>();
+			List<Coordinates> saved_edge_blackbox_coord_list = new List<Coordinates>();
+			List<List<Coordinates>> saved_isolation_blackboxes_group_list = new List<List<Coordinates>>();
+		}
+		public StateSave(StateSave origin_state)
+		{
+			// 引数の盤面の全てのマス
+			this.saved_box = StateSave.getStateBoard(origin_state.saved_box);
+			// 引数の数字マスの座標のリスト
+			this.saved_numbox_coord_list = StateSave.getStateCoordList(origin_state.saved_numbox_coord_list);
+			// 引数の未定マスの座標リスト
+			this.saved_not_deployedbox_coord_list = StateSave.getStateCoordList(origin_state.saved_not_deployedbox_coord_list);
+			// 引数の伸び代のある黒マスの座標リスト
+			this.saved_edge_blackbox_coord_list = StateSave.getStateCoordList(origin_state.saved_edge_blackbox_coord_list);
+			// 呼びだされた時点での一繋がりの黒マス群の座標リスト
+			this.saved_isolation_blackboxes_group_list
+				= StateSave.getStateIsolationBlackBoxesGroupList(origin_state.saved_isolation_blackboxes_group_list);
+		}
 
 		/*********************************
 		 * 
@@ -28,13 +51,13 @@ namespace Tapa
 			// 呼びだされた時点での盤面の全てのマス
 			save_point.saved_box = StateSave.getStateBoard();
 			// 呼びだされた時点での数字マスの座標のリスト
-			save_point.saved_numbox_coord_list = getStateCoordList(Tapa.numbox_coord_list);
+			save_point.saved_numbox_coord_list = StateSave.getStateCoordList(Tapa.numbox_coord_list);
 			// 呼びだされた時点での未定マスの座標リスト
-			save_point.saved_not_deployedbox_coord_list = getStateCoordList(Tapa.not_deployedbox_coord_list);
+			save_point.saved_not_deployedbox_coord_list = StateSave.getStateCoordList(Tapa.not_deployedbox_coord_list);
 			// 呼びだされた時点での伸び代のある黒マスの座標リスト
-			save_point.saved_edge_blackbox_coord_list = getStateCoordList(Tapa.edge_blackbox_coord_list);
+			save_point.saved_edge_blackbox_coord_list = StateSave.getStateCoordList(Tapa.edge_blackbox_coord_list);
 			// 呼びだされた時点での一繋がりの黒マス群の座標リスト
-			save_point.saved_isolation_blackboxes_group_list = getStateIsolationBlackBoxesGroupList();
+			save_point.saved_isolation_blackboxes_group_list = StateSave.getStateIsolationBlackBoxesGroupList();
 		}
 
 		/*********************************
@@ -62,9 +85,11 @@ namespace Tapa
 			}
 			return tmp_co_list;
 		}
-		private static List<List<Box>> getStateBoard()
+		private static List<List<Box>> getStateBoard(List<List<Box>> origin_board = null)
 		{
-			if (Tapa.box == null) { return null; }
+			List<List<Box>> copy_target;
+			if (origin_board == null) { copy_target = new List<List<Box>>(Tapa.box); }
+			else { copy_target = new List<List<Box>>(origin_board); }
 
 			List<List<Box>> tmp_board = new List<List<Box>>();
 
@@ -74,20 +99,23 @@ namespace Tapa
 			for (int i = 0; i < max_row; i++) {
 				List<Box> tmp_list = new List<Box>();
 				for (int j = 0; j < max_col; j++) {
-					tmp_list.Add(new Box(Tapa.box[i][j]));
+					tmp_list.Add(new Box(copy_target[i][j]));
 				}
 				tmp_board.Add(new List<Box>(tmp_list));
 				tmp_list.Clear();
 			}
 			return tmp_board;
 		}
-		private static List<List<Coordinates>> getStateIsolationBlackBoxesGroupList()
+		private static List<List<Coordinates>> getStateIsolationBlackBoxesGroupList(
+			List<List<Coordinates>> origin_multi_coord_list = null)
 		{
-			if (Tapa.isolation_blackboxes_group_list == null) { return null; }
+			List<List<Coordinates>> copy_target;
+			if (origin_multi_coord_list == null) { copy_target = new List<List<Coordinates>>(Tapa.isolation_blackboxes_group_list); }
+			else { copy_target = new List<List<Coordinates>>(Tapa.isolation_blackboxes_group_list); }
 
 			List<List<Coordinates>> tmp_iso_group_list = new List<List<Coordinates>>();
 
-			int max_row = Tapa.isolation_blackboxes_group_list.Count;
+			int max_row = copy_target.Count;
 			// if (max_row == 0) { return null; }
 			// 要素ごとにaddする (インスタンスができる)
 			for (int i = 0; i < max_row; i++) {
