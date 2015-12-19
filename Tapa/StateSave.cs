@@ -111,17 +111,16 @@ namespace Tapa
 		{
 			List<List<Coordinates>> copy_target;
 			if (origin_multi_coord_list == null) { copy_target = new List<List<Coordinates>>(Tapa.isolation_blackboxes_group_list); }
-			else { copy_target = new List<List<Coordinates>>(Tapa.isolation_blackboxes_group_list); }
+			else { copy_target = new List<List<Coordinates>>(origin_multi_coord_list); }
 
 			List<List<Coordinates>> tmp_iso_group_list = new List<List<Coordinates>>();
 
-			int max_row = copy_target.Count;
 			// if (max_row == 0) { return null; }
 			// 要素ごとにaddする (インスタンスができる)
-			for (int i = 0; i < max_row; i++) {
+			for (int i = 0; i < copy_target.Count; i++) {
 				List<Coordinates> tmp_list = new List<Coordinates>();
-				for (int j = 0; j < Tapa.isolation_blackboxes_group_list[i].Count; j++) {
-					tmp_list.Add(new Coordinates(Tapa.isolation_blackboxes_group_list[i][j]));
+				for (int j = 0; j < copy_target[i].Count; j++) {
+					tmp_list.Add(new Coordinates(copy_target[i][j]));
 				}
 				tmp_iso_group_list.Add(new List<Coordinates>(tmp_list));
 				tmp_list.Clear();

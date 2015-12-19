@@ -695,10 +695,10 @@ namespace Tapa
 			int ndbg_size = Tapa.isolation_not_deployedbox_group_list.Count;
 
 			for (int i = 0; i < Tapa.isolation_blackboxes_group_list.Count; i++ ) {
-				List<Coordinates> tmp_bb_coord_list = Tapa.isolation_blackboxes_group_list[i];
+				List<Coordinates> tmp_bb_coord_list = new List<Coordinates>(Tapa.isolation_blackboxes_group_list[i]);
 				// 今回調べている一繋がりの黒マス群と接している未定マスを保存するリスト
 				List<Coordinates> local_adjacent_not_deployedbox_list = new List<Coordinates>();
-				int[] count_adjacent_group = new int[ndbg_size];
+				int[] count_adjacent_group = Enumerable.Repeat<int>(0, ndbg_size + 1).ToArray();	// 未定マス領域の種類の長さをもった配列
 				for (int j = 0; j < tmp_bb_coord_list.Count; j++ ) {
 					Coordinates tmp_bb_coord = tmp_bb_coord_list[j];
 					if (Tapa.box[tmp_bb_coord.x][tmp_bb_coord.y].can_extend_blackbox) {
@@ -706,7 +706,7 @@ namespace Tapa
 						List<Coordinates> around_not_deployedcoord_list = Box.getNoColorBoxCoordinatesAround(tmp_bb_coord);
 						// 接している未定マスを追加
 						local_adjacent_not_deployedbox_list.AddRange(new List<Coordinates>(around_not_deployedcoord_list));
-						// 黒マスに接している未定マス群の数を種類別に（重複も含め）数える
+						// 黒マスに接している未定マスの領域数を（重複も含め）数える
 						foreach (Coordinates tmp_around_not_coord in around_not_deployedcoord_list) {
 							count_adjacent_group[
 								Tapa.box[tmp_around_not_coord.x][tmp_around_not_coord.y].id_not_deployedbox_group]++;

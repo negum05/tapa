@@ -80,8 +80,11 @@ namespace Tapa
 				if (!was_change_board) { break; }
 			}
 
-			BackTrack backtrack = new BackTrack();
-			backtrack.doBackTrack();
+			// 未定マスが存在するなら、バックトラックを行う。
+			if (Tapa.not_deployedbox_coord_list.Count > 0) {
+				BackTrack backtrack = new BackTrack();
+				backtrack.doBackTrack(0);
+			}
 
 			StateSave.setSavedState(BackTrack.correct_save_point);
 			printBoard();
