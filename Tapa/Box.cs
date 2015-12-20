@@ -670,15 +670,15 @@ namespace Tapa
 		* 一繋がりの未定マス群のリストを作成する
 		*   
 		* *******************************/
-		private static void divideNotDeployedBoxToGroup()
+		public static void divideNotDeployedBoxToGroup()
 		{
 			// 未定マス群リストをリセット
-			Tapa.isolation_not_deployedbox_group_list.Clear();
+			Tapa.isolation_notdeployedboxes_group_list.Clear();
 			// 未定マスのリストをコピー
 			List<Coordinates> remaining_not_deployedbox_list = new List<Coordinates>(Tapa.not_deployedbox_coord_list);
 
 			for (int i = 0; i < remaining_not_deployedbox_list.Count; i++) {
-				Tapa.isolation_not_deployedbox_group_list.Add(
+				Tapa.isolation_notdeployedboxes_group_list.Add(
 					uniteAdjacentNotDeployedBox(i, remaining_not_deployedbox_list[i], remaining_not_deployedbox_list));
 			}
 		}
@@ -692,7 +692,7 @@ namespace Tapa
 		private static void extendBlackBoxOnlyOneAdjacentIsolationNotDeployedBoxGroup()
 		{
 			// 一繋がりの未定マス群（not_deployedbox_group）の数
-			int ndbg_size = Tapa.isolation_not_deployedbox_group_list.Count;
+			int ndbg_size = Tapa.isolation_notdeployedboxes_group_list.Count;
 
 			for (int i = 0; i < Tapa.isolation_blackboxes_group_list.Count; i++ ) {
 				List<Coordinates> tmp_bb_coord_list = new List<Coordinates>(Tapa.isolation_blackboxes_group_list[i]);

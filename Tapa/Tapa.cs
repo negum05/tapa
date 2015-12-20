@@ -17,7 +17,7 @@ namespace Tapa
 		// 未定マスの座標リスト
 		public static List<Coordinates> not_deployedbox_coord_list = new List<Coordinates>();
 		// 一繋がりの未定マス群の座標リスト
-		public static List<List<Coordinates>> isolation_not_deployedbox_group_list = new List<List<Coordinates>>();
+		public static List<List<Coordinates>> isolation_notdeployedboxes_group_list = new List<List<Coordinates>>();
 		// 伸び代のある黒マスの座標リスト
 		public static List<Coordinates> edge_blackbox_coord_list = new List<Coordinates>();
 		// 一繋がりの黒マス群の座標リスト
@@ -83,7 +83,7 @@ namespace Tapa
 			// 未定マスが存在するなら、バックトラックを行う。
 			if (Tapa.not_deployedbox_coord_list.Count > 0) {
 				BackTrack backtrack = new BackTrack();
-				backtrack.doBackTrack(0);
+				backtrack.manageBackTrack();
 			}
 
 			StateSave.setSavedState(BackTrack.correct_save_point);
@@ -95,7 +95,7 @@ namespace Tapa
 			Console.WriteLine("edge_blackbox_coordlist >> " + Tapa.edge_blackbox_coord_list.Count);
 			Console.WriteLine("isolation_blackboxes_group_list >> " + Tapa.isolation_blackboxes_group_list.Count);
 
-			printMultiCoordList(Tapa.isolation_not_deployedbox_group_list);
+			printMultiCoordList(Tapa.isolation_notdeployedboxes_group_list);
 
 			if (isCorrectAnswer()) { Console.WriteLine("正解！！"); }
 			else { Console.WriteLine("不正解"); }

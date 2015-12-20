@@ -10,31 +10,43 @@ namespace Tapa
 	{
 		public static StateSave correct_save_point = new StateSave();
 
-		private static int min_Depth = 2147483647;	// 答えまでの最小先読み数
+		private const int MAX_INT = 2147483647;
+		private static int min_Depth = MAX_INT;	// 答えまでの最小先読み数
 		public static int min_depth
 		{
 			private set { min_Depth = value; }
 			get { return min_Depth; }
 		}
 
-		public void doBackTrack(int depth)
+		/*********************************
+		 * 
+		 * processingNotDeployedBoxListの範囲でバックトラックを行う
+		 * バックトラックの結果が一度でも正しければtrueを返す
+		 * 引数
+		 * depth	: バックトラックの深さ
+		 * processingNotDeployedBoxList	: バックトラックを行う未定マス群のリスト
+		 *   
+		 * *******************************/
+		private bool doBackTrack(int depth, List<Coordinates> processingNotDeployedBoxList)
 		{
 			StateSave save_point = new StateSave();
 			StateSave.saveNowState(save_point);
+			bool ret_bool = false;	// true:(途中)盤面が正しい
 
+			// 深さをインクリメント
 			depth++;
 			// 黒マスと接している未定マスのリストを作成
 			List<Coordinates> adjacent_notdeployedbox_coord_list = new List<Coordinates>();
 			// 黒マスと接している未定マスがある時
-			foreach (Coordinates tmp_ndbox_coord in Tapa.not_deployedbox_coord_list) {
+			foreach (Coordinates tmp_ndbox_coord in processingNotDeployedBoxList) {
 				if (Box.existBlackBoxAround(tmp_ndbox_coord)) {
 					adjacent_notdeployedbox_coord_list.Add(tmp_ndbox_coord);
 				}
 			}
 			// 未定マスはあるが、黒マスと接している未定マスがない時
 			if (adjacent_notdeployedbox_coord_list.Count == 0
-				&& Tapa.not_deployedbox_coord_list.Count > 0) {
-				foreach (Coordinates tmp_ndbox_coord in Tapa.not_deployedbox_coord_list) {
+				&& processingNotDeployedBoxList.Count > 0) {
+					foreach (Coordinates tmp_ndbox_coord in processingNotDeployedBoxList) {
 					adjacent_notdeployedbox_coord_list.Add(new Coordinates(tmp_ndbox_coord));
 				}
 			}
@@ -51,27 +63,39 @@ namespace Tapa
 						Box.manageBlackBox();
 					} while (Tapa.was_change_board);
 
+					// 処理中の未定マス群から色のついたマスを除外したリストを作成
+					List<Coordinates> arg_list = new List<Coordinates>(processingNotDeployedBoxList);
+					for (int j = arg_list.Count - 1; j >= 0; j--) {
+						if (Tapa.box[arg_list[j].x][arg_list[j].y].Color != Box.NOCOLOR) {
+							arg_list.RemoveAt(j);
+						}
+					}
+
 					// 未定マスが存在すれば再起する
-					if (Tapa.not_deployedbox_coord_list.Count > 0) {
-						doBackTrack(depth);
+					if (arg_list.Count > 0) {
+						ret_bool = ret_bool || doBackTrack(depth, arg_list);
 					}
 					else {	// 未定マスが存在しない
-						if (Tapa.isCorrectAnswer()) {	// 盤面が正しいか見る
+						if (Box.checkNotIsolationBlackBoxGroup() || Tapa.isCorrectAnswer() ) {	// 盤面の一繋がりの黒マス群が孤立していないか
 							StateSave.saveNowState(BackTrack.correct_save_point);		// 正しければ現在の盤面を保存
 							if (depth < min_depth) {		// 先読みした深さ（のうち小さい方）を記録
 								min_depth = depth;
 							}
+							ret_bool = true;
 						}
 					}
 					// 元の状態に戻す
 					StateSave.setSavedState(save_point);
 				}
-
-				return;
+				return ret_bool;
 			}
 
 			// 未定マスをたどる
 			for (int i = 0; i < adjacent_notdeployedbox_coord_list.Count; i++) {
+				// iがリストより大きい添字になったら次のループへ
+				// (未定マスが同時に２個以上消えた時に必要な処理）
+				// if (adjacent_notdeployedbox_coord_list.Count <= i) { continue; }
+
 				Coordinates tmp_ndbox_coord = adjacent_notdeployedbox_coord_list[i];
 
 				// 未定マスの色を黒にする
@@ -84,27 +108,65 @@ namespace Tapa
 					Box.manageBlackBox();
 				} while (Tapa.was_change_board);
 
-				// 未定マスが存在すれば再起する
-				if (Tapa.not_deployedbox_coord_list.Count > 0) {
-					doBackTrack(depth);
+				// 処理中の未定マス群から色のついたマスを除外したリストを作成
+				List<Coordinates> arg_list = new List<Coordinates>(processingNotDeployedBoxList);
+				for (int j = arg_list.Count - 1; j >= 0; j--) {
+					if (Tapa.box[arg_list[j].x][arg_list[j].y].Color != Box.NOCOLOR) {
+						arg_list.RemoveAt(j);
+					}
 				}
-				else {	// 未定マスが存在しない
-					if (Tapa.isCorrectAnswer()) {	// 盤面が正しいか見る
-						StateSave.saveNowState(BackTrack.correct_save_point);		// 正しければ現在の盤面を保存
 
-						Console.Write("##############\n正解に到達 ");
-						tmp_ndbox_coord.printCoordinates();
-						Console.WriteLine();
-						Tapa.printBoard();
-						Console.WriteLine();
+				// 処理中の未定マス群に未定マスが残っていれば再起する
+				if (arg_list.Count > 0) {
+					ret_bool = ret_bool || doBackTrack(depth, arg_list);
+				}
+				else {	// 処理中の未定マス群に未定マスが存在しない
+					// 盤面に一繋がりの黒マス群が孤立していない or 盤面が正解
+					if (Box.checkNotIsolationBlackBoxGroup() || Tapa.isCorrectAnswer()) {
+						StateSave.saveNowState(BackTrack.correct_save_point);		// 正しければ現在の盤面を保存
 						if (depth < min_depth) {		// 先読みした深さ（のうち小さい方）を記録
 							min_depth = depth;
 						}
+						ret_bool = true;
 					}
 				}
 				// 元の状態に戻す
 				StateSave.setSavedState(save_point);
 			}
+			return ret_bool;
+		}
+
+		/*********************************
+		 * 
+		 * 一繋がりの未定マス群毎にバックトラックを行う
+		 *   
+		 * *******************************/
+		public void manageBackTrack()
+		{
+			//StateSave state_base = new StateSave();
+			//StateSave.saveNowState(state_base);
+			// 一繋がりの未定マス群のリストを作成
+			Box.divideNotDeployedBoxToGroup();
+			do {
+				Tapa.printCoordList(Tapa.isolation_notdeployedboxes_group_list[0]);
+				Console.WriteLine();
+
+				bool tmp;
+				if (tmp = doBackTrack(0, Tapa.isolation_notdeployedboxes_group_list[0])) {
+
+					StateSave.setSavedState(BackTrack.correct_save_point);
+
+					Console.WriteLine("バックトラック成功 深さ：{0}", min_Depth);
+					Tapa.printBoard();
+					Console.WriteLine();
+
+				}
+				Console.WriteLine("doBT >> " + tmp);
+				if (Tapa.not_deployedbox_coord_list.Count > 0) {
+					// 一繋がりの未定マス群のリストを作成
+					Box.divideNotDeployedBoxToGroup();
+				}
+			} while (Tapa.isolation_notdeployedboxes_group_list.Count > 0);
 		}
 	}
 }

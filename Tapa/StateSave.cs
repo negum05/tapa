@@ -17,6 +17,8 @@ namespace Tapa
 		private List<Coordinates> saved_edge_blackbox_coord_list;
 		// 呼びだされた時点での一繋がりの黒マス群の座標リスト
 		private List<List<Coordinates>> saved_isolation_blackboxes_group_list;
+		// 呼びだされた時点での一繋がりの黒マス群の座標リスト
+		private List<List<Coordinates>> saved_isolation_notdeployedboxes_group_list;
 
 		public StateSave()
 		{
@@ -25,6 +27,7 @@ namespace Tapa
 			List<Coordinates> saved_not_deployedbox_coord_list = new List<Coordinates>();
 			List<Coordinates> saved_edge_blackbox_coord_list = new List<Coordinates>();
 			List<List<Coordinates>> saved_isolation_blackboxes_group_list = new List<List<Coordinates>>();
+			List<List<Coordinates>> saved_isolation_notdeployedboxes_group_list = new List<List<Coordinates>>();
 		}
 		public StateSave(StateSave origin_state)
 		{
@@ -36,9 +39,12 @@ namespace Tapa
 			this.saved_not_deployedbox_coord_list = StateSave.getStateCoordList(origin_state.saved_not_deployedbox_coord_list);
 			// 引数の伸び代のある黒マスの座標リスト
 			this.saved_edge_blackbox_coord_list = StateSave.getStateCoordList(origin_state.saved_edge_blackbox_coord_list);
-			// 呼びだされた時点での一繋がりの黒マス群の座標リスト
+			// 引数の一繋がりの黒マス群の座標リスト
 			this.saved_isolation_blackboxes_group_list
-				= StateSave.getStateIsolationBlackBoxesGroupList(origin_state.saved_isolation_blackboxes_group_list);
+				= StateSave.getStateMultiCoordList(origin_state.saved_isolation_blackboxes_group_list);
+			// 引数の一繋がりの未定マス群の座標リスト
+			this.saved_isolation_notdeployedboxes_group_list
+				= StateSave.getStateMultiCoordList(origin_state.saved_isolation_notdeployedboxes_group_list);
 		}
 
 		/*********************************
@@ -57,7 +63,11 @@ namespace Tapa
 			// 呼びだされた時点での伸び代のある黒マスの座標リスト
 			save_point.saved_edge_blackbox_coord_list = StateSave.getStateCoordList(Tapa.edge_blackbox_coord_list);
 			// 呼びだされた時点での一繋がりの黒マス群の座標リスト
-			save_point.saved_isolation_blackboxes_group_list = StateSave.getStateIsolationBlackBoxesGroupList();
+			save_point.saved_isolation_blackboxes_group_list
+				= StateSave.getStateMultiCoordList(Tapa.isolation_blackboxes_group_list);
+			// 呼びだされた時点での一繋がりの黒マス群の座標リスト
+			save_point.saved_isolation_notdeployedboxes_group_list
+				= StateSave.getStateMultiCoordList(Tapa.isolation_notdeployedboxes_group_list);
 		}
 
 		/*********************************
@@ -106,21 +116,16 @@ namespace Tapa
 			}
 			return tmp_board;
 		}
-		private static List<List<Coordinates>> getStateIsolationBlackBoxesGroupList(
-			List<List<Coordinates>> origin_multi_coord_list = null)
+		private static List<List<Coordinates>> getStateMultiCoordList(List<List<Coordinates>> origin_multi_coord_list)
 		{
-			List<List<Coordinates>> copy_target;
-			if (origin_multi_coord_list == null) { copy_target = new List<List<Coordinates>>(Tapa.isolation_blackboxes_group_list); }
-			else { copy_target = new List<List<Coordinates>>(origin_multi_coord_list); }
-
 			List<List<Coordinates>> tmp_iso_group_list = new List<List<Coordinates>>();
 
 			// if (max_row == 0) { return null; }
 			// 要素ごとにaddする (インスタンスができる)
-			for (int i = 0; i < copy_target.Count; i++) {
+			for (int i = 0; i < origin_multi_coord_list.Count; i++) {
 				List<Coordinates> tmp_list = new List<Coordinates>();
-				for (int j = 0; j < copy_target[i].Count; j++) {
-					tmp_list.Add(new Coordinates(copy_target[i][j]));
+				for (int j = 0; j < origin_multi_coord_list[i].Count; j++) {
+					tmp_list.Add(new Coordinates(origin_multi_coord_list[i][j]));
 				}
 				tmp_iso_group_list.Add(new List<Coordinates>(tmp_list));
 				tmp_list.Clear();
@@ -184,6 +189,25 @@ namespace Tapa
 					tmp_co_list.Add(new Coordinates(tmp_co));
 				}
 				Tapa.isolation_blackboxes_group_list.Add(new List<Coordinates>(tmp_co_list));
+				tmp_co_list.Clear();
+			}
+		}
+		private static void setSavedStateIsolationNotDeployedBoxesGroupList(List<List<Coordinates>> saved_iso_group_list)
+		{
+			if (Tapa.isolation_notdeployedboxes_group_list.Count == 0) { return; }
+			if (saved_iso_group_list == null) { return; }
+
+			List<List<Coordinates>> tmp_iso_group_list = new List<List<Coordinates>>();
+			int max_row = Tapa.isolation_notdeployedboxes_group_list.Count;
+
+			Tapa.isolation_notdeployedboxes_group_list.Clear();
+
+			for (int ite_iso_group_list = 0; ite_iso_group_list < saved_iso_group_list.Count; ite_iso_group_list++) {
+				List<Coordinates> tmp_co_list = new List<Coordinates>();
+				foreach (Coordinates tmp_co in saved_iso_group_list[ite_iso_group_list]) {
+					tmp_co_list.Add(new Coordinates(tmp_co));
+				}
+				Tapa.isolation_notdeployedboxes_group_list.Add(new List<Coordinates>(tmp_co_list));
 				tmp_co_list.Clear();
 			}
 		}
