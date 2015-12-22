@@ -25,7 +25,7 @@ namespace Tapa
 			get { return this.has_num; }
 			set
 			{
-				if (value) { this.Color = Box.WHITE; }			// 数字マスは白色
+				if (value) { this.color = Box.WHITE; }			// 数字マスは白色
 				this.has_num = value;
 			}
 		}
@@ -41,15 +41,12 @@ namespace Tapa
 				if (this.color != value) { changed_count_in_search_confirm_box++; }
 				if (this.color == Box.NOCOLOR) {
 					this.color = value;
-					Tapa.was_change_board = true;
 					if (!during_clone && !Box.during_make_inputbord) {	// (クローン処理中 or 盤面入力中)はマスをリストに追加しない
+						Tapa.was_change_board = true;	// 今回の処理で変化したのでフラグを立てる
 						// 塗る色が黒かつ伸び代があれば、伸び代のある黒マスリストに追加
 						if (this.color == Box.BLACK) {
 							// 塗られたマス周りで黒マスの団子ができないよう白マスを配置
 							avoidDumpling(Tapa.box[this.coord.x][this.coord.y].coord);
-							//this.coord.printCoordinates();
-							//Console.Write(" Color: " + this.color + " value:" + value);
-							//Console.Write("\n");
 							if (canExtendBlackBox(this.coord)) {
 								this.can_extend_blackbox = true;
 								Tapa.edge_blackbox_coord_list.Add(this.coord);
@@ -123,7 +120,7 @@ namespace Tapa
 			this.hasNum = false;
 			this.box_num = -1;
 			this.id_list.Clear();
-			this.Color = Box.NOCOLOR;
+			this.color = Box.NOCOLOR;
 			this.can_extend_blackbox = false;
 			this.id_not_deployedbox_group = 0;
 		}
@@ -640,6 +637,8 @@ namespace Tapa
 		 * *******************************/
 		private static List<Coordinates> uniteAdjacentNotDeployedBox(int notdeployed_id, Coordinates co, List<Coordinates> remaining_not_deployedbox_list)
 		{
+			if (!remaining_not_deployedbox_list.Contains(co)) { return new List<Coordinates>(); }
+
 			// 未定マス群のidを登録
 			Tapa.box[co.x][co.y].id_not_deployedbox_group = notdeployed_id;
 			// 自身の入ったリスト
@@ -677,9 +676,9 @@ namespace Tapa
 			// 未定マスのリストをコピー
 			List<Coordinates> remaining_not_deployedbox_list = new List<Coordinates>(Tapa.not_deployedbox_coord_list);
 
-			for (int i = 0; i < remaining_not_deployedbox_list.Count; i++) {
+			for (int i = 0; i < Tapa.not_deployedbox_coord_list.Count; i++) {
 				Tapa.isolation_notdeployedboxes_group_list.Add(
-					uniteAdjacentNotDeployedBox(i, remaining_not_deployedbox_list[i], remaining_not_deployedbox_list));
+					uniteAdjacentNotDeployedBox(i, Tapa.not_deployedbox_coord_list[i], remaining_not_deployedbox_list));
 			}
 		}
 
@@ -698,7 +697,7 @@ namespace Tapa
 				List<Coordinates> tmp_bb_coord_list = new List<Coordinates>(Tapa.isolation_blackboxes_group_list[i]);
 				// 今回調べている一繋がりの黒マス群と接している未定マスを保存するリスト
 				List<Coordinates> local_adjacent_not_deployedbox_list = new List<Coordinates>();
-				int[] count_adjacent_group = Enumerable.Repeat<int>(0, ndbg_size + 1).ToArray();	// 未定マス領域の種類の長さをもった配列
+				int[] count_adjacent_group = Enumerable.Repeat<int>(0, ndbg_size).ToArray();	// 未定マス領域の種類の長さをもった配列
 				for (int j = 0; j < tmp_bb_coord_list.Count; j++ ) {
 					Coordinates tmp_bb_coord = tmp_bb_coord_list[j];
 					if (Tapa.box[tmp_bb_coord.x][tmp_bb_coord.y].can_extend_blackbox) {
@@ -719,6 +718,8 @@ namespace Tapa
 						foreach (Coordinates tmp_co in local_adjacent_not_deployedbox_list) {
 							if (Tapa.box[tmp_co.x][tmp_co.y].id_not_deployedbox_group == k) {
 								Tapa.box[tmp_co.x][tmp_co.y].Color = Box.BLACK;
+								// 一繋がりの未定マス群リストを作成する
+								divideNotDeployedBoxToGroup();
 								// 一箇所黒色になったら、このメソッドの処理を初めから行う
 								extendBlackBoxOnlyOneAdjacentIsolationNotDeployedBoxGroup();
 							}
@@ -753,7 +754,7 @@ namespace Tapa
 			if (!Tapa.was_change_board) {
 				// 一繋がりの未定マス群リストを作成する
 				divideNotDeployedBoxToGroup();
-				// 黒マス群がある未定マス群に一箇所のみ接していた場合、そこに黒マスを伸ばす
+				// 黒マス群が、ある未定マス群に一箇所のみ接していた場合、そこに黒マスを伸ばす。
 				extendBlackBoxOnlyOneAdjacentIsolationNotDeployedBoxGroup();
 			}
 		}

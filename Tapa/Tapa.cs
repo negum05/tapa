@@ -22,7 +22,7 @@ namespace Tapa
 		public static List<Coordinates> edge_blackbox_coord_list = new List<Coordinates>();
 		// 一繋がりの黒マス群の座標リスト
 		public static List<List<Coordinates>> isolation_blackboxes_group_list = new List<List<Coordinates>>();
-		
+
 		public static bool DEBUG = false;
 		public static bool DEBUG_PRINT_PROCESS = false;
 
@@ -36,6 +36,8 @@ namespace Tapa
 		public static int MAX_BOARD_COL = 0;
 
 		public static bool was_change_board;
+
+		public static int cycle_num = 0;
 
 		/// <summary>
 		/// アプリケーションのメイン エントリ ポイントです。
@@ -60,11 +62,11 @@ namespace Tapa
 			PatternAroundNumBox.preparePatternArroundNumBox();
 
 
-			for (int i = 1; i <= 5; i++) {
+			for (cycle_num = 1; cycle_num <= 10; cycle_num++) {
 				was_change_board = false;
 				// 数字マス周りのパターンを管理
 				PatternAroundNumBox.managePatternAroundNumBox();
-				Console.WriteLine("{0}回目：数字マス周りの処理後", i);
+				Console.WriteLine("{0}回目：数字マス周りの処理後", cycle_num);
 				Tapa.printBoard();
 				Console.WriteLine();
 				//Tapa.printCoordList(Tapa.edge_blackbox_coord_list);
@@ -72,7 +74,7 @@ namespace Tapa
 
 				// 伸び代のある黒マスから、黒マスが伸びないかを見て、可能なら実際に伸ばす。
 				Box.manageBlackBox();
-				Console.WriteLine("{0}回目：黒マス関係の処理後", i);
+				Console.WriteLine("{0}回目：黒マス関係の処理後", cycle_num);
 				Tapa.printBoard();
 				Console.WriteLine();
 				//Tapa.printCoordList(Tapa.edge_blackbox_coord_list);
@@ -84,10 +86,10 @@ namespace Tapa
 			if (Tapa.not_deployedbox_coord_list.Count > 0) {
 				BackTrack backtrack = new BackTrack();
 				backtrack.manageBackTrack();
+				StateSave.setSavedState(BackTrack.correct_save_point);
+				printBoard();
 			}
 
-			StateSave.setSavedState(BackTrack.correct_save_point);
-			printBoard();
 
 			Console.WriteLine("深さ >> " + BackTrack.min_depth);
 			Console.WriteLine("notdeployedbox_list >> " + Tapa.not_deployedbox_coord_list.Count);
@@ -160,8 +162,8 @@ namespace Tapa
 			Console.WriteLine();
 			return;
 			 * */
-			
-			
+
+
 
 			// 数字マス周りのチェック
 			// PatternAroundNumBox.checkPatternAroundNumBox();
@@ -376,11 +378,11 @@ namespace Tapa
 		 * *******************************/
 		public static bool isCorrectAnswer()
 		{
-			if(Tapa.not_deployedbox_coord_list.Count == 0			// 未定マスがない
+			if (Tapa.not_deployedbox_coord_list.Count == 0			// 未定マスがない
 				&& Tapa.numbox_coord_list.Count == 0				// idが一意に定まらなかった数字マスがない
 				&& Tapa.isolation_blackboxes_group_list.Count == 1	// 黒マスが一繋がり
-				&& Box.checkNotDumplingBlackBox() ) {				// 黒マスの団子がない
-					return true;
+				&& Box.checkNotDumplingBlackBox()) {				// 黒マスの団子がない
+				return true;
 			}
 			return false;
 		}

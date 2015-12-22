@@ -3400,55 +3400,15 @@ namespace Tapa
 			StateSave save_point = new StateSave();
 			// 現在の状態を保存
 			StateSave.saveNowState(save_point);
-
-			//Console.Write("数字座標 >> ");
-			//co.printCoordinates();
-			//Console.WriteLine("############################");
-			//Console.WriteLine("調査開始時の黒マス群リスト >> ");
-			//Tapa.printIsolationBlackBoxGroup();
-			//Console.WriteLine();
-			//Console.WriteLine("調査開始時の伸び代リスト >> ");
-			//Tapa.printCoordList(Tapa.edge_blackbox_coord_list);
-			//Console.WriteLine();
-			//Console.Write("残りid >> ");
-			//Tapa.box[co.x][co.y].printIdList();
-			//Console.WriteLine();
-			//Tapa.printBoard();
-			//Console.WriteLine();
-
 			// 孤立するidのid_listでの要素番号を保存するリスト
 			List<int> iso_id_ite_list = new List<int>();
 			for (int i = id_list.Count - 1; i >= 0; i--) {
 				PatternAroundNumBox.setPatternAroundNumBox(co, id_list[i]);
-
-				//Console.WriteLine("臨時id設置後の黒マス群リスト >> ");
-				//Tapa.printIsolationBlackBoxGroup();
-				//Console.WriteLine();
-				//Console.WriteLine("調査対象id >> " + id_list[i] + "\n");
-				//Console.WriteLine();
-				//Tapa.printBoard();
-				//Console.WriteLine();
-
-				// Tapa.printIsolationBlackBoxGroup();
-				// Console.WriteLine();
-				// Tapa.printBoard();
-				if (!Box.checkNotIsolationBlackBoxGroup()) {	// 盤面に孤立した黒マス群がないか調べる
-
-					//Console.WriteLine("除外するid >> " + id_list[i]);
-					//Console.WriteLine();
-
+				if (!Box.checkNotIsolationBlackBoxGroup()				// 盤面に孤立した黒マス群がないか調べる
+					&& Tapa.not_deployedbox_coord_list.Count > 0) {	
 					iso_id_ite_list.Add(i);
 				}
 				StateSave.setSavedState(save_point);
-
-				//Console.WriteLine("元の黒マス群リストになっててほしい >> ");
-				//Tapa.printIsolationBlackBoxGroup();
-				//Console.WriteLine();
-				//Console.WriteLine("（idチェック後）元の伸び代リストになっててほしい >> ");
-				//Tapa.printCoordList(Tapa.edge_blackbox_coord_list);
-				//Console.WriteLine();
-				//Tapa.printBoard();
-				//Console.WriteLine();
 			}
 
 			// 孤立したidをid_listから削除
@@ -3456,10 +3416,6 @@ namespace Tapa
 				// id_list.RemoveAt(tmp_ite);
 				Tapa.box[co.x][co.y].id_list.RemoveAt(tmp_ite);
 			}
-			//Console.Write("残りid >> ");
-			//Tapa.box[co.x][co.y].printIdList();
-			//Console.WriteLine();
-			//Console.WriteLine("############################\n");
 		}
 
 		/*********************************
@@ -3482,6 +3438,11 @@ namespace Tapa
 			StateSave save_point = new StateSave();
 			// 現在の状態を保存
 			StateSave.saveNowState(save_point);
+
+			//List<byte> id_list = new List<byte>();
+			//foreach (byte tmp_byte in arg_id_list) {
+			//	id_list.Add(tmp_byte);
+			//}
 
 			// 除外するidのid_listでの要素番号を保存するリスト
 			List<int> kill_id_ite_list = new List<int>();
@@ -3513,12 +3474,14 @@ namespace Tapa
 				// 保存した状態をロード
 				StateSave.setSavedState(save_point);
 			}
-
+			co.printCoordinates();
+			Console.WriteLine("kill_id_ite_list >> " + kill_id_ite_list.Count);
+			Console.WriteLine("削除前 >> " + Tapa.box[co.x][co.y].id_list.Count);
 			// 除外対象のidをid_listから除外
 			foreach (int tmp_ite in kill_id_ite_list) {
-				// id_list.RemoveAt(tmp_ite);
 				Tapa.box[co.x][co.y].id_list.RemoveAt(tmp_ite);
 			}
+			Console.WriteLine("削除後 >> " + Tapa.box[co.x][co.y].id_list.Count);
 		}
 
 		/*********************************
@@ -3543,7 +3506,11 @@ namespace Tapa
 						Tapa.box[tmp_co.x][tmp_co.y].id_list.RemoveAt(ite_id);
 					}
 				}
-				
+				// id_listのうち、孤立する黒マス群を作るidを除外（id_listごとに処理したほうが効率的）
+				excludeIdToMakeIsolationBlackBoxGroup(tmp_co, Tapa.box[tmp_co.x][tmp_co.y].id_list);
+				//// id_listのうち、idを配置して別の数字マスのid_listの大きさが0になるようなidを除外する。
+				excludeIdToKillOtherNameBoxAllId(tmp_co, Tapa.box[tmp_co.x][tmp_co.y].id_list);
+
 				// id_listが一意ならそれを配置して数字マスリストから除外
 				Tapa.NOW_STATE_PROCESS = Tapa.STATE_ID_LIST_ONLY_ONE;
 				if (Tapa.box[tmp_co.x][tmp_co.y].id_list.Count == 1) {
@@ -3551,20 +3518,16 @@ namespace Tapa
 					Tapa.numbox_coord_list.RemoveAt(ite_coord);
 				}
 				// id_listの大きさが0ならエラー
-				else if (Tapa.box[tmp_co.x][tmp_co.y].id_list.Count == 0) {
-					Console.Write("Error: id_listの長さが0になってしまいました。");
-					tmp_co.printCoordinates();
-					Console.WriteLine();
-					Application.Exit();
-				}
+				//else if (Tapa.box[tmp_co.x][tmp_co.y].id_list.Count == 0) {
+				//	Console.Write("Error: id_listの長さが0になってしまいました。");
+				//	tmp_co.printCoordinates();
+				//	Console.WriteLine();
+				//	Application.Exit();
+				//}
+
 				// tmp_coのid_listを見て数字周りで色が確定しているマスを埋める。
 				Tapa.NOW_STATE_PROCESS = Tapa.STATE_CONFIRM_BOX_COLOR_FROM_ID_LIST;
 				setConfirmBoxArroundNumBox(tmp_co);
-
-				// id_listのうち、孤立する黒マス群を作るidを除外（id_listごとに処理したほうが効率的）
-				excludeIdToMakeIsolationBlackBoxGroup(tmp_co, Tapa.box[tmp_co.x][tmp_co.y].id_list);
-				// id_listのうち、idを配置して別の数字マスのid_listの大きさが0になるようなidを除外する。
-				excludeIdToKillOtherNameBoxAllId(tmp_co, Tapa.box[tmp_co.x][tmp_co.y].id_list);
 			}
 		}
 	}
