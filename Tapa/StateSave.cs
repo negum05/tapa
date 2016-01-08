@@ -17,8 +17,8 @@ namespace Tapa
 		private List<Coordinates> saved_edge_blackbox_coord_list;
 		// 呼びだされた時点での一繋がりの黒マス群の座標リスト
 		private List<List<Coordinates>> saved_isolation_blackboxes_group_list;
-		// 呼びだされた時点での一繋がりの黒マス群の座標リスト
-		private List<List<Coordinates>> saved_isolation_notdeployedboxes_group_list;
+		// 呼びだされた時点での一繋がりの未定マス群の座標リスト
+		// private List<List<Coordinates>> saved_isolation_notdeployedboxes_group_list;
 		// 
 		private bool saved_was_changed_board;
 
@@ -29,7 +29,7 @@ namespace Tapa
 			List<Coordinates> saved_not_deployedbox_coord_list = new List<Coordinates>();
 			List<Coordinates> saved_edge_blackbox_coord_list = new List<Coordinates>();
 			List<List<Coordinates>> saved_isolation_blackboxes_group_list = new List<List<Coordinates>>();
-			List<List<Coordinates>> saved_isolation_notdeployedboxes_group_list = new List<List<Coordinates>>();
+			// List<List<Coordinates>> saved_isolation_notdeployedboxes_group_list = new List<List<Coordinates>>();
 			this.saved_was_changed_board = Tapa.was_change_board;
 		}
 		public StateSave(StateSave origin_state)
@@ -46,8 +46,8 @@ namespace Tapa
 			this.saved_isolation_blackboxes_group_list
 				= StateSave.getStateMultiCoordList(origin_state.saved_isolation_blackboxes_group_list);
 			// 引数の一繋がりの未定マス群の座標リスト
-			this.saved_isolation_notdeployedboxes_group_list
-				= StateSave.getStateMultiCoordList(origin_state.saved_isolation_notdeployedboxes_group_list);
+			//this.saved_isolation_notdeployedboxes_group_list
+			//	= StateSave.getStateMultiCoordList(origin_state.saved_isolation_notdeployedboxes_group_list);
 			// 引数の盤面が変更されたかの情報
 			this.saved_was_changed_board = origin_state.saved_was_changed_board;
 		}
@@ -71,8 +71,8 @@ namespace Tapa
 			save_point.saved_isolation_blackboxes_group_list
 				= StateSave.getStateMultiCoordList(Tapa.isolation_blackboxes_group_list);
 			// 呼びだされた時点での一繋がりの黒マス群の座標リスト
-			save_point.saved_isolation_notdeployedboxes_group_list
-				= StateSave.getStateMultiCoordList(Tapa.isolation_notdeployedboxes_group_list);
+			//save_point.saved_isolation_notdeployedboxes_group_list
+			//	= StateSave.getStateMultiCoordList(Tapa.isolation_notdeployedboxes_group_list);
 			// 呼びだされた時点での盤面が変更されたかの情報
 			save_point.saved_was_changed_board = Tapa.was_change_board;
 		}
@@ -200,6 +200,7 @@ namespace Tapa
 				tmp_co_list.Clear();
 			}
 		}
+		/*
 		private static void setSavedStateIsolationNotDeployedBoxesGroupList(List<List<Coordinates>> saved_iso_group_list)
 		{
 			if (Tapa.isolation_notdeployedboxes_group_list.Count == 0) { return; }
@@ -219,6 +220,7 @@ namespace Tapa
 				tmp_co_list.Clear();
 			}
 		}
+		 */
 		/*** (end) set ***/
 
 		public bool saved_was_change_board { get; set; }

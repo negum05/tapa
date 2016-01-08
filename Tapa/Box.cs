@@ -667,67 +667,69 @@ namespace Tapa
 		/*********************************
 		* 
 		* 一繋がりの未定マス群のリストを作成する
+		 * 【手法が限定的だったため処理の必要なし】
 		*   
 		* *******************************/
-		public static void divideNotDeployedBoxToGroup()
-		{
-			// 未定マス群リストをリセット
-			Tapa.isolation_notdeployedboxes_group_list.Clear();
-			// 未定マスのリストをコピー
-			List<Coordinates> remaining_not_deployedbox_list = new List<Coordinates>(Tapa.not_deployedbox_coord_list);
+		//public static void divideNotDeployedBoxToGroup()
+		//{
+		//	// 未定マス群リストをリセット
+		//	Tapa.isolation_notdeployedboxes_group_list.Clear();
+		//	// 未定マスのリストをコピー
+		//	List<Coordinates> remaining_not_deployedbox_list = new List<Coordinates>(Tapa.not_deployedbox_coord_list);
 
-			for (int i = 0; i < Tapa.not_deployedbox_coord_list.Count; i++) {
-				Tapa.isolation_notdeployedboxes_group_list.Add(
-					uniteAdjacentNotDeployedBox(i, Tapa.not_deployedbox_coord_list[i], remaining_not_deployedbox_list));
-			}
-		}
+		//	for (int i = 0; i < Tapa.not_deployedbox_coord_list.Count; i++) {
+		//		Tapa.isolation_notdeployedboxes_group_list.Add(
+		//			uniteAdjacentNotDeployedBox(i, Tapa.not_deployedbox_coord_list[i], remaining_not_deployedbox_list));
+		//	}
+		//}
 
 		/*********************************
 		 * 
 		 * 黒マス群のうち、ある未定マス群に接している黒マスが1つ
 		 * かつ接している辺が1つのみのとき、接している未定マスを黒マスにする。
+		 * 【手法が限定的だったため処理の必要なし】
 		 * 
 		 * *******************************/
-		private static void extendBlackBoxOnlyOneAdjacentIsolationNotDeployedBoxGroup()
-		{
-			// 一繋がりの未定マス群（not_deployedbox_group）の数
-			int ndbg_size = Tapa.isolation_notdeployedboxes_group_list.Count;
+		//private static void extendBlackBoxOnlyOneAdjacentIsolationNotDeployedBoxGroup()
+		//{
+		//	// 一繋がりの未定マス群（not_deployedbox_group）の数
+		//	int ndbg_size = Tapa.isolation_notdeployedboxes_group_list.Count;
 
-			for (int i = 0; i < Tapa.isolation_blackboxes_group_list.Count; i++ ) {
-				List<Coordinates> tmp_bb_coord_list = new List<Coordinates>(Tapa.isolation_blackboxes_group_list[i]);
-				// 今回調べている一繋がりの黒マス群と接している未定マスを保存するリスト
-				List<Coordinates> local_adjacent_not_deployedbox_list = new List<Coordinates>();
-				int[] count_adjacent_group = Enumerable.Repeat<int>(0, ndbg_size).ToArray();	// 未定マス領域の種類の長さをもった配列
-				for (int j = 0; j < tmp_bb_coord_list.Count; j++ ) {
-					Coordinates tmp_bb_coord = tmp_bb_coord_list[j];
-					if (Tapa.box[tmp_bb_coord.x][tmp_bb_coord.y].can_extend_blackbox) {
-						// 上下左右にある未定マスをリストで取得
-						List<Coordinates> around_not_deployedcoord_list = Box.getNoColorBoxCoordinatesAround(tmp_bb_coord);
-						// 接している未定マスを追加
-						local_adjacent_not_deployedbox_list.AddRange(new List<Coordinates>(around_not_deployedcoord_list));
-						// 黒マスに接している未定マスの領域数を（重複も含め）数える
-						foreach (Coordinates tmp_around_not_coord in around_not_deployedcoord_list) {
-							count_adjacent_group[
-								Tapa.box[tmp_around_not_coord.x][tmp_around_not_coord.y].id_not_deployedbox_group]++;
-						}
-					}
-				}
-				// 接している種類別の未定マス群の数を見る
-				for (int k = 0; k < count_adjacent_group.Count(); k++) {
-					if (count_adjacent_group[k] == 1) {
-						foreach (Coordinates tmp_co in local_adjacent_not_deployedbox_list) {
-							if (Tapa.box[tmp_co.x][tmp_co.y].id_not_deployedbox_group == k) {
-								Tapa.box[tmp_co.x][tmp_co.y].Color = Box.BLACK;
-								// 一繋がりの未定マス群リストを作成する
-								divideNotDeployedBoxToGroup();
-								// 一箇所黒色になったら、このメソッドの処理を初めから行う
-								extendBlackBoxOnlyOneAdjacentIsolationNotDeployedBoxGroup();
-							}
-						}
-					}
-				}
-			}
-		}
+		//	for (int i = 0; i < Tapa.isolation_blackboxes_group_list.Count; i++ ) {
+		//		List<Coordinates> tmp_bb_coord_list = new List<Coordinates>(Tapa.isolation_blackboxes_group_list[i]);
+		//		// 今回調べている一繋がりの黒マス群と接している未定マスを保存するリスト
+		//		List<Coordinates> local_adjacent_not_deployedbox_list = new List<Coordinates>();
+		//		int[] count_adjacent_group = Enumerable.Repeat<int>(0, ndbg_size).ToArray();	// 未定マス領域の種類の長さをもった配列
+		//		for (int j = 0; j < tmp_bb_coord_list.Count; j++ ) {
+		//			Coordinates tmp_bb_coord = tmp_bb_coord_list[j];
+		//			if (Tapa.box[tmp_bb_coord.x][tmp_bb_coord.y].can_extend_blackbox) {
+		//				// 上下左右にある未定マスをリストで取得
+		//				List<Coordinates> around_not_deployedcoord_list = Box.getNoColorBoxCoordinatesAround(tmp_bb_coord);
+		//				// 接している未定マスを追加
+		//				local_adjacent_not_deployedbox_list.AddRange(new List<Coordinates>(around_not_deployedcoord_list));
+		//				// 黒マスに接している未定マスの領域数を（重複も含め）数える
+		//				foreach (Coordinates tmp_around_not_coord in around_not_deployedcoord_list) {
+		//					count_adjacent_group[
+		//						Tapa.box[tmp_around_not_coord.x][tmp_around_not_coord.y].id_not_deployedbox_group]++;
+		//				}
+		//			}
+		//		}
+		//		// 接している種類別の未定マス群の数を見る
+		//		for (int k = 0; k < count_adjacent_group.Count(); k++) {
+		//			if (count_adjacent_group[k] == 1) {
+		//				foreach (Coordinates tmp_co in local_adjacent_not_deployedbox_list) {
+		//					if (Tapa.box[tmp_co.x][tmp_co.y].id_not_deployedbox_group == k) {
+		//						Tapa.box[tmp_co.x][tmp_co.y].Color = Box.BLACK;
+		//						// 一繋がりの未定マス群リストを作成する
+		//						divideNotDeployedBoxToGroup();
+		//						// 一箇所黒色になったら、このメソッドの処理を初めから行う
+		//						extendBlackBoxOnlyOneAdjacentIsolationNotDeployedBoxGroup();
+		//					}
+		//				}
+		//			}
+		//		}
+		//	}
+		//}
 
 		/*********************************
 		 * 
@@ -751,12 +753,13 @@ namespace Tapa
 			extendIsolationBlackBoxGroup();
 
 			// 数字周り、黒マス周りの処理で一度もマス色が変化しなかった場合
-			if (!Tapa.was_change_board) {
-				// 一繋がりの未定マス群リストを作成する
-				divideNotDeployedBoxToGroup();
-				// 黒マス群が、ある未定マス群に一箇所のみ接していた場合、そこに黒マスを伸ばす。
-				extendBlackBoxOnlyOneAdjacentIsolationNotDeployedBoxGroup();
-			}
+			//if (!Tapa.was_change_board) {
+			//	Console.WriteLine("DEBUG: Tapa.was_change_board >> false");
+			//	// 一繋がりの未定マス群リストを作成する
+			//	divideNotDeployedBoxToGroup();
+			//	// 黒マス群が、ある未定マス群に一箇所のみ接していた場合、そこに黒マスを伸ばす。
+			//	extendBlackBoxOnlyOneAdjacentIsolationNotDeployedBoxGroup();
+			//}
 		}
 
 		// 1000 ~ 9999 の乱数を返す

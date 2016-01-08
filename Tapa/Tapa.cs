@@ -17,7 +17,7 @@ namespace Tapa
 		// 未定マスの座標リスト
 		public static List<Coordinates> not_deployedbox_coord_list = new List<Coordinates>();
 		// 一繋がりの未定マス群の座標リスト
-		public static List<List<Coordinates>> isolation_notdeployedboxes_group_list = new List<List<Coordinates>>();
+		// public static List<List<Coordinates>> isolation_notdeployedboxes_group_list = new List<List<Coordinates>>();
 		// 伸び代のある黒マスの座標リスト
 		public static List<Coordinates> edge_blackbox_coord_list = new List<Coordinates>();
 		// 一繋がりの黒マス群の座標リスト
@@ -61,8 +61,7 @@ namespace Tapa
 			// 準備：数字マスにidのリストを追加
 			PatternAroundNumBox.preparePatternArroundNumBox();
 
-
-			for (cycle_num = 1; cycle_num <= 10; cycle_num++) {
+			for (cycle_num = 1; cycle_num <= 30; cycle_num++) {
 				was_change_board = false;
 				// 数字マス周りのパターンを管理
 				PatternAroundNumBox.managePatternAroundNumBox();
@@ -90,14 +89,11 @@ namespace Tapa
 				printBoard();
 			}
 
-
 			Console.WriteLine("深さ >> " + BackTrack.min_depth);
 			Console.WriteLine("notdeployedbox_list >> " + Tapa.not_deployedbox_coord_list.Count);
 			Console.WriteLine("numbox_coord_list >> " + Tapa.numbox_coord_list.Count);
 			Console.WriteLine("edge_blackbox_coordlist >> " + Tapa.edge_blackbox_coord_list.Count);
 			Console.WriteLine("isolation_blackboxes_group_list >> " + Tapa.isolation_blackboxes_group_list.Count);
-
-			printMultiCoordList(Tapa.isolation_notdeployedboxes_group_list);
 
 			if (isCorrectAnswer()) { Console.WriteLine("正解！！"); }
 			else { Console.WriteLine("不正解"); }

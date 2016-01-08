@@ -3474,14 +3474,14 @@ namespace Tapa
 				// 保存した状態をロード
 				StateSave.setSavedState(save_point);
 			}
-			co.printCoordinates();
-			Console.WriteLine("kill_id_ite_list >> " + kill_id_ite_list.Count);
-			Console.WriteLine("削除前 >> " + Tapa.box[co.x][co.y].id_list.Count);
+			// co.printCoordinates();
+			//Console.WriteLine("kill_id_ite_list >> " + kill_id_ite_list.Count);
+			//Console.WriteLine("削除前 >> " + Tapa.box[co.x][co.y].id_list.Count);
 			// 除外対象のidをid_listから除外
 			foreach (int tmp_ite in kill_id_ite_list) {
 				Tapa.box[co.x][co.y].id_list.RemoveAt(tmp_ite);
 			}
-			Console.WriteLine("削除後 >> " + Tapa.box[co.x][co.y].id_list.Count);
+			//Console.WriteLine("削除後 >> " + Tapa.box[co.x][co.y].id_list.Count);
 		}
 
 		/*********************************
@@ -3508,7 +3508,7 @@ namespace Tapa
 				}
 				// id_listのうち、孤立する黒マス群を作るidを除外（id_listごとに処理したほうが効率的）
 				excludeIdToMakeIsolationBlackBoxGroup(tmp_co, Tapa.box[tmp_co.x][tmp_co.y].id_list);
-				//// id_listのうち、idを配置して別の数字マスのid_listの大きさが0になるようなidを除外する。
+				// id_listのうち、idを配置して別の数字マスのid_listの大きさが0になるようなidを除外する。
 				excludeIdToKillOtherNameBoxAllId(tmp_co, Tapa.box[tmp_co.x][tmp_co.y].id_list);
 
 				// id_listが一意ならそれを配置して数字マスリストから除外
