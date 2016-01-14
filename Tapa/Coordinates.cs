@@ -29,6 +29,16 @@ namespace Tapa
 			this.y = co.y;
 		}
 
+		public static Coordinates operator+ (Coordinates aaa, Coordinates bbb)
+		{
+			return new Coordinates(aaa.x + bbb.x, aaa.y + bbb.y);
+		}
+
+		public static Coordinates operator- (Coordinates aaa, Coordinates bbb)
+		{
+			return new Coordinates(aaa.x - bbb.x, aaa.y - bbb.y);
+		}
+
 		public override bool Equals(object obj)
 		{
 			if (obj == null || GetType() != obj.GetType()) { return false; }

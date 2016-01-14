@@ -17,7 +17,7 @@ namespace Tapa
 		// 未定マスの座標リスト
 		public static List<Coordinates> not_deployedbox_coord_list = new List<Coordinates>();
 		// 一繋がりの未定マス群の座標リスト
-		// public static List<List<Coordinates>> isolation_notdeployedboxes_group_list = new List<List<Coordinates>>();
+		public static List<List<Coordinates>> isolation_notdeployedboxes_group_list = new List<List<Coordinates>>();
 		// 伸び代のある黒マスの座標リスト
 		public static List<Coordinates> edge_blackbox_coord_list = new List<Coordinates>();
 		// 一繋がりの黒マス群の座標リスト
@@ -32,8 +32,8 @@ namespace Tapa
 		public static int STATE_AVOID_DUMPLING_AROUND_BLACK_BOX = 3;		// 黒マスの上下左右で団子マスを避ける時
 		public static int STATE_ISOLATION_BLACK_BOXES_ONLY_EXTENDABLE = 4;	// 一繋がりの黒マス群の伸び代が一箇所のみの時
 
-		public static int MAX_BOARD_ROW = 0;
-		public static int MAX_BOARD_COL = 0;
+		public static int MAX_BOARD_ROW = 10;
+		public static int MAX_BOARD_COL = 10;
 
 		public static bool was_change_board;
 
@@ -45,11 +45,20 @@ namespace Tapa
 		[STAThread]
 		static void Main(string[] args)
 		{
+
+			Problem.manageMakingProblem();
+			Console.WriteLine("盤面:{0}*{1} = {2}", MAX_BOARD_ROW, MAX_BOARD_COL, (MAX_BOARD_ROW) * (MAX_BOARD_COL));
+			Console.WriteLine("黒マスの数 >> " + Tapa.isolation_blackboxes_group_list[0].Count);
+			return;
+
+
 			if (args.Length == 0) {
 				Console.WriteLine("Error:コマンドライン引き数が正しくありません。\n"
 								+ "第一引数：入力ファイル\n第二引数：出力ファイル\n");
 				Application.Exit();
 			}
+
+			Console.WriteLine("#######################入力ファイル名 >> " + args[0]);
 
 			// 入力ファイルの読み込み
 			Tapa.inputTapa(args[0]);
@@ -87,13 +96,15 @@ namespace Tapa
 				backtrack.manageBackTrack();
 				StateSave.setSavedState(BackTrack.correct_save_point);
 				printBoard();
+				Console.WriteLine("\n深さ >> " + BackTrack.min_depth);
 			}
 
-			Console.WriteLine("深さ >> " + BackTrack.min_depth);
-			Console.WriteLine("notdeployedbox_list >> " + Tapa.not_deployedbox_coord_list.Count);
-			Console.WriteLine("numbox_coord_list >> " + Tapa.numbox_coord_list.Count);
-			Console.WriteLine("edge_blackbox_coordlist >> " + Tapa.edge_blackbox_coord_list.Count);
-			Console.WriteLine("isolation_blackboxes_group_list >> " + Tapa.isolation_blackboxes_group_list.Count);
+			//Console.WriteLine("notdeployedbox_list >> " + Tapa.not_deployedbox_coord_list.Count);
+			//Console.WriteLine("numbox_coord_list >> " + Tapa.numbox_coord_list.Count);
+			//Console.WriteLine("edge_blackbox_coordlist >> " + Tapa.edge_blackbox_coord_list.Count);
+			//Console.WriteLine("isolation_blackboxes_group_list >> " + Tapa.isolation_blackboxes_group_list.Count);
+			Console.WriteLine("盤面:{0}*{1} = {2}", Tapa.MAX_BOARD_ROW-2, Tapa.MAX_BOARD_COL-2, (Tapa.MAX_BOARD_ROW-2)*(Tapa.MAX_BOARD_COL-2));
+			Console.WriteLine("黒マスの数 >> " + Tapa.isolation_blackboxes_group_list[0].Count);
 
 			if (isCorrectAnswer()) { Console.WriteLine("正解！！"); }
 			else { Console.WriteLine("不正解"); }
@@ -291,13 +302,13 @@ namespace Tapa
 		 *   引数：（盤面の行数、盤面の列数）
 		 *  
 		 * *******************************/
-		private static void makeOuterBox(int row_count, int column_count)
+		public static void makeOuterBox(int row_count, int column_count)
 		{
 			// ########## 盤面の外側にも1マスずつマスを配置
 			Box tmp_box = new Box();
 			List<Box> tmp_top_box_list = new List<Box>();	// 最上行に配置する行
 			List<Box> tmp_bot_box_list = new List<Box>();	// 最下行に配置する行
-			tmp_box.Color = Box.WHITE;		// 外側のマスは白色
+			tmp_box.Color = Box.WHITE;						// 外側のマスは白色
 			for (int i = 0; i <= column_count + 1; i++) {
 				tmp_box.coord = new Coordinates(0, i);
 				tmp_top_box_list.Add(new Box(tmp_box));      // 最上行に追加する空マスのリストに追加
@@ -305,13 +316,13 @@ namespace Tapa
 				tmp_box.coord = new Coordinates(row_count + 1, i);
 				tmp_bot_box_list.Add(new Box(tmp_box));      // 最下行に追加する空マスのリストに追加
 			}
-			box.Insert(0, new List<Box>(tmp_top_box_list));    // 最上行に空マスのリストを追加
-			box.Add(new List<Box>(tmp_bot_box_list));          // 最下行に空マスのリストを追加
+			Tapa.box.Insert(0, new List<Box>(tmp_top_box_list));    // 最上行に空マスのリストを追加
+			Tapa.box.Add(new List<Box>(tmp_bot_box_list));          // 最下行に空マスのリストを追加
 			for (int i = 1; i <= row_count; i++) {
-				tmp_box.coord = new Coordinates(i, 0);	// 座標情報を訂正
-				box[i].Insert(0, new Box(tmp_box));			// 先頭に空マスを追加
+				tmp_box.coord = new Coordinates(i, 0);					// 座標情報を訂正
+				Tapa.box[i].Insert(0, new Box(tmp_box));			// 先頭に空マスを追加
 				tmp_box.coord = new Coordinates(i, column_count + 1);	// 座標情報を訂正
-				box[i].Add(new Box(tmp_box));				// 末尾に空マスを追加
+				Tapa.box[i].Add(new Box(tmp_box));				// 末尾に空マスを追加
 			}
 		}
 

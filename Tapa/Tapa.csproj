@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="Box.cs" />
     <Compile Include="BackTrack.cs" />
+    <Compile Include="Problem.cs" />
     <Compile Include="StateSave.cs" />
     <Compile Include="Coordinates.cs" />
     <Compile Include="PatternAroundNumBox.cs" />

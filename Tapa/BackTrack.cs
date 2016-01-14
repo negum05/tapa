@@ -81,6 +81,8 @@ namespace Tapa
 							StateSave.saveNowState(BackTrack.correct_save_point);		// 正しければ現在の盤面を保存
 							if (depth < min_depth) {		// 先読みした深さ（のうち小さい方）を記録
 								min_depth = depth;
+								tmp_ndbox_coord.printCoordinates();
+								Console.WriteLine(":min_depth >> " + min_depth);
 							}
 							ret_bool = true;
 						}
@@ -131,6 +133,8 @@ namespace Tapa
 						StateSave.saveNowState(BackTrack.correct_save_point);		// 正しければ現在の盤面を保存
 						if (depth < min_depth) {		// 先読みした深さ（のうち小さい方）を記録
 							min_depth = depth;
+							tmp_ndbox_coord.printCoordinates();
+							Console.WriteLine(":min_depth >> " + min_depth);
 						}
 						ret_bool = true;
 					}
@@ -159,7 +163,6 @@ namespace Tapa
 			//StateSave.saveNowState(state_base);
 			// 一繋がりの未定マス群のリストを作成
 			// Box.divideNotDeployedBoxToGroup();
-			min_Depth = MAX_INT;
 			do {
 				if (doBackTrack(0)) {
 
@@ -170,7 +173,6 @@ namespace Tapa
 					Console.WriteLine();
 
 				}
-				min_Depth = MAX_INT;
 			} while (Tapa.not_deployedbox_coord_list.Count > 0);
 		}
 	}
