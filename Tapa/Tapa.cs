@@ -32,8 +32,9 @@ namespace Tapa
 		public static int STATE_AVOID_DUMPLING_AROUND_BLACK_BOX = 3;		// 黒マスの上下左右で団子マスを避ける時
 		public static int STATE_ISOLATION_BLACK_BOXES_ONLY_EXTENDABLE = 4;	// 一繋がりの黒マス群の伸び代が一箇所のみの時
 
-		public static int MAX_BOARD_ROW = 10;
-		public static int MAX_BOARD_COL = 10;
+		public static int MAX_BOARD_ROW = 6;
+		public static int MAX_BOARD_COL = 6;
+		public static int BOX_SUM = MAX_BOARD_COL * MAX_BOARD_ROW;
 
 		public static bool was_change_board;
 
@@ -62,13 +63,12 @@ namespace Tapa
 
 			// 入力ファイルの読み込み
 			Tapa.inputTapa(args[0]);
+			// 準備：数字マスにidのリストを追加
+			PatternAroundNumBox.preparePatternArroundNumBox();
 			// 盤面の出力
 			Console.WriteLine("入力盤面");
 			Tapa.printBoard();
 			Console.WriteLine();
-
-			// 準備：数字マスにidのリストを追加
-			PatternAroundNumBox.preparePatternArroundNumBox();
 
 			for (cycle_num = 1; cycle_num <= 30; cycle_num++) {
 				was_change_board = false;

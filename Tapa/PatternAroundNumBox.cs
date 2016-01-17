@@ -3358,12 +3358,9 @@ namespace Tapa
 				};
 
 			// クローンのマス色変更回数を0にする。
-			//foreach (Box tmp_box in clonebox_arround_numbox_list) {
-			//	tmp_box.changed_count_in_search_confirm_box = 0;
-			//	//Console.Write("({0},{1})\n", tmp_box.coord.x, tmp_box.coord.y);
-			//	//tmp_box.printBoxNum();
-			//	//Console.Write("\n");
-			//}
+			foreach (Box tmp_box in clonebox_around_numbox_list) {
+				tmp_box.changed_count_in_search_confirm_box = 0;
+			}
 
 			// ######## <begin> クローン処理中はリスト関係の処理をしない
 			Box.during_clone = true;
