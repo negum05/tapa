@@ -178,8 +178,7 @@ namespace Tapa
 		* co(新しく白マスになった座標)周りの黒マスを見て、
 		* coが白マスになったことで伸び代がなくなった黒マスの伸び代フラグをオフにし、
 		* 伸び代のある黒マスリストから除外する。
-		* その黒マスが所属する孤立した黒マス群リストを、伸び代のある黒マスが前にくるようソートする。
-		* 
+		*  
 		* 引数
 		* co	: 白マスの座標
 		*   
@@ -200,14 +199,6 @@ namespace Tapa
 				if (tmp_box.can_extend_blackbox && !canExtendBlackBox(tmp_box.coord)) {
 					tmp_box.can_extend_blackbox = false;
 					Tapa.edge_blackbox_coord_list.Remove(tmp_box.coord);
-					//// 伸び代のなくなった黒マスが所属していた、孤立した黒マス群をソートする。
-					//for (int ite_iso_list = Tapa.isolation_blackboxes_group_list.Count - 1; ite_iso_list >= 0; ite_iso_list--) {
-					//	if (Tapa.isolation_blackboxes_group_list[ite_iso_list].Contains(tmp_box.coord)) {
-					//		List<Coordinates> sorted_coord_list = sortFrontExtendableList(Tapa.isolation_blackboxes_group_list[ite_iso_list]);
-					//		Tapa.isolation_blackboxes_group_list[ite_iso_list].RemoveRange(0, sorted_coord_list.Count);	// ソート前のリストを削除
-					//		Tapa.isolation_blackboxes_group_list[ite_iso_list].InsertRange(0, sorted_coord_list);		// 空になったリストにソート後のリストを挿入
-					//	}
-					//}
 				}
 			}
 
@@ -440,29 +431,45 @@ namespace Tapa
 
 		/*********************************
 		 * 
-		 * 座標co周り8マスの内、白マスが２つ以上存在すればtrueを返す。
+		 * 座標co周り8マスにある白マスの座標をリストで返す。(外周を除く)
+		 *
 		 * 引数
-		 * co	: 黒マスの座標
+		 * co	: 注目座標
 		 *   
 		 * *******************************/
-		//public static bool existWhiteBoxAroundOver2(Coordinates co)
-		//{
-		//	int whitebox_count = 0;
+		public static List<Coordinates> getWhiteBoxCoordAround8 (Coordinates co)
+		{
+			List<Coordinates> around_whitebox_list = new List<Coordinates>();
 
-		//	if (Tapa.box[co.x - 1][co.y - 1].Color == Box.WHITE) { whitebox_count++; }
-		//	if (Tapa.box[co.x - 1][co.y].Color == Box.WHITE) { whitebox_count++; }
-		//	if (Tapa.box[co.x - 1][co.y + 1].Color == Box.WHITE) { whitebox_count++; }
-		//	if (Tapa.box[co.x][co.y - 1].Color == Box.WHITE) { whitebox_count++; }
-		//	if (Tapa.box[co.x][co.y].Color == Box.WHITE) { whitebox_count++; }
-		//	if (Tapa.box[co.x][co.y + 1].Color == Box.WHITE) { whitebox_count++; }
-		//	if (Tapa.box[co.x + 1][co.y - 1].Color == Box.WHITE) { whitebox_count++; }
-		//	if (Tapa.box[co.x + 1][co.y].Color == Box.WHITE) { whitebox_count++; }
-		//	if (Tapa.box[co.x + 1][co.y + 1].Color == Box.WHITE) { whitebox_count++; }
+			for (int i = co.x - 1; i <= co.x + 1; i++) {
+				for (int j = co.y - 1; j <= co.y + 1; j++) {
+					Coordinates around_co = new Coordinates(i,j);
+					if ( (i == co.x && j == co.y) || !Box.checkNotOuterBox(around_co) ) { continue; }
+					if (Tapa.box[i][j].Color == Box.WHITE) {
+						around_whitebox_list.Add(around_co);
+					}
+				}
+			}
 
-		//	if (whitebox_count >= 2) { return true; }
-		//	return false;
+			return around_whitebox_list;
+		}
 
-		//}
+		/*********************************
+		 * 
+		 * 座標coが外周の座標かどうか返す
+		 * true		: 外周の座標ではない
+		 * false	: 外周の座標である
+		 * 
+		 * 引数
+		 * co	: 注目座標
+		 *   
+		 * *******************************/
+		public static bool checkNotOuterBox(Coordinates co)
+		{
+			if (co.x <= 0 || Tapa.MAX_BOARD_ROW < co.x
+				|| co.y <= 0 || Tapa.MAX_BOARD_COL < co.y) { return false; }
+			return true;
+		}
 
 		/*********************************
 		 * 
@@ -565,6 +572,9 @@ namespace Tapa
 		 * *******************************/
 		private static void extendIsolationBlackBoxGroup()
 		{
+			// 問題作成中かつ
+			if (Problem.is_adopting_numberbox && Tapa.not_deployedbox_coord_list.Count == 1) { return; }
+
 			for (int ite_iso_group_list = 0; ite_iso_group_list < Tapa.isolation_blackboxes_group_list.Count; ite_iso_group_list++) {
 				List<Coordinates> tmp_iso_group = Tapa.isolation_blackboxes_group_list[ite_iso_group_list];
 				int count_extendable_blackbox = 0;						// 孤立した黒マス群にある伸び代のある黒マスの数

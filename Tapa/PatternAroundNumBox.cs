@@ -3330,9 +3330,11 @@ namespace Tapa
 		static public void preparePatternArroundNumBox()
 		{
 			foreach (Coordinates tmp_co in Tapa.numbox_coord_list) {
-				Tapa.box[tmp_co.x][tmp_co.y].id_list
-					= new List<byte>(PatternAroundNumBox.getPatternAroundNumBoxList(
-						Tapa.box[tmp_co.x][tmp_co.y].box_num));
+				if (Tapa.box[tmp_co.x][tmp_co.y].id_list.Count == 0) {	// id_listを持っていなければ
+					Tapa.box[tmp_co.x][tmp_co.y].id_list
+						= new List<byte>(PatternAroundNumBox.getPatternAroundNumBoxList(
+							Tapa.box[tmp_co.x][tmp_co.y].box_num));
+				}
 			}
 		}
 
@@ -3402,7 +3404,7 @@ namespace Tapa
 			for (int i = id_list.Count - 1; i >= 0; i--) {
 				PatternAroundNumBox.setPatternAroundNumBox(co, id_list[i]);
 				if (!Box.checkNotIsolationBlackBoxGroup()				// 盤面に孤立した黒マス群がないか調べる
-					&& Tapa.not_deployedbox_coord_list.Count > 0) {	
+					&& Tapa.not_deployedbox_coord_list.Count > 0) {
 					iso_id_ite_list.Add(i);
 				}
 				StateSave.setSavedState(save_point);

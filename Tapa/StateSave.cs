@@ -111,8 +111,8 @@ namespace Tapa
 
 			List<List<Box>> tmp_board = new List<List<Box>>();
 
-			int max_row = Tapa.MAX_BOARD_ROW;
-			int max_col = Tapa.MAX_BOARD_COL;
+			int max_row = Tapa.MAX_BOARD_ROW + 2; // +2は外周の分
+			int max_col = Tapa.MAX_BOARD_COL + 2;
 			// 要素ごとにaddする (インスタンスができる)
 			for (int i = 0; i < max_row; i++) {
 				List<Box> tmp_list = new List<Box>();

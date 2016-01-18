@@ -32,13 +32,13 @@ namespace Tapa
 		public static int STATE_AVOID_DUMPLING_AROUND_BLACK_BOX = 3;		// 黒マスの上下左右で団子マスを避ける時
 		public static int STATE_ISOLATION_BLACK_BOXES_ONLY_EXTENDABLE = 4;	// 一繋がりの黒マス群の伸び代が一箇所のみの時
 
-		public static int MAX_BOARD_ROW = 6;
-		public static int MAX_BOARD_COL = 6;
+		public static int MAX_BOARD_ROW = 10;
+		public static int MAX_BOARD_COL = 10;
 		public static int BOX_SUM = MAX_BOARD_COL * MAX_BOARD_ROW;
 
 		public static bool was_change_board;
 
-		public static int cycle_num = 0;
+		public static int REPEAT_NUM = 30;
 
 		/// <summary>
 		/// アプリケーションのメイン エントリ ポイントです。
@@ -70,6 +70,78 @@ namespace Tapa
 			Tapa.printBoard();
 			Console.WriteLine();
 
+
+			solveTapa(30);	// 問題を解く
+
+
+			// 未定マスが存在するなら、バックトラックを行う。
+			if (Tapa.not_deployedbox_coord_list.Count > 0) {
+				BackTrack backtrack = new BackTrack();
+				backtrack.manageBackTrack();
+				StateSave.setSavedState(BackTrack.correct_save_point);
+				printBoard();
+				Console.WriteLine("\n深さ >> " + BackTrack.min_depth);
+			}
+
+			//Console.WriteLine("notdeployedbox_list >> " + Tapa.not_deployedbox_coord_list.Count);
+			//Console.WriteLine("numbox_coord_list >> " + Tapa.numbox_coord_list.Count);
+			//Console.WriteLine("edge_blackbox_coordlist >> " + Tapa.edge_blackbox_coord_list.Count);
+			//Console.WriteLine("isolation_blackboxes_group_list >> " + Tapa.isolation_blackboxes_group_list.Count);
+			Console.WriteLine("盤面:{0}*{1} = {2}", MAX_BOARD_ROW, MAX_BOARD_COL, (MAX_BOARD_ROW) * (MAX_BOARD_COL));
+			Console.WriteLine("黒マスの数 >> " + Tapa.isolation_blackboxes_group_list[0].Count);
+
+			if (isCorrectAnswer()) { Console.WriteLine("正解！！"); }
+			else { Console.WriteLine("不正解"); }
+
+			return;
+
+			/*
+			// ボタンをWindows風のスタイルにしてくれる
+			Application.EnableVisualStyles();
+			// falseにすることでパフォーマンスを優先する
+			Application.SetCompatibleTextRenderingDefault(false);
+			// Form1()が停止しない間常に動作
+			Application.Run(new Display());
+			 */
+		}
+
+		/*********************************
+		 * 
+		 * 盤面のリセット
+		 * 
+		 * *******************************/
+		public static void clearBoard()
+		{
+			// idの残っている数字マスの座標のリストを初期化
+			numbox_coord_list.Clear();
+			// 未定マスの座標リストを初期化
+			not_deployedbox_coord_list.Clear();
+			// 一繋がりの未定マス群の座標リストを初期化
+			isolation_notdeployedboxes_group_list.Clear();
+			// 伸び代のある黒マスの座標リストを初期化
+			edge_blackbox_coord_list.Clear();
+			// 一繋がりの黒マス群の座標リストを初期化
+			isolation_blackboxes_group_list.Clear();
+
+			for (int i = 1; i <= MAX_BOARD_ROW; i++) {
+				for (int j = 1; j <= MAX_BOARD_COL; j++) {
+					box[i][j].clear();
+					box[i][j].coord = new Coordinates(i, j);
+					not_deployedbox_coord_list.Add(new Coordinates(i, j));
+				}
+			}
+		}
+
+
+		/*********************************
+		 * 
+		 * Tapaを解く(BuckTrack無し)
+		 * 引数：
+		 * cycle_num	: 手法の繰り返し上限回数
+		 *  
+		 * *******************************/
+		public static void solveTapa(int cycle_num)
+		{
 			for (cycle_num = 1; cycle_num <= 30; cycle_num++) {
 				was_change_board = false;
 				// 数字マス周りのパターンを管理
@@ -89,105 +161,11 @@ namespace Tapa
 				//Console.WriteLine();
 				if (!was_change_board) { break; }
 			}
-
-			// 未定マスが存在するなら、バックトラックを行う。
-			if (Tapa.not_deployedbox_coord_list.Count > 0) {
-				BackTrack backtrack = new BackTrack();
-				backtrack.manageBackTrack();
-				StateSave.setSavedState(BackTrack.correct_save_point);
-				printBoard();
-				Console.WriteLine("\n深さ >> " + BackTrack.min_depth);
-			}
-
-			//Console.WriteLine("notdeployedbox_list >> " + Tapa.not_deployedbox_coord_list.Count);
-			//Console.WriteLine("numbox_coord_list >> " + Tapa.numbox_coord_list.Count);
-			//Console.WriteLine("edge_blackbox_coordlist >> " + Tapa.edge_blackbox_coord_list.Count);
-			//Console.WriteLine("isolation_blackboxes_group_list >> " + Tapa.isolation_blackboxes_group_list.Count);
-			Console.WriteLine("盤面:{0}*{1} = {2}", Tapa.MAX_BOARD_ROW-2, Tapa.MAX_BOARD_COL-2, (Tapa.MAX_BOARD_ROW-2)*(Tapa.MAX_BOARD_COL-2));
-			Console.WriteLine("黒マスの数 >> " + Tapa.isolation_blackboxes_group_list[0].Count);
-
-			if (isCorrectAnswer()) { Console.WriteLine("正解！！"); }
-			else { Console.WriteLine("不正解"); }
-
-			return;
-
-			/*
-			// boxとsaveの参照確認用（一方の変化が他方に影響しないことを確認）
-			StateSave test_state_save = new StateSave();
-			StateSave.saveNowState(test_state_save);
-			Console.WriteLine("######################");
-			Console.WriteLine("box >> ");
-			Tapa.printBoard();
-			Console.WriteLine();
-			Console.WriteLine("saved_box >> ");
-			Tapa.printBoard(test_state_save.saved_box);
-			Console.WriteLine();
-
-			Console.WriteLine("box.[7][1] = BLACK>> ");
-			Tapa.box[7][1].Color = Box.BLACK;
-			Console.WriteLine("box >> ");
-			Tapa.printBoard();
-			Console.WriteLine();
-			Console.WriteLine("saved_box >> ");
-			Tapa.printBoard(test_state_save.saved_box);
-			Console.WriteLine();
-
-			Console.WriteLine("test_save[6][1].Color = Box.BLACK");
-			test_state_save.saved_box[6][1].Color = Box.BLACK;
-			Console.WriteLine("box >> ");
-			Tapa.printBoard();
-			Console.WriteLine();
-			Console.WriteLine("saved_box >> ");
-			Tapa.printBoard(test_state_save.saved_box);
-			Console.WriteLine();
-
-			Console.WriteLine("set");
-			StateSave.setSavedState(test_state_save);
-			Console.WriteLine("num_box >> ");
-			Tapa.printBoard();
-			Console.WriteLine();
-			Console.WriteLine("saved_box >> ");
-			Tapa.printBoard(test_state_save.saved_box);
-			Console.WriteLine();
-
-			Console.WriteLine("box[1][7].Color = Box.BLACK");
-			box[1][7].Color = Box.BLACK;
-			Console.WriteLine("box >> ");
-			Tapa.printBoard();
-			Console.WriteLine();
-			Console.WriteLine("saved_box >> ");
-			Tapa.printBoard(test_state_save.saved_box);
-			Console.WriteLine();
-
-			Console.WriteLine("set");
-			StateSave.setSavedState(test_state_save);
-			Console.WriteLine("num_box >> ");
-			Tapa.printBoard();
-			Console.WriteLine();
-			Console.WriteLine("saved_box >> ");
-			Tapa.printBoard(test_state_save.saved_box);
-			Console.WriteLine();
-			return;
-			 * */
-
-
-
-			// 数字マス周りのチェック
-			// PatternAroundNumBox.checkPatternAroundNumBox();
-			/*
-			// ボタンをWindows風のスタイルにしてくれる
-			Application.EnableVisualStyles();
-			// falseにすることでパフォーマンスを優先する
-			Application.SetCompatibleTextRenderingDefault(false);
-			// Form1()が停止しない間常に動作
-			Application.Run(new Display());
-			 */
 		}
 
 		/*********************************
 		 * 
 		 * 入力ファイルの読み込み
-		 * ## 場所はなぜかvisual studio 2013と同じディレクトリ ##
 		 *  
 		 * *******************************/
 		public static void inputTapa(string in_filename)
@@ -217,8 +195,9 @@ namespace Tapa
 			int column_count
 				= sheet.get_Range("A1").End[Microsoft.Office.Interop.Excel.XlDirection.xlToRight].Column;
 
-			MAX_BOARD_ROW = row_count + 2;		// 外周のマスも含んだ行数
-			MAX_BOARD_COL = column_count + 2;	// 外周のマスも含んだ列数
+			MAX_BOARD_ROW = row_count;		// 行数
+			MAX_BOARD_COL = column_count;	// 列数
+			BOX_SUM = MAX_BOARD_COL * MAX_BOARD_ROW;
 
 			if (DEBUG) {
 				Console.WriteLine("row_count >> " + row_count + "\ncolumn_count >> " + column_count + "\n");
