@@ -42,6 +42,49 @@ namespace Tapa
 			Box.during_make_inputbord = false;
 
 
+			Tapa.box[1][3].Color = Box.WHITE;
+			Tapa.box[1][6].Color = Box.WHITE;
+			Tapa.box[1][10].Color = Box.WHITE;
+			Tapa.box[2][2].Color = Box.WHITE;
+			Tapa.box[2][4].Color = Box.WHITE;
+			Tapa.box[2][6].Color = Box.WHITE;
+			Tapa.box[2][8].Color = Box.WHITE;
+			Tapa.box[2][9].Color = Box.WHITE;
+			Tapa.box[3][6].Color = Box.WHITE;
+			Tapa.box[3][8].Color = Box.WHITE;
+			Tapa.box[3][9].Color = Box.WHITE;
+			Tapa.box[4][1].Color = Box.WHITE;
+			Tapa.box[4][2].Color = Box.WHITE;
+			Tapa.box[4][3].Color = Box.WHITE;
+			Tapa.box[4][5].Color = Box.WHITE;
+			Tapa.box[5][5].Color = Box.WHITE;
+			Tapa.box[5][7].Color = Box.WHITE;
+			Tapa.box[5][9].Color = Box.WHITE;
+			Tapa.box[6][2].Color = Box.WHITE;
+			Tapa.box[6][4].Color = Box.WHITE;
+			Tapa.box[6][5].Color = Box.WHITE;
+			Tapa.box[6][7].Color = Box.WHITE;
+			Tapa.box[6][10].Color = Box.WHITE;
+			Tapa.box[7][1].Color = Box.WHITE;
+			Tapa.box[7][5].Color = Box.WHITE;
+			Tapa.box[7][8].Color = Box.WHITE;
+			Tapa.box[8][3].Color = Box.WHITE;
+			Tapa.box[8][7].Color = Box.WHITE;
+			Tapa.box[8][9].Color = Box.WHITE;
+			Tapa.box[9][1].Color = Box.WHITE;
+			Tapa.box[9][4].Color = Box.WHITE;
+			Tapa.box[9][5].Color = Box.WHITE;
+			Tapa.box[9][6].Color = Box.WHITE;
+			Tapa.box[10][1].Color = Box.WHITE;
+			Tapa.box[10][3].Color = Box.WHITE;
+			Tapa.box[10][4].Color = Box.WHITE;
+			Tapa.box[10][5].Color = Box.WHITE;
+			Tapa.box[10][6].Color = Box.WHITE;
+			Tapa.box[10][7].Color = Box.WHITE;
+			Tapa.box[10][9].Color = Box.WHITE;
+
+
+
 			Tapa.printBoard();
 		}
 
@@ -277,6 +320,12 @@ namespace Tapa
 			return tmp_num;
 		}
 
+		/*********************************
+		 * 
+		 * まっさらな盤面に数字を配置、問題を解く、数字を配置...を繰り返して
+		 * 答えの盤面を生成する。
+		 *   
+		 * *******************************/
 		private void generateTapaPrblem()
 		{
 			// 数字マスの座標とその数字を関連付けたハッシュ
@@ -374,8 +423,6 @@ namespace Tapa
 			}
 		}
 
-		
-
 		/*********************************
 		 * 
 		 * base_coordの上下左右の未定マスの座標をランダムで1つ返す
@@ -410,9 +457,10 @@ namespace Tapa
 		{
 			Problem p;
 			do {
+				// Tapa.clearBoard();
 				p = new Problem();
 				p.makeBasicBoard();
-				p.setRandomWhiteBox();
+				// p.setRandomWhiteBox();
 				p.makeBlackBoxRoute();
 			} while (!Tapa.isCorrectAnswer());
 			p.setBoxNumber();

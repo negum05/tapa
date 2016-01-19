@@ -125,9 +125,14 @@ namespace Tapa
 
 			for (int i = 1; i <= MAX_BOARD_ROW; i++) {
 				for (int j = 1; j <= MAX_BOARD_COL; j++) {
+					not_deployedbox_coord_list.Add(new Coordinates(i, j));
+				}
+			}
+
+			for (int i = 1; i < box.Count - 1; i++) {
+				for (int j = 1; j < box[i].Count - 1; j++) {
 					box[i][j].clear();
 					box[i][j].coord = new Coordinates(i, j);
-					not_deployedbox_coord_list.Add(new Coordinates(i, j));
 				}
 			}
 		}
