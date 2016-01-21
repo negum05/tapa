@@ -123,12 +123,6 @@ namespace Tapa
 			// 一繋がりの黒マス群の座標リストを初期化
 			isolation_blackboxes_group_list.Clear();
 
-			for (int i = 1; i <= MAX_BOARD_ROW; i++) {
-				for (int j = 1; j <= MAX_BOARD_COL; j++) {
-					not_deployedbox_coord_list.Add(new Coordinates(i, j));
-				}
-			}
-
 			for (int i = 1; i < box.Count - 1; i++) {
 				for (int j = 1; j < box[i].Count - 1; j++) {
 					box[i][j].clear();
@@ -151,17 +145,17 @@ namespace Tapa
 				was_change_board = false;
 				// 数字マス周りのパターンを管理
 				PatternAroundNumBox.managePatternAroundNumBox();
-				Console.WriteLine("{0}回目：数字マス周りの処理後", cycle_num);
-				Tapa.printBoard();
-				Console.WriteLine();
+				//Console.WriteLine("{0}回目：数字マス周りの処理後", cycle_num);
+				//Tapa.printBoard();
+				//Console.WriteLine();
 				//Tapa.printCoordList(Tapa.edge_blackbox_coord_list);
 				//Console.WriteLine();
 
 				// 伸び代のある黒マスから、黒マスが伸びないかを見て、可能なら実際に伸ばす。
 				Box.manageBlackBox();
-				Console.WriteLine("{0}回目：黒マス関係の処理後", cycle_num);
-				Tapa.printBoard();
-				Console.WriteLine();
+				//Console.WriteLine("{0}回目：黒マス関係の処理後", cycle_num);
+				//Tapa.printBoard();
+				//Console.WriteLine();
 				//Tapa.printCoordList(Tapa.edge_blackbox_coord_list);
 				//Console.WriteLine();
 				if (!was_change_board) { break; }
