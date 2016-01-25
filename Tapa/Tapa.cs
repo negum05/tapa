@@ -38,7 +38,7 @@ namespace Tapa
 
 		public static bool was_change_board;
 
-		public static int REPEAT_NUM = 30;
+		public static int REPEAT_NUM = 40;
 
 		/// <summary>
 		/// アプリケーションのメイン エントリ ポイントです。
@@ -49,7 +49,7 @@ namespace Tapa
 
 			Problem.manageMakingProblem();
 			Console.WriteLine("盤面:{0}*{1} = {2}", MAX_BOARD_ROW, MAX_BOARD_COL, (MAX_BOARD_ROW) * (MAX_BOARD_COL));
-			Console.WriteLine("黒マスの数 >> " + Tapa.isolation_blackboxes_group_list[0].Count);
+			// Console.WriteLine("黒マスの数 >> " + Tapa.isolation_blackboxes_group_list[0].Count);
 			return;
 
 
@@ -127,6 +127,7 @@ namespace Tapa
 				for (int j = 1; j < box[i].Count - 1; j++) {
 					box[i][j].clear();
 					box[i][j].coord = new Coordinates(i, j);
+					not_deployedbox_coord_list.Add(box[i][j].coord);
 				}
 			}
 		}
@@ -147,17 +148,18 @@ namespace Tapa
 				PatternAroundNumBox.managePatternAroundNumBox();
 				//Console.WriteLine("{0}回目：数字マス周りの処理後", cycle_num);
 				//Tapa.printBoard();
-				//Console.WriteLine();
-				//Tapa.printCoordList(Tapa.edge_blackbox_coord_list);
+				//Console.WriteLine("notdeployedbox_list >> " + Tapa.not_deployedbox_coord_list.Count);
+				//Tapa.printCoordList(Tapa.not_deployedbox_coord_list);
 				//Console.WriteLine();
 
 				// 伸び代のある黒マスから、黒マスが伸びないかを見て、可能なら実際に伸ばす。
 				Box.manageBlackBox();
 				//Console.WriteLine("{0}回目：黒マス関係の処理後", cycle_num);
 				//Tapa.printBoard();
+				//Console.WriteLine("notdeployedbox_list >> " + Tapa.not_deployedbox_coord_list.Count);
+				//Tapa.printCoordList(Tapa.not_deployedbox_coord_list);
 				//Console.WriteLine();
-				//Tapa.printCoordList(Tapa.edge_blackbox_coord_list);
-				//Console.WriteLine();
+
 				if (!was_change_board) { break; }
 			}
 		}

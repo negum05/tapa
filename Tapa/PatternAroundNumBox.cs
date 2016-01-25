@@ -3462,7 +3462,7 @@ namespace Tapa
 						}
 					}
 					// id_listのうち、孤立する黒マス群を作るidを除外（id_listごとに処理したほうが効率的）
-					excludeIdToMakeIsolationBlackBoxGroup(tmp_co, Tapa.box[tmp_co.x][tmp_co.y].id_list);
+					// excludeIdToMakeIsolationBlackBoxGroup(tmp_co, Tapa.box[tmp_co.x][tmp_co.y].id_list);
 
 					// id_listの大きさが0なら今回試し塗りしたidの添字を、除外するid_listに追加し、次のidを見に行く。
 					if (Tapa.box[tmp_co.x][tmp_co.y].id_list.Count == 0) {
@@ -3491,8 +3491,10 @@ namespace Tapa
 		 * *******************************/
 		static public void managePatternAroundNumBox()
 		{
+
 			for (int ite_coord = Tapa.numbox_coord_list.Count - 1; ite_coord >= 0; ite_coord--) {	// 数字マスのリスト
 				Coordinates tmp_co = new Coordinates(Tapa.numbox_coord_list[ite_coord]);
+
 				for (int ite_id = Tapa.box[tmp_co.x][tmp_co.y].id_list.Count - 1; ite_id >= 0; ite_id--) {	// id_list
 					byte tmp_id = Tapa.box[tmp_co.x][tmp_co.y].id_list[ite_id];
 					// 条件に一致したidをid_listから除外

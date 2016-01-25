@@ -3,14 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace Tapa
 {
 	class Problem
 	{
+		public static string file_path = @"C:\Users\Amano\OneDrive\zemi\Q_Tapa_txt\tapa_problem.txt";
+
 		private static int MIN_WHITEBOX_START_RATE = 40;
 		private static int MAX_WHITEBOX_START_RATE = 60;
 		public static bool is_adopting_numberbox = false;
+
 
 		// 数字マスを格納できる座標リスト
 		private static List<Coordinates> can_be_number_whitebox_list = new List<Coordinates>();
@@ -438,63 +442,60 @@ namespace Tapa
 			}
 			Box.during_make_inputbord = false;
 
+			bool is_break = false;
+			while (!is_break){
+				// 数字マスの削除前の盤面の数字マスの数
+				int first_numbox_num = Tapa.numbox_coord_list.Count;
+				do {
+					// 現在の状態を保存
+					StateSave save_point = new StateSave();
+					StateSave.saveNowState(save_point);
 
-			do {
-				// 現在の状態を保存
-				StateSave save_point = new StateSave();
-				StateSave.saveNowState(save_point);
+					// 削除する数字マスをランダムに選択
+					Coordinates deleting_numbox_coord = Problem.can_be_number_whitebox_list[
+						Problem.getRandomInt(0, Problem.can_be_number_whitebox_list.Count)];
+					// 削除する数字マスを、未削除の数字マス座標リストから除外する。
+					Problem.can_be_number_whitebox_list.Remove(deleting_numbox_coord);
+					Box deleting_box = Tapa.box[deleting_numbox_coord.x][deleting_numbox_coord.y];	// 浅いコピー
 
-				// 削除する数字マスをランダムに選択
-				Coordinates deleting_numbox_coord = Problem.can_be_number_whitebox_list[
-					   Problem.getRandomInt(0, Problem.can_be_number_whitebox_list.Count)];
-				// 削除する数字マスを、数字マスを格納できる座標リストから除外する。
-				Problem.can_be_number_whitebox_list.Remove(deleting_numbox_coord);
-				Box deleting_box = Tapa.box[deleting_numbox_coord.x][deleting_numbox_coord.y];	// 浅いコピー
-
-				// 選択した数字マスを未定マスにする
-				Box.during_make_inputbord = true;
-				deleting_box.Color = Box.NOCOLOR;	// 選択した座標を未定マスにする
-				deleting_box.hasNum = false;		// 数字を持ってるフラグをオフにする
-				Tapa.numbox_coord_list.Remove(deleting_numbox_coord);							// 数字マスリストから除外
-				Tapa.not_deployedbox_coord_list.Add(new Coordinates(deleting_numbox_coord));	// 未定マスリストに追加
-				Box.during_make_inputbord = false;
- 				
-				// 問題を解く
-				Problem.is_adopting_numberbox = true;
-				Tapa.solveTapa(Tapa.REPEAT_NUM);
-				Problem.is_adopting_numberbox = false;
-
-				Tapa.printBoard();
-				Console.WriteLine();
-
-
-				// 解ならば、復元後に、選択した数字マスをそのまま未定マスにする。
-				if (Tapa.isCorrectAnswer()) {
-					StateSave.setSavedState(save_point);
 					// 選択した数字マスを未定マスにする
-					Box.during_make_inputbord = true;
-					deleting_box.Color = Box.NOCOLOR;	// 選択した座標を未定マスにする
-					deleting_box.hasNum = false;		// 数字を持ってるフラグをオフにする
+					deleting_box.revision_color = Box.NOCOLOR;	// 選択した座標を未定マスにする
+					deleting_box.hasNum = false;				// 数字を持ってるフラグをオフにする
 					Tapa.numbox_coord_list.Remove(deleting_numbox_coord);							// 数字マスリストから除外
 					Tapa.not_deployedbox_coord_list.Add(new Coordinates(deleting_numbox_coord));	// 未定マスリストに追加
-					Box.during_make_inputbord = false;
-				}
-				else {
-					// 解でないなら、盤面を復元するのみ。
-					StateSave.setSavedState(save_point);
-				}
 
-				Console.Write("選択された数字マス >> ");
-				deleting_numbox_coord.printCoordinates();
-				Console.WriteLine(deleting_box.box_num);
+					// 問題を解く
+					Problem.is_adopting_numberbox = true;
+					Tapa.solveTapa(Tapa.REPEAT_NUM);
+					Problem.is_adopting_numberbox = false;
+
+					// 解ならば復元後に、選択した数字マスをそのまま未定マスにする。
+					if (Tapa.isCorrectAnswer()) {
+						StateSave.setSavedState(save_point);
+						// 選択した数字マスを未定マスにする
+						Tapa.box[deleting_numbox_coord.x][deleting_numbox_coord.y].revision_color = Box.NOCOLOR;	// 選択した座標を未定マスにする
+						Tapa.box[deleting_numbox_coord.x][deleting_numbox_coord.y].hasNum = false;				// 数字を持ってるフラグをオフにする
+						Tapa.numbox_coord_list.Remove(deleting_numbox_coord);							// 数字マスリストから除外
+						Tapa.not_deployedbox_coord_list.Add(new Coordinates(deleting_numbox_coord));	// 未定マスリストに追加
+					}
+					else {
+						// 解でないなら、盤面を復元するのみ。
+						StateSave.setSavedState(save_point);
+					}
+				} while (Problem.can_be_number_whitebox_list.Count > 0);
+
+				// 数字マスが1つも削除されていなければ
+				if (Tapa.numbox_coord_list.Count == first_numbox_num) {
+					Console.WriteLine("check");
+					is_break = true;
+					break;
+				}
+				// 未削除の数字マスリストを現在残っている数字マスリストで更新
+				Problem.can_be_number_whitebox_list = new List<Coordinates>(Tapa.numbox_coord_list);
+
 				Tapa.printBoard();
-				Console.Write("未選択の数字マスリスト >> ");
-				Tapa.printCoordList(Problem.can_be_number_whitebox_list);
 				Console.WriteLine();
-				Console.WriteLine();
-
-
-			} while (Problem.can_be_number_whitebox_list.Count > 0);
+			} 
 		}
 
 		/*********************************
@@ -525,7 +526,7 @@ namespace Tapa
 					generateTapaProblemInDeleteNumBox(boxnumber_in_whitebox_coord_dict);
 					break;
 			}
-			
+
 		}
 
 		/*********************************
@@ -558,6 +559,43 @@ namespace Tapa
 			return new Random(seed++).Next(min, max);
 		}
 
+		/*********************************
+		 * 
+		 * ぱずぷれv3用のtxtファイルを出力する
+		 *   
+		 * *******************************/
+		private static void generateTapaProblemText()
+		{
+			using (StreamWriter w = new StreamWriter(file_path)) {
+				w.WriteLine("pzprv3\ntapa\n{0}\n{1}", Tapa.MAX_BOARD_ROW, Tapa.MAX_BOARD_COL);
+
+				for (int i = 1; i <= Tapa.MAX_BOARD_ROW; i++) {
+					String st = "";
+					for (int j = 1; j <= Tapa.MAX_BOARD_COL; j++) {
+						Box tmp_box = Tapa.box[i][j];
+						if (tmp_box.hasNum) {
+							// リストの作成
+							List<int> tmp_box_num_list = new List<int>();
+							do {              // 数字を桁毎にリストに追加
+								tmp_box_num_list.Insert(0, tmp_box.box_num % 10);
+								tmp_box.box_num /= 10;
+							} while (tmp_box.box_num > 0);  // do-whileは0の場合を許可するため
+
+							foreach (int tmp_num in tmp_box_num_list) {
+								st += tmp_num.ToString() + ",";
+							}
+							st = st.Remove(st.Length - 1);
+						}
+						else {
+							st += ".";
+						}
+						st += " ";
+					}
+					w.WriteLine(st);
+				}
+			}
+		}
+
 		public static void manageMakingProblem()
 		{
 			Problem p;
@@ -581,6 +619,9 @@ namespace Tapa
 
 			p.generateTapaPrblem(1);
 
+			Tapa.printBoard();
+
+			generateTapaProblemText();
 		}
 	}
 }

@@ -11,8 +11,8 @@ namespace Tapa
 	class Box
 	{
 		public static readonly int NOCOLOR = 0;    // 色未定
-		public static readonly int WHITE = -1;       // 白色
-		public static readonly int BLACK = 1;       // 黒色
+		public static readonly int WHITE = -1;     // 白色
+		public static readonly int BLACK = 1;      // 黒色
 
 		public static bool during_clone = false;	// true:クローン処理中
 		public static bool during_make_inputbord = false;	// true:外周の冗長なマスを作成中
@@ -162,15 +162,10 @@ namespace Tapa
 		* *******************************/
 		public void printIdList()
 		{
-			if (!this.has_num) {
-				Console.WriteLine("Error: id_listのないマスからid_listを出力しようとしています。");
-				Application.Exit();
+			foreach (byte tmp_id in id_list) {
+				Console.Write(tmp_id.ToString() + " ");
 			}
-			else {
-				foreach (byte tmp_id in id_list) {
-					Console.Write(tmp_id.ToString() + " ");
-				}
-			}
+			Console.WriteLine();
 		}
 
 		/*********************************
@@ -437,14 +432,14 @@ namespace Tapa
 		 * co	: 注目座標
 		 *   
 		 * *******************************/
-		public static List<Coordinates> getWhiteBoxCoordAround8 (Coordinates co)
+		public static List<Coordinates> getWhiteBoxCoordAround8(Coordinates co)
 		{
 			List<Coordinates> around_whitebox_list = new List<Coordinates>();
 
 			for (int i = co.x - 1; i <= co.x + 1; i++) {
 				for (int j = co.y - 1; j <= co.y + 1; j++) {
-					Coordinates around_co = new Coordinates(i,j);
-					if ( (i == co.x && j == co.y) || !Box.checkNotOuterBox(around_co) ) { continue; }
+					Coordinates around_co = new Coordinates(i, j);
+					if ((i == co.x && j == co.y) || !Box.checkNotOuterBox(around_co)) { continue; }
 					if (Tapa.box[i][j].Color == Box.WHITE) {
 						around_whitebox_list.Add(around_co);
 					}
