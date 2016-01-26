@@ -112,6 +112,7 @@ namespace Tapa
 		 * *******************************/
 		public static void clearBoard()
 		{
+			box.Clear();
 			// idの残っている数字マスの座標のリストを初期化
 			numbox_coord_list.Clear();
 			// 未定マスの座標リストを初期化
@@ -123,13 +124,18 @@ namespace Tapa
 			// 一繋がりの黒マス群の座標リストを初期化
 			isolation_blackboxes_group_list.Clear();
 
-			for (int i = 1; i < box.Count - 1; i++) {
-				for (int j = 1; j < box[i].Count - 1; j++) {
-					box[i][j].clear();
-					box[i][j].coord = new Coordinates(i, j);
-					not_deployedbox_coord_list.Add(box[i][j].coord);
+			for (int i = 1; i <= Tapa.MAX_BOARD_ROW; i++) {
+				List<Box> tmp_boxlist = new List<Box>();
+				for (int j = 1; j <= Tapa.MAX_BOARD_COL; j++) {
+					Box tmp_box = new Box();
+					tmp_box.coord = new Coordinates(i, j);
+					tmp_boxlist.Add(tmp_box);
+
+					not_deployedbox_coord_list.Add(new Coordinates(tmp_box.coord));
 				}
+				box.Add(tmp_boxlist);
 			}
+			Tapa.makeOuterBox(Tapa.MAX_BOARD_ROW, Tapa.MAX_BOARD_COL);
 		}
 
 
@@ -284,6 +290,8 @@ namespace Tapa
 		 * *******************************/
 		public static void makeOuterBox(int row_count, int column_count)
 		{
+			Box.during_make_inputbord = true;
+
 			// ########## 盤面の外側にも1マスずつマスを配置
 			Box tmp_box = new Box();
 			List<Box> tmp_top_box_list = new List<Box>();	// 最上行に配置する行
@@ -304,6 +312,8 @@ namespace Tapa
 				tmp_box.coord = new Coordinates(i, column_count + 1);	// 座標情報を訂正
 				Tapa.box[i].Add(new Box(tmp_box));				// 末尾に空マスを追加
 			}
+
+			Box.during_make_inputbord = false;
 		}
 
 		/*********************************

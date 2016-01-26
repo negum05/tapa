@@ -11,8 +11,8 @@ namespace Tapa
 	{
 		public static string file_path = @"C:\Users\Amano\OneDrive\zemi\Q_Tapa_txt\tapa_problem.txt";
 
-		private static int MIN_WHITEBOX_START_RATE = 40;
-		private static int MAX_WHITEBOX_START_RATE = 60;
+		private static int MIN_WHITEBOX_START_RATE = 45;
+		private static int MAX_WHITEBOX_START_RATE = 55;
 		public static bool is_adopting_numberbox = false;
 
 
@@ -28,64 +28,71 @@ namespace Tapa
 		private void makeBasicBoard()
 		{
 			// 色を塗る以外の処理をColorプロパティ内で行わないため
-			Box.during_make_inputbord = true;
+			//Box.during_make_inputbord = true;
 
-			for (int i = 1; i <= Tapa.MAX_BOARD_ROW; i++) {
-				List<Box> tmp_box_list = new List<Box>();
-				for (int j = 1; j <= Tapa.MAX_BOARD_COL; j++) {
-					Box tmp_box = new Box();
-					tmp_box.coord = new Coordinates(i, j);
-					tmp_box.Color = Box.NOCOLOR;
-					tmp_box_list.Add(tmp_box);
-					Tapa.not_deployedbox_coord_list.Add(tmp_box.coord);		// 未定マスの座標Listに追加
-				}
-				Tapa.box.Add(tmp_box_list);
-			}
-			Tapa.makeOuterBox(Tapa.MAX_BOARD_ROW, Tapa.MAX_BOARD_COL);
+			//for (int i = 1; i <= Tapa.MAX_BOARD_ROW; i++) {
+			//	List<Box> tmp_box_list = new List<Box>();
+			//	for (int j = 1; j <= Tapa.MAX_BOARD_COL; j++) {
+			//		Box tmp_box = new Box();
+			//		tmp_box.coord = new Coordinates(i, j);
+			//		tmp_box.Color = Box.NOCOLOR;
+			//		tmp_box_list.Add(tmp_box);
+			//		Tapa.not_deployedbox_coord_list.Add(tmp_box.coord);		// 未定マスの座標Listに追加
+			//	}
+			//	Tapa.box.Add(tmp_box_list);
+			//}
+			//Tapa.makeOuterBox(Tapa.MAX_BOARD_ROW, Tapa.MAX_BOARD_COL);
 
-			Box.during_make_inputbord = false;
+			//Box.during_make_inputbord = false;
+
+			//Tapa.box[1][4].Color = Box.WHITE;
+			//Tapa.box[2][4].Color = Box.WHITE;
+			//Tapa.box[3][4].Color = Box.WHITE;
+			//Tapa.box[4][4].Color = Box.WHITE;
+			//Tapa.box[5][4].Color = Box.WHITE;
+			//Tapa.box[6][4].Color = Box.WHITE;
 
 
-			Tapa.box[1][3].Color = Box.WHITE;
-			Tapa.box[1][6].Color = Box.WHITE;
-			Tapa.box[1][10].Color = Box.WHITE;
-			Tapa.box[2][2].Color = Box.WHITE;
-			Tapa.box[2][4].Color = Box.WHITE;
-			Tapa.box[2][6].Color = Box.WHITE;
-			Tapa.box[2][8].Color = Box.WHITE;
-			Tapa.box[2][9].Color = Box.WHITE;
-			Tapa.box[3][6].Color = Box.WHITE;
-			Tapa.box[3][8].Color = Box.WHITE;
-			Tapa.box[3][9].Color = Box.WHITE;
-			Tapa.box[4][1].Color = Box.WHITE;
-			Tapa.box[4][2].Color = Box.WHITE;
-			Tapa.box[4][3].Color = Box.WHITE;
-			Tapa.box[4][5].Color = Box.WHITE;
-			Tapa.box[5][5].Color = Box.WHITE;
-			Tapa.box[5][7].Color = Box.WHITE;
-			Tapa.box[5][9].Color = Box.WHITE;
-			Tapa.box[6][2].Color = Box.WHITE;
-			Tapa.box[6][4].Color = Box.WHITE;
-			Tapa.box[6][5].Color = Box.WHITE;
-			Tapa.box[6][7].Color = Box.WHITE;
-			Tapa.box[6][10].Color = Box.WHITE;
-			Tapa.box[7][1].Color = Box.WHITE;
-			Tapa.box[7][5].Color = Box.WHITE;
-			Tapa.box[7][8].Color = Box.WHITE;
-			Tapa.box[8][3].Color = Box.WHITE;
-			Tapa.box[8][7].Color = Box.WHITE;
-			Tapa.box[8][9].Color = Box.WHITE;
-			Tapa.box[9][1].Color = Box.WHITE;
-			Tapa.box[9][4].Color = Box.WHITE;
-			Tapa.box[9][5].Color = Box.WHITE;
-			Tapa.box[9][6].Color = Box.WHITE;
-			Tapa.box[10][1].Color = Box.WHITE;
-			Tapa.box[10][3].Color = Box.WHITE;
-			Tapa.box[10][4].Color = Box.WHITE;
-			Tapa.box[10][5].Color = Box.WHITE;
-			Tapa.box[10][6].Color = Box.WHITE;
-			Tapa.box[10][7].Color = Box.WHITE;
-			Tapa.box[10][9].Color = Box.WHITE;
+			//Tapa.box[1][3].Color = Box.WHITE;
+			//Tapa.box[1][6].Color = Box.WHITE;
+			//Tapa.box[1][10].Color = Box.WHITE;
+			//Tapa.box[2][2].Color = Box.WHITE;
+			//Tapa.box[2][4].Color = Box.WHITE;
+			//Tapa.box[2][6].Color = Box.WHITE;
+			//Tapa.box[2][8].Color = Box.WHITE;
+			//Tapa.box[2][9].Color = Box.WHITE;
+			//Tapa.box[3][6].Color = Box.WHITE;
+			//Tapa.box[3][8].Color = Box.WHITE;
+			//Tapa.box[3][9].Color = Box.WHITE;
+			//Tapa.box[4][1].Color = Box.WHITE;
+			//Tapa.box[4][2].Color = Box.WHITE;
+			//Tapa.box[4][3].Color = Box.WHITE;
+			//Tapa.box[4][5].Color = Box.WHITE;
+			//Tapa.box[5][5].Color = Box.WHITE;
+			//Tapa.box[5][7].Color = Box.WHITE;
+			//Tapa.box[5][9].Color = Box.WHITE;
+			//Tapa.box[6][2].Color = Box.WHITE;
+			//Tapa.box[6][4].Color = Box.WHITE;
+			//Tapa.box[6][5].Color = Box.WHITE;
+			//Tapa.box[6][7].Color = Box.WHITE;
+			//Tapa.box[6][10].Color = Box.WHITE;
+			//Tapa.box[7][1].Color = Box.WHITE;
+			//Tapa.box[7][5].Color = Box.WHITE;
+			//Tapa.box[7][8].Color = Box.WHITE;
+			//Tapa.box[8][3].Color = Box.WHITE;
+			//Tapa.box[8][7].Color = Box.WHITE;
+			//Tapa.box[8][9].Color = Box.WHITE;
+			//Tapa.box[9][1].Color = Box.WHITE;
+			//Tapa.box[9][4].Color = Box.WHITE;
+			//Tapa.box[9][5].Color = Box.WHITE;
+			//Tapa.box[9][6].Color = Box.WHITE;
+			//Tapa.box[10][1].Color = Box.WHITE;
+			//Tapa.box[10][3].Color = Box.WHITE;
+			//Tapa.box[10][4].Color = Box.WHITE;
+			//Tapa.box[10][5].Color = Box.WHITE;
+			//Tapa.box[10][6].Color = Box.WHITE;
+			//Tapa.box[10][7].Color = Box.WHITE;
+			//Tapa.box[10][9].Color = Box.WHITE;
 
 
 
@@ -102,10 +109,13 @@ namespace Tapa
 			int whitebox_num = getRandomInt(Tapa.BOX_SUM * MIN_WHITEBOX_START_RATE / 100, Tapa.BOX_SUM * MAX_WHITEBOX_START_RATE / 100);
 			Console.WriteLine("start_whitebox_num >> " + whitebox_num);
 
-			for (int i = whitebox_num; i > 0; i--) {
-				// 未定マスからランダムにマスを選択
-				Coordinates will_whitebox = Tapa.not_deployedbox_coord_list[
-					Problem.getRandomInt(0, Tapa.not_deployedbox_coord_list.Count)];
+			// 白マス候補の未定マス
+			List<Coordinates> candidate_notdeploy2whitebox_list = new List<Coordinates>(Tapa.not_deployedbox_coord_list);
+
+			for (int i = whitebox_num; i > 0　&& candidate_notdeploy2whitebox_list.Count > 0; i--) {
+				// 白マス候補の未定マスからランダムにマスを選択
+				Coordinates will_whitebox = candidate_notdeploy2whitebox_list[
+					Problem.getRandomInt(0, candidate_notdeploy2whitebox_list.Count)];
 				// 選択したマスを白色にする
 				Tapa.box[will_whitebox.x][will_whitebox.y].Color = Box.WHITE;
 
@@ -155,13 +165,18 @@ namespace Tapa
 				Tapa.box[new_blackbox_coord.x][new_blackbox_coord.y].Color = Box.BLACK;
 				doTarjan();	// 切断点を黒マスにする
 
+
 				Tapa.printBoard();
 				Console.WriteLine();
+				Console.WriteLine("未定マスの数 >> " + Tapa.not_deployedbox_coord_list.Count);
+
+
 			}
-			for (int i = Tapa.not_deployedbox_coord_list.Count - 1; i >= 0; i--) {
-				Coordinates tmp_coord = Tapa.not_deployedbox_coord_list[i];
-				Tapa.box[tmp_coord.x][tmp_coord.y].Color = Box.WHITE;
-			}
+			// なぞ
+			//for (int i = Tapa.not_deployedbox_coord_list.Count - 1; i >= 0; i--) {
+			//	Coordinates tmp_coord = Tapa.not_deployedbox_coord_list[i];
+			//	Tapa.box[tmp_coord.x][tmp_coord.y].Color = Box.WHITE;
+			//}
 		}
 
 		/*********************************
@@ -601,16 +616,25 @@ namespace Tapa
 			Problem p;
 			do {
 				Tapa.clearBoard();
+
+				Console.WriteLine("未定マスの数1 >> " + Tapa.not_deployedbox_coord_list.Count);
+
 				p = new Problem();
 				p.makeBasicBoard();
-				// p.setRandomWhiteBox();
+
+				Console.WriteLine("未定マスの数2 >> " + Tapa.not_deployedbox_coord_list.Count);
+
+				p.setRandomWhiteBox();
 				p.makeBlackBoxRoute();
+
+				Console.WriteLine("未定マスの数3 >> " + Tapa.not_deployedbox_coord_list.Count);
 
 				Console.WriteLine("notdeployedbox_list >> " + Tapa.not_deployedbox_coord_list.Count);
 				Console.WriteLine("numbox_coord_list >> " + Tapa.numbox_coord_list.Count);
 				Console.WriteLine("edge_blackbox_coordlist >> " + Tapa.edge_blackbox_coord_list.Count);
 				Console.WriteLine("isolation_blackboxes_group_list >> " + Tapa.isolation_blackboxes_group_list.Count);
 
+				if (Tapa.isCorrectAnswer()) { Console.WriteLine("正解！！"); }
 			} while (!Tapa.isCorrectAnswer());
 
 			p.setBoxNumber();
