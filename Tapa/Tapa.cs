@@ -47,11 +47,21 @@ namespace Tapa
 		static void Main(string[] args)
 		{
 
-			Problem.manageMakingProblem();
-			Console.WriteLine("盤面:{0}*{1} = {2}", MAX_BOARD_ROW, MAX_BOARD_COL, (MAX_BOARD_ROW) * (MAX_BOARD_COL));
-			// Console.WriteLine("黒マスの数 >> " + Tapa.isolation_blackboxes_group_list[0].Count);
-			return;
+			// ボタンをWindows風のスタイルにしてくれる
+			Application.EnableVisualStyles();
+			// falseにすることでパフォーマンスを優先する
+			Application.SetCompatibleTextRenderingDefault(false);
+			// Form1()が停止しない間常に動作
+			Application.Run(new Display());
+			
 
+
+			//Problem.manageMakingProblem();
+			//Console.WriteLine("盤面:{0}*{1} = {2}", MAX_BOARD_ROW, MAX_BOARD_COL, (MAX_BOARD_ROW) * (MAX_BOARD_COL));
+			//// Console.WriteLine("黒マスの数 >> " + Tapa.isolation_blackboxes_group_list[0].Count);
+			//return;
+
+			/*****
 
 			if (args.Length == 0) {
 				Console.WriteLine("Error:コマンドライン引き数が正しくありません。\n"
@@ -94,15 +104,12 @@ namespace Tapa
 			else { Console.WriteLine("不正解"); }
 
 			return;
+			 
+			*****/
 
-			/*
-			// ボタンをWindows風のスタイルにしてくれる
-			Application.EnableVisualStyles();
-			// falseにすることでパフォーマンスを優先する
-			Application.SetCompatibleTextRenderingDefault(false);
-			// Form1()が停止しない間常に動作
-			Application.Run(new Display());
-			 */
+			
+			
+			
 		}
 
 		/*********************************

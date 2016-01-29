@@ -9,7 +9,12 @@ namespace Tapa
 {
 	class Problem
 	{
-		public static string file_path = @"C:\Users\Amano\OneDrive\zemi\Q_Tapa_txt\tapa_problem.txt";
+		// 問題生成をするディレクトリパス（GUIで指定）
+		public static string directory_path;
+		// 問題のファイル名
+		public static string file_name = "tapa_problem.txt";
+		// 問題のフルパス
+		public static string file_path;
 
 		private static int MIN_WHITEBOX_START_RATE = 45;
 		private static int MAX_WHITEBOX_START_RATE = 55;
@@ -172,11 +177,11 @@ namespace Tapa
 
 
 			}
-			// なぞ
-			//for (int i = Tapa.not_deployedbox_coord_list.Count - 1; i >= 0; i--) {
-			//	Coordinates tmp_coord = Tapa.not_deployedbox_coord_list[i];
-			//	Tapa.box[tmp_coord.x][tmp_coord.y].Color = Box.WHITE;
-			//}
+			// 白マスに囲まれた未定マスが残っている時、それを白マスで埋める
+			for (int i = Tapa.not_deployedbox_coord_list.Count - 1; i >= 0; i--) {
+				Coordinates tmp_coord = Tapa.not_deployedbox_coord_list[i];
+				Tapa.box[tmp_coord.x][tmp_coord.y].Color = Box.WHITE;
+			}
 		}
 
 		/*********************************
@@ -581,6 +586,8 @@ namespace Tapa
 		 * *******************************/
 		private static void generateTapaProblemText()
 		{
+			file_path = directory_path + file_name;
+			Console.WriteLine("file_path >> " + file_path);
 			using (StreamWriter w = new StreamWriter(file_path)) {
 				w.WriteLine("pzprv3\ntapa\n{0}\n{1}", Tapa.MAX_BOARD_ROW, Tapa.MAX_BOARD_COL);
 
