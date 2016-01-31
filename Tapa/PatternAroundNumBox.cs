@@ -2217,8 +2217,8 @@ namespace Tapa
 						break;
 					case (byte)82:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
-						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)83:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
@@ -3330,11 +3330,11 @@ namespace Tapa
 		static public void preparePatternArroundNumBox()
 		{
 			foreach (Coordinates tmp_co in Tapa.numbox_coord_list) {
-				if (Tapa.box[tmp_co.x][tmp_co.y].id_list.Count == 0) {	// id_listを持っていなければ
+				//if (Tapa.box[tmp_co.x][tmp_co.y].id_list.Count == 0) {	// id_listを持っていなければ
 					Tapa.box[tmp_co.x][tmp_co.y].id_list
 						= new List<byte>(PatternAroundNumBox.getPatternAroundNumBoxList(
 							Tapa.box[tmp_co.x][tmp_co.y].box_num));
-				}
+				//}
 			}
 		}
 
@@ -3434,15 +3434,12 @@ namespace Tapa
 		 * *******************************/
 		static private void excludeIdToKillOtherNameBoxAllId(Coordinates co, List<byte> id_list)
 		{
+			bool test = co.Equals(new Coordinates(3, 1)) ? true : false;
+
+
 			StateSave save_point = new StateSave();
 			// 現在の状態を保存
 			StateSave.saveNowState(save_point);
-
-			//List<byte> id_list = new List<byte>();
-			//foreach (byte tmp_byte in arg_id_list) {
-			//	id_list.Add(tmp_byte);
-			//}
-
 			// 除外するidのid_listでの要素番号を保存するリスト
 			List<int> kill_id_ite_list = new List<int>();
 			for (int i = id_list.Count - 1; i >= 0; i--) {
@@ -3450,7 +3447,6 @@ namespace Tapa
 				PatternAroundNumBox.setPatternAroundNumBox(co, id_list[i]);
 				// 数字マスのリストから今回試し塗りしたidの数字マスを除外
 				Tapa.numbox_coord_list.Remove(co);
-
 				for (int ite_coord = Tapa.numbox_coord_list.Count - 1; ite_coord >= 0; ite_coord--) {	// 数字マスのリスト
 					Coordinates tmp_co = new Coordinates(Tapa.numbox_coord_list[ite_coord]);
 					for (int ite_id = Tapa.box[tmp_co.x][tmp_co.y].id_list.Count - 1; ite_id >= 0; ite_id--) {	// id_list
@@ -3462,25 +3458,21 @@ namespace Tapa
 						}
 					}
 					// id_listのうち、孤立する黒マス群を作るidを除外（id_listごとに処理したほうが効率的）
-					// excludeIdToMakeIsolationBlackBoxGroup(tmp_co, Tapa.box[tmp_co.x][tmp_co.y].id_list);
-
+					excludeIdToMakeIsolationBlackBoxGroup(tmp_co, Tapa.box[tmp_co.x][tmp_co.y].id_list);
 					// id_listの大きさが0なら今回試し塗りしたidの添字を、除外するid_listに追加し、次のidを見に行く。
 					if (Tapa.box[tmp_co.x][tmp_co.y].id_list.Count == 0) {
 						kill_id_ite_list.Add(i);
 						break;
 					}
+
 				}
 				// 保存した状態をロード
 				StateSave.setSavedState(save_point);
 			}
-			// co.printCoordinates();
-			//Console.WriteLine("kill_id_ite_list >> " + kill_id_ite_list.Count);
-			//Console.WriteLine("削除前 >> " + Tapa.box[co.x][co.y].id_list.Count);
 			// 除外対象のidをid_listから除外
 			foreach (int tmp_ite in kill_id_ite_list) {
 				Tapa.box[co.x][co.y].id_list.RemoveAt(tmp_ite);
 			}
-			//Console.WriteLine("削除後 >> " + Tapa.box[co.x][co.y].id_list.Count);
 		}
 
 		/*********************************
@@ -3507,25 +3499,18 @@ namespace Tapa
 						Tapa.box[tmp_co.x][tmp_co.y].id_list.RemoveAt(ite_id);
 					}
 				}
+
 				// id_listのうち、孤立する黒マス群を作るidを除外（id_listごとに処理したほうが効率的）
 				excludeIdToMakeIsolationBlackBoxGroup(tmp_co, Tapa.box[tmp_co.x][tmp_co.y].id_list);
 				// id_listのうち、idを配置して別の数字マスのid_listの大きさが0になるようなidを除外する。
 				excludeIdToKillOtherNameBoxAllId(tmp_co, Tapa.box[tmp_co.x][tmp_co.y].id_list);
-
+				
 				// id_listが一意ならそれを配置して数字マスリストから除外
 				Tapa.NOW_STATE_PROCESS = Tapa.STATE_ID_LIST_ONLY_ONE;
 				if (Tapa.box[tmp_co.x][tmp_co.y].id_list.Count == 1) {
 					PatternAroundNumBox.setPatternAroundNumBox(tmp_co, Tapa.box[tmp_co.x][tmp_co.y].id_list[0]);
 					Tapa.numbox_coord_list.RemoveAt(ite_coord);
 				}
-				// id_listの大きさが0ならエラー
-				//else if (Tapa.box[tmp_co.x][tmp_co.y].id_list.Count == 0) {
-				//	Console.Write("Error: id_listの長さが0になってしまいました。");
-				//	tmp_co.printCoordinates();
-				//	Console.WriteLine();
-				//	Application.Exit();
-				//}
-
 				// tmp_coのid_listを見て数字周りで色が確定しているマスを埋める。
 				Tapa.NOW_STATE_PROCESS = Tapa.STATE_CONFIRM_BOX_COLOR_FROM_ID_LIST;
 				setConfirmBoxArroundNumBox(tmp_co);

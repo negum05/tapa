@@ -32,8 +32,8 @@ namespace Tapa
 		public static int STATE_AVOID_DUMPLING_AROUND_BLACK_BOX = 3;		// 黒マスの上下左右で団子マスを避ける時
 		public static int STATE_ISOLATION_BLACK_BOXES_ONLY_EXTENDABLE = 4;	// 一繋がりの黒マス群の伸び代が一箇所のみの時
 
-		public static int MAX_BOARD_ROW = 10;
-		public static int MAX_BOARD_COL = 10;
+		public static int MAX_BOARD_ROW = 8;
+		public static int MAX_BOARD_COL = 8;
 		public static int BOX_SUM = MAX_BOARD_COL * MAX_BOARD_ROW;
 
 		public static bool was_change_board;
@@ -53,7 +53,9 @@ namespace Tapa
 			Application.SetCompatibleTextRenderingDefault(false);
 			// Form1()が停止しない間常に動作
 			Application.Run(new Display());
-			
+
+
+
 
 
 			//Problem.manageMakingProblem();
@@ -61,8 +63,8 @@ namespace Tapa
 			//// Console.WriteLine("黒マスの数 >> " + Tapa.isolation_blackboxes_group_list[0].Count);
 			//return;
 
-			/*****
-
+			
+			/*
 			if (args.Length == 0) {
 				Console.WriteLine("Error:コマンドライン引き数が正しくありません。\n"
 								+ "第一引数：入力ファイル\n第二引数：出力ファイル\n");
@@ -85,13 +87,13 @@ namespace Tapa
 
 
 			// 未定マスが存在するなら、バックトラックを行う。
-			if (Tapa.not_deployedbox_coord_list.Count > 0) {
-				BackTrack backtrack = new BackTrack();
-				backtrack.manageBackTrack();
-				StateSave.setSavedState(BackTrack.correct_save_point);
-				printBoard();
-				Console.WriteLine("\n深さ >> " + BackTrack.min_depth);
-			}
+			//if (Tapa.not_deployedbox_coord_list.Count > 0) {
+			//	BackTrack backtrack = new BackTrack();
+			//	backtrack.manageBackTrack();
+			//	StateSave.setSavedState(BackTrack.correct_save_point);
+			//	printBoard();
+			//	Console.WriteLine("\n深さ >> " + BackTrack.min_depth);
+			//}
 
 			//Console.WriteLine("notdeployedbox_list >> " + Tapa.not_deployedbox_coord_list.Count);
 			//Console.WriteLine("numbox_coord_list >> " + Tapa.numbox_coord_list.Count);
@@ -105,8 +107,7 @@ namespace Tapa
 
 			return;
 			 
-			*****/
-
+		*/
 			
 			
 			
@@ -162,16 +163,18 @@ namespace Tapa
 				//Console.WriteLine("{0}回目：数字マス周りの処理後", cycle_num);
 				//Tapa.printBoard();
 				//Console.WriteLine("notdeployedbox_list >> " + Tapa.not_deployedbox_coord_list.Count);
-				//Tapa.printCoordList(Tapa.not_deployedbox_coord_list);
-				//Console.WriteLine();
+				//Console.WriteLine("numbox_coord_list >> " + Tapa.numbox_coord_list.Count);
+				//Console.WriteLine("edge_blackbox_coordlist >> " + Tapa.edge_blackbox_coord_list.Count);
+				//Console.WriteLine("isolation_blackboxes_group_list >> " + Tapa.isolation_blackboxes_group_list.Count);
 
 				// 伸び代のある黒マスから、黒マスが伸びないかを見て、可能なら実際に伸ばす。
 				Box.manageBlackBox();
 				//Console.WriteLine("{0}回目：黒マス関係の処理後", cycle_num);
 				//Tapa.printBoard();
 				//Console.WriteLine("notdeployedbox_list >> " + Tapa.not_deployedbox_coord_list.Count);
-				//Tapa.printCoordList(Tapa.not_deployedbox_coord_list);
-				//Console.WriteLine();
+				//Console.WriteLine("numbox_coord_list >> " + Tapa.numbox_coord_list.Count);
+				//Console.WriteLine("edge_blackbox_coordlist >> " + Tapa.edge_blackbox_coord_list.Count);
+				//Console.WriteLine("isolation_blackboxes_group_list >> " + Tapa.isolation_blackboxes_group_list.Count);
 
 				if (!was_change_board) { break; }
 			}
@@ -342,6 +345,7 @@ namespace Tapa
 				}
 				Console.WriteLine();
 			}
+			Console.WriteLine();
 		}
 
 		/*********************************

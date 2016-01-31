@@ -48,6 +48,7 @@ namespace Tapa
 									MessageBoxIcon.Error);
 					return;
 				}
+				
 				string tmp = startMakeProblem.Text;
 				startMakeProblem.Text = "問題生成中...";
 				startMakeProblem.Enabled = false;
@@ -79,6 +80,9 @@ namespace Tapa
 
 		private void Display_Load(object sender, EventArgs e)
 		{
+
+			Console.WriteLine("call\"Display_Load !!!\"");
+	
 			// デフォルトのファイル名
 			textBox9.Text = "tapa_puzzle";
 			Problem.file_name = textBox9.Text + ".txt";
@@ -106,8 +110,7 @@ namespace Tapa
 
 			// 読み取り専用（テキストボックスは編集不可）にする
 			comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
-
-			Tapa.MAX_BOARD_ROW = int.Parse(comboBox1.SelectedItem.ToString());
+			Tapa.MAX_BOARD_ROW = int.Parse(comboBox1.SelectedItem.ToString());	// 行数
 		}
 
 		/*********************************
@@ -125,8 +128,7 @@ namespace Tapa
 
 			// 読み取り専用（テキストボックスは編集不可）にする
 			comboBox2.DropDownStyle = ComboBoxStyle.DropDownList;
-
-			Tapa.MAX_BOARD_COL = int.Parse(comboBox1.SelectedItem.ToString());
+			Tapa.MAX_BOARD_COL = int.Parse(comboBox2.SelectedItem.ToString());	// 列数
 		}
 
 		private void textBox1_TextChanged(object sender, EventArgs e)
@@ -191,13 +193,16 @@ namespace Tapa
 		private void button2_Click_1(object sender, EventArgs e)
 		{
 			System.Diagnostics.Process p =
-				System.Diagnostics.Process.Start(@"C:\Users\Amano\OneDrive\zemi\puzzlevan\puzzlevan.exe", Problem.file_path);
+				// System.Diagnostics.Process.Start(@"C:\Users\Amano\OneDrive\zemi\puzzlevan\puzzlevan.exe", Problem.file_path);
+				System.Diagnostics.Process.Start(@"D:\negum_d\OneDrive\zemi\puzzlevan\puzzlevan.exe", Problem.file_path);
 			System.Threading.Thread.Sleep(500); //少し待つ
-			SetForegroundWindow(p.MainWindowHandle); // puzzlevanをアクティブにする
-			System.Threading.Thread.Sleep(500); //少し待つ
-			// F2 を送信（回答モードにするため）
-			SendKeys.Send("{F2}");
-			Console.WriteLine("F2送信");
+			for (int i = 0; i < 10; i++) {
+				SetForegroundWindow(p.MainWindowHandle); // puzzlevanをアクティブにする
+				System.Threading.Thread.Sleep(500); //少し待つ
+				// F2 を送信（回答モードにするため）
+				SendKeys.Send("{F2}");
+				Console.WriteLine("F2送信");
+			}
 			p.WaitForExit();
 		}
 

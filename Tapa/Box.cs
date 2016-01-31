@@ -567,8 +567,10 @@ namespace Tapa
 		 * *******************************/
 		private static void extendIsolationBlackBoxGroup()
 		{
-			// 問題作成中かつ
-			if (Problem.is_adopting_numberbox && Tapa.not_deployedbox_coord_list.Count == 1) { return; }
+			// 問題作成中 かつ 未定マスが一つ かつ 黒マス群が一つしかなければこの処理をしない
+			if (Problem.is_adopting_numberbox
+				&& Tapa.not_deployedbox_coord_list.Count == 1
+				&& Tapa.isolation_blackboxes_group_list.Count == 1) { return; }
 
 			for (int ite_iso_group_list = 0; ite_iso_group_list < Tapa.isolation_blackboxes_group_list.Count; ite_iso_group_list++) {
 				List<Coordinates> tmp_iso_group = Tapa.isolation_blackboxes_group_list[ite_iso_group_list];
