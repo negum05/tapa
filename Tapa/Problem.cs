@@ -377,11 +377,22 @@ namespace Tapa
 		private void generateTapaProblemInDeleteNumBox()
 		{
 
+			Console.WriteLine("盤面の数字マス選択開始！（削除）");
+			Tapa.printBoard();
+
 			bool is_break = false;
 			while (!is_break){
 				// 未削除の数字マスリストを現在残っている数字マスリストで更新
 				Problem.can_be_number_whitebox_list = new List<Coordinates>(Tapa.numbox_coord_list);
 				PatternAroundNumBox.preparePatternArroundNumBox();
+
+
+				// idの数で降順にソート
+				Problem.can_be_number_whitebox_list.Sort(
+					delegate(Coordinates co1, Coordinates co2){
+						return Tapa.box[co2.x][co2.y].id_list.Count - Tapa.box[co1.x][co1.y].id_list.Count;
+					});
+
 
 				// 数字マスを削除する前の盤面にある数字マスの数
 				int first_numbox_num = Tapa.numbox_coord_list.Count;
@@ -391,11 +402,24 @@ namespace Tapa
 					StateSave.saveNowState(save_point);
 
 					// 削除する数字マスをランダムに選択
-					Coordinates deleting_numbox_coord = Problem.can_be_number_whitebox_list[
-						Problem.getRandomInt(0, Problem.can_be_number_whitebox_list.Count)];
+					//Coordinates deleting_numbox_coord = Problem.can_be_number_whitebox_list[
+					//	Problem.getRandomInt(0, Problem.can_be_number_whitebox_list.Count)];
+					
+					// idの数でソートされた未削除の数字マスリストの先頭を削除
+					Coordinates deleting_numbox_coord = Problem.can_be_number_whitebox_list[0];
+
 					// 削除する数字マスを、未削除の数字マス座標リストから除外する。
 					Problem.can_be_number_whitebox_list.Remove(deleting_numbox_coord);
 					Box deleting_box = Tapa.box[deleting_numbox_coord.x][deleting_numbox_coord.y];	// 浅いコピー
+
+
+					
+					Console.Write("削除前 >> " + Tapa.box[deleting_numbox_coord.x][deleting_numbox_coord.y].box_num);
+					deleting_numbox_coord.printCoordinates();
+					Console.WriteLine();
+					Tapa.printBoard();
+
+
 
 					// 選択した数字マスを未定マスにする
 					deleting_box.revision_color = Box.NOCOLOR;	// 選択した座標を未定マスにする
@@ -403,17 +427,29 @@ namespace Tapa
 					Tapa.numbox_coord_list.Remove(deleting_numbox_coord);							// 数字マスリストから除外
 					Tapa.not_deployedbox_coord_list.Add(new Coordinates(deleting_numbox_coord));	// 未定マスリストに追加
 
+
+					Console.Write("削除後 >> " + Tapa.box[deleting_numbox_coord.x][deleting_numbox_coord.y].box_num);
+					deleting_numbox_coord.printCoordinates();
+					Console.WriteLine();
+					Tapa.printBoard();
+
+
 					// 問題を解く
 					Problem.is_adopting_numberbox = true;
 					Tapa.solveTapa(Tapa.REPEAT_NUM);
 					Problem.is_adopting_numberbox = false;
 
-					deleting_numbox_coord.printCoordinates();
+
 					
-
-
 					// 解ならば復元後に、選択した数字マスをそのまま未定マスにする。
 					if (Tapa.isCorrectAnswer()) {
+						Console.Write("回答後[正解] >> ");
+						deleting_numbox_coord.printCoordinates();
+						Console.WriteLine();
+						Tapa.printBoard();
+
+
+
 						StateSave.setSavedState(save_point);
 						// 選択した数字マスを未定マスにする
 						Tapa.box[deleting_numbox_coord.x][deleting_numbox_coord.y].revision_color = Box.NOCOLOR;	// 選択した座標を未定マスにする
@@ -422,6 +458,12 @@ namespace Tapa
 						Tapa.not_deployedbox_coord_list.Add(new Coordinates(deleting_numbox_coord));	// 未定マスリストに追加
 					}
 					else {
+						Console.Write("回答後[不正解] >> ");
+						deleting_numbox_coord.printCoordinates();
+						Console.WriteLine();
+						Tapa.printBoard();
+
+
 						// 解でないなら、盤面を復元するのみ。
 						StateSave.setSavedState(save_point);
 					}
@@ -663,7 +705,7 @@ namespace Tapa
 
 			Tapa.printBoard();			
 
-			p.generateTapaPrblem(2);
+			p.generateTapaPrblem(1);
 
 			Tapa.printBoard();
 

@@ -372,7 +372,15 @@ namespace Tapa
 		{
 			foreach (Coordinates tmp_coord in coord_list) {
 				tmp_coord.printCoordinates();
+
+
+				Console.WriteLine(Tapa.box[tmp_coord.x][tmp_coord.y].id_list.Count);
+
+
 				Console.Write(" ");
+
+
+				
 			}
 			Console.WriteLine();
 		}

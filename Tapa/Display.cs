@@ -193,8 +193,8 @@ namespace Tapa
 		private void button2_Click_1(object sender, EventArgs e)
 		{
 			System.Diagnostics.Process p =
-				// System.Diagnostics.Process.Start(@"C:\Users\Amano\OneDrive\zemi\puzzlevan\puzzlevan.exe", Problem.file_path);
-				System.Diagnostics.Process.Start(@"D:\negum_d\OneDrive\zemi\puzzlevan\puzzlevan.exe", Problem.file_path);
+				System.Diagnostics.Process.Start(@"C:\Users\Amano\OneDrive\zemi\puzzlevan\puzzlevan.exe", Problem.file_path);
+				// System.Diagnostics.Process.Start(@"D:\negum_d\OneDrive\zemi\puzzlevan\puzzlevan.exe", Problem.file_path);
 			System.Threading.Thread.Sleep(500); //少し待つ
 			for (int i = 0; i < 10; i++) {
 				SetForegroundWindow(p.MainWindowHandle); // puzzlevanをアクティブにする
