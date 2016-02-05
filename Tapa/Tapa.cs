@@ -5,13 +5,14 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Text;
+using Microsoft.Office.Interop.Excel;
 
 namespace Tapa
 {
 	static class Tapa
 	{
 		// 盤面の全てのマス
-		public static List<List<Box>> box = new List<List<Box>>();
+		public static Box[][] box;
 		// idの残っている数字マスの座標のリスト
 		public static List<Coordinates> numbox_coord_list = new List<Coordinates>();
 		// 未定マスの座標リスト
@@ -32,13 +33,26 @@ namespace Tapa
 		public static int STATE_AVOID_DUMPLING_AROUND_BLACK_BOX = 3;		// 黒マスの上下左右で団子マスを避ける時
 		public static int STATE_ISOLATION_BLACK_BOXES_ONLY_EXTENDABLE = 4;	// 一繋がりの黒マス群の伸び代が一箇所のみの時
 
-		public static int MAX_BOARD_ROW = 8;
-		public static int MAX_BOARD_COL = 8;
+		public static int MAX_BOARD_ROW = 30;
+		public static int MAX_BOARD_COL = 30;
 		public static int BOX_SUM = MAX_BOARD_COL * MAX_BOARD_ROW;
 
 		public static bool was_change_board;
 
 		public static int REPEAT_NUM = 40;
+
+
+		// エクセルに書き込む用
+		public static string file_name = "tapa";
+		public static int processnum_kuromasu;
+		public static int processnum_kakuteijogaiid;
+		public static int processnum_dangoid;
+		public static int processnum_korituid;
+		public static int processnum_betu0id;
+		public static int processnum_kakuteimasu;
+		public static int processnum_numbox;
+		public static bool is_count = false;
+
 
 		/// <summary>
 		/// アプリケーションのメイン エントリ ポイントです。
@@ -46,29 +60,34 @@ namespace Tapa
 		[STAThread]
 		static void Main(string[] args)
 		{
-
-			// ボタンをWindows風のスタイルにしてくれる
-			Application.EnableVisualStyles();
-			// falseにすることでパフォーマンスを優先する
-			Application.SetCompatibleTextRenderingDefault(false);
-			// Form1()が停止しない間常に動作
-			Application.Run(new Display());
+			// 時間計測開始
+			System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
 
 
+			Problem.manageMakingProblem();
 
+			//時間計測終了
+			sw.Stop();
+			Console.WriteLine("問題生成にかかった時間 >> " + sw.Elapsed);
+			Console.ReadLine();
+			return;
 
+			//// ボタンをWindows風のスタイルにしてくれる
+			//System.Windows.Forms.Application.EnableVisualStyles();
+			//// falseにすることでパフォーマンスを優先する
+			//System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
+			//// Form1()が停止しない間常に動作
+			//System.Windows.Forms.Application.Run(new Display());
 
-			//Problem.manageMakingProblem();
-			//Console.WriteLine("盤面:{0}*{1} = {2}", MAX_BOARD_ROW, MAX_BOARD_COL, (MAX_BOARD_ROW) * (MAX_BOARD_COL));
-			//// Console.WriteLine("黒マスの数 >> " + Tapa.isolation_blackboxes_group_list[0].Count);
+			//MyCSVManagement.makeSampleData();
+
 			//return;
 
+
 			
-			/*
 			if (args.Length == 0) {
 				Console.WriteLine("Error:コマンドライン引き数が正しくありません。\n"
 								+ "第一引数：入力ファイル\n第二引数：出力ファイル\n");
-				Application.Exit();
 			}
 
 			Console.WriteLine("#######################入力ファイル名 >> " + args[0]);
@@ -77,40 +96,164 @@ namespace Tapa
 			Tapa.inputTapa(args[0]);
 			// 準備：数字マスにidのリストを追加
 			PatternAroundNumBox.preparePatternArroundNumBox();
+
+			foreach (Coordinates co in Tapa.numbox_coord_list) {
+				co.printCoordinates();
+				Console.Write(Tapa.box[co.x][co.y].boxNum + ":");
+				Tapa.box[co.x][co.y].printIdList();
+			}
+
 			// 盤面の出力
 			Console.WriteLine("入力盤面");
 			Tapa.printBoard();
 			Console.WriteLine();
 
+			is_count = true;
+			Tapa.solveTapa(Tapa.REPEAT_NUM);
+			is_count = false;
 
-			solveTapa(30);	// 問題を解く
-
-
-			// 未定マスが存在するなら、バックトラックを行う。
-			//if (Tapa.not_deployedbox_coord_list.Count > 0) {
-			//	BackTrack backtrack = new BackTrack();
-			//	backtrack.manageBackTrack();
-			//	StateSave.setSavedState(BackTrack.correct_save_point);
-			//	printBoard();
-			//	Console.WriteLine("\n深さ >> " + BackTrack.min_depth);
-			//}
-
-			//Console.WriteLine("notdeployedbox_list >> " + Tapa.not_deployedbox_coord_list.Count);
-			//Console.WriteLine("numbox_coord_list >> " + Tapa.numbox_coord_list.Count);
-			//Console.WriteLine("edge_blackbox_coordlist >> " + Tapa.edge_blackbox_coord_list.Count);
-			//Console.WriteLine("isolation_blackboxes_group_list >> " + Tapa.isolation_blackboxes_group_list.Count);
+			Console.WriteLine("notdeployedbox_list >> " + Tapa.not_deployedbox_coord_list.Count);
+			Console.WriteLine("numbox_coord_list >> " + Tapa.numbox_coord_list.Count);
+			Console.WriteLine("edge_blackbox_coordlist >> " + Tapa.edge_blackbox_coord_list.Count);
+			Console.WriteLine("isolation_blackboxes_group_list >> " + Tapa.isolation_blackboxes_group_list.Count);
 			Console.WriteLine("盤面:{0}*{1} = {2}", MAX_BOARD_ROW, MAX_BOARD_COL, (MAX_BOARD_ROW) * (MAX_BOARD_COL));
 			Console.WriteLine("黒マスの数 >> " + Tapa.isolation_blackboxes_group_list[0].Count);
 
 			if (isCorrectAnswer()) { Console.WriteLine("正解！！"); }
 			else { Console.WriteLine("不正解"); }
+			return;
+			
+
+
+			int sum = 0;
+			for (int j = 0; j < 10; j++) {
+
+				// http://excelcsharp.lance40.com/bookopen.html
+				// Excel操作用オブジェクト
+				Microsoft.Office.Interop.Excel.Application xlApp = null;
+				Microsoft.Office.Interop.Excel.Workbooks xlBooks = null;
+				Microsoft.Office.Interop.Excel.Workbook xlBook = null;
+				Microsoft.Office.Interop.Excel.Sheets xlSheets = null;
+				Microsoft.Office.Interop.Excel.Worksheet xlSheet = null;
+
+
+				String ex_file_name = @"C:\Users\Amano\Desktop\rooptest\sample" + String.Format("{0:0000}", j) + ".xlsx";
+
+
+				// Excelアプリケーション生成
+				xlApp = new Microsoft.Office.Interop.Excel.Application();
+
+				// ◆操作対象のExcelブックを開く◆
+				// Openメソッド
+				xlBooks = xlApp.Workbooks;
+				xlBook = xlBooks.Add();
+
+				// シートを選択する
+				xlSheets = xlBook.Worksheets;
+				xlSheet = xlSheets[1] as Microsoft.Office.Interop.Excel.Worksheet; // 1シート目を操作対象に設定する
+
+				// 非表示
+				xlApp.Visible = false;
+				xlApp.DisplayAlerts = false; // Excelの確認ダイアログ表示有無
+
+				xlSheet.Cells[1, 1] = "問題";
+				xlSheet.Cells[1, 2] = "黒マス数";
+				xlSheet.Cells[1, 3] = "白マス数";
+				xlSheet.Cells[1, 4] = "黒マスの割合";
+				xlSheet.Cells[1, 5] = "数字の数";
+				xlSheet.Cells[1, 6] = "黒マス";
+				xlSheet.Cells[1, 7] = "確定id除外";
+				xlSheet.Cells[1, 8] = "団子id";
+				xlSheet.Cells[1, 9] = "孤立id";
+				xlSheet.Cells[1, 10] = "別0id";
+				xlSheet.Cells[1, 11] = "確定マス";
+
+
+
+				for (int i = 2; i <= 100001; i++) {
+					Tapa.file_name = "tapa" + String.Format("{0:000000}", sum++) + ".txt";
+					processnum_kuromasu = 0;
+					processnum_kakuteijogaiid = 0;
+					processnum_dangoid = 0;
+					processnum_korituid = 0;
+					processnum_betu0id = 0;
+					processnum_kakuteimasu = 0;
+					processnum_numbox = 0;
+
+
+					Problem.manageMakingProblem();
+
+
+
+					//if (args.Length == 0) {
+					//	Console.WriteLine("Error:コマンドライン引き数が正しくありません。\n"
+					//					+ "第一引数：入力ファイル\n第二引数：出力ファイル\n");
+					//	Application.Exit();
+					//}
+
+					//Console.WriteLine("#######################入力ファイル名 >> " + args[0]);
+
+					//// 入力ファイルの読み込み
+					//Tapa.inputTapa(args[0]);
+					//// 準備：数字マスにidのリストを追加
+					//PatternAroundNumBox.preparePatternArroundNumBox();
+					//// 盤面の出力
+					//Console.WriteLine("入力盤面");
+					//Tapa.printBoard();
+					//Console.WriteLine();
+
+					is_count = true;
+					Tapa.solveTapa(Tapa.REPEAT_NUM);
+					is_count = false;
+
+					xlSheet.Cells[i, 1] = file_name;
+					xlSheet.Cells[i, 2] = Tapa.isolation_blackboxes_group_list[0].Count;
+					xlSheet.Cells[i, 3] = 100 - Tapa.isolation_blackboxes_group_list[0].Count;
+					xlSheet.Cells[i, 4] = Tapa.isolation_blackboxes_group_list[0].Count;
+					xlSheet.Cells[i, 5] = Tapa.processnum_numbox;
+					xlSheet.Cells[i, 6] = Tapa.processnum_kuromasu;
+					xlSheet.Cells[i, 7] = Tapa.processnum_kakuteijogaiid;
+					xlSheet.Cells[i, 8] = Tapa.processnum_dangoid;
+					xlSheet.Cells[i, 9] = Tapa.processnum_korituid;
+					xlSheet.Cells[i, 10] = Tapa.processnum_betu0id;
+					xlSheet.Cells[i, 11] = Tapa.processnum_kakuteimasu;
+
+				}
+
+				// 未定マスが存在するなら、バックトラックを行う。
+				//if (Tapa.not_deployedbox_coord_list.Count > 0) {
+				//	BackTrack backtrack = new BackTrack();
+				//	backtrack.manageBackTrack();
+				//	StateSave.setSavedState(BackTrack.correct_save_point);
+				//	printBoard();
+				//	Console.WriteLine("\n深さ >> " + BackTrack.min_depth);
+				//}
+
+				
+
+
+				xlBook.SaveAs(ex_file_name);
+
+				// ■■■以下、COMオブジェクトの解放■■■
+				// Sheet解放
+				System.Runtime.InteropServices.Marshal.ReleaseComObject(xlSheet);
+				System.Runtime.InteropServices.Marshal.ReleaseComObject(xlSheets);
+
+				// Book解放
+				xlBook.Close();
+				System.Runtime.InteropServices.Marshal.ReleaseComObject(xlBook);
+				System.Runtime.InteropServices.Marshal.ReleaseComObject(xlBooks);
+
+				// Excelアプリケーションを解放
+				xlApp.Quit();
+				System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp);
+			}
 
 			return;
-			 
-		*/
-			
-			
-			
+
+
+
+
 		}
 
 		/*********************************
@@ -118,9 +261,9 @@ namespace Tapa
 		 * 盤面のリセット
 		 * 
 		 * *******************************/
-		public static void clearBoard()
+		public static void resetBoard()
 		{
-			box.Clear();
+			box = new Box[Tapa.MAX_BOARD_ROW + 2][];
 			// idの残っている数字マスの座標のリストを初期化
 			numbox_coord_list.Clear();
 			// 未定マスの座標リストを初期化
@@ -132,18 +275,21 @@ namespace Tapa
 			// 一繋がりの黒マス群の座標リストを初期化
 			isolation_blackboxes_group_list.Clear();
 
-			for (int i = 1; i <= Tapa.MAX_BOARD_ROW; i++) {
-				List<Box> tmp_boxlist = new List<Box>();
-				for (int j = 1; j <= Tapa.MAX_BOARD_COL; j++) {
-					Box tmp_box = new Box();
-					tmp_box.coord = new Coordinates(i, j);
-					tmp_boxlist.Add(tmp_box);
+			Box.during_make_inputbord = true;
+			for (int i = 0; i < Tapa.MAX_BOARD_ROW+2; i++) {
+				Box[] tmp_boxarray = new Box[Tapa.MAX_BOARD_COL+2];
+				for (int j = 0; j < Tapa.MAX_BOARD_COL+2; j++) {
+					tmp_boxarray[j] = new Box();
+					tmp_boxarray[j].coord = new Coordinates(i, j);
 
-					not_deployedbox_coord_list.Add(new Coordinates(tmp_box.coord));
+					if (i == 0 || i == Tapa.MAX_BOARD_ROW + 1 || j == 0 || j == Tapa.MAX_BOARD_COL + 1)
+						tmp_boxarray[j].Color = Box.WHITE;
+					else
+						not_deployedbox_coord_list.Add(new Coordinates(tmp_boxarray[j].coord));
 				}
-				box.Add(tmp_boxlist);
+				box[i] = tmp_boxarray;
 			}
-			Tapa.makeOuterBox(Tapa.MAX_BOARD_ROW, Tapa.MAX_BOARD_COL);
+			Box.during_make_inputbord = false;
 		}
 
 
@@ -231,30 +377,28 @@ namespace Tapa
 				}
 			}
 
+			resetBoard();
 			// 各セルのデータの取得
 			for (int i = 1; i <= row_count; i++) {
-				List<Box> tmp_box_list = new List<Box>();   // 行ごとのリストを格納する用
 				for (int j = 1; j <= column_count; j++) {
-					Box tmp_box = new Box();
 					int tmp_num = 0;
 					string st = "";
+
 					Microsoft.Office.Interop.Excel.Range range = sheet.Cells[i, j];
 					if (range.Value != null) {
 						st = range.Value.ToString();  // セル(i,j)のデータを文字列で取得
 					}
 					else {
 						Console.Write("Error: セル(" + i + "," + j + ")の読み込み中にエラー(中身がnull)\n");
-						Application.Exit();
 					}
-					tmp_box.coord = new Coordinates(i, j);	// 座標の代入
+
 					if (st.Equals("-")) {
-						tmp_box.hasNum = false;
-						not_deployedbox_coord_list.Add(new Coordinates(tmp_box.coord));		// 未定マスの座標Listに追加
+						Tapa.box[i][j].hasNum = false;
 					}
 					else if (int.TryParse(st, out tmp_num)) { // tmp_num=(int)stが数字だった場合
-						if (DEBUG) { Console.WriteLine("st >> " + st); }
 						int origin_num = tmp_num;
-						tmp_box.hasNum = true;
+						Tapa.box[i][j].hasNum = true;
+						
 						// ####### (begin) マスの数字を昇順に並べ替える
 						List<int> tmp_box_num_list = new List<int>();
 						do {              // 数字を桁毎にリストに追加
@@ -268,60 +412,21 @@ namespace Tapa
 							tmp_num += _num * digit_pow;
 							digit_pow /= 10;
 						}
-						tmp_box.box_num = tmp_num;
+						Tapa.box[i][j].boxNum = tmp_num;
 						// ####### (end) マスの数字を昇順に並べ替える
-						numbox_coord_list.Add(new Coordinates(tmp_box.coord));		// 数字マスの座標Listに追加
+						numbox_coord_list.Add(Tapa.box[i][j].coord);		// 数字マスの座標Listに追加
+						Tapa.not_deployedbox_coord_list.Remove(Tapa.box[i][j].coord);	// 未定マスリストから除外
 					}
 					else {
 						Console.WriteLine("Error: セル(" + i + "," + j + ")の読み込み中にエラー(中身が数字でも'-'でもない)\n");
 					}
-					tmp_box_list.Add(new Box(tmp_box));
-					tmp_box.clear();
 				}
-				box.Add(new List<Box>(tmp_box_list));  // 行毎にリストをboxに追加
-				tmp_box_list.Clear();
 			}
 
-			// 盤面の外側に余分な白マスを生成
-			makeOuterBox(row_count, column_count);
 			//ワークブックを閉じる
 			WorkBook.Close();
 			//エクセルを閉じる
 			ExcelApp.Quit();
-
-			Box.during_make_inputbord = false;
-		}
-
-		/*********************************
-		 * 
-		 *   盤面の外側に1マスずつ白マスを配置
-		 *   引数：（盤面の行数、盤面の列数）
-		 *  
-		 * *******************************/
-		public static void makeOuterBox(int row_count, int column_count)
-		{
-			Box.during_make_inputbord = true;
-
-			// ########## 盤面の外側にも1マスずつマスを配置
-			Box tmp_box = new Box();
-			List<Box> tmp_top_box_list = new List<Box>();	// 最上行に配置する行
-			List<Box> tmp_bot_box_list = new List<Box>();	// 最下行に配置する行
-			tmp_box.Color = Box.WHITE;						// 外側のマスは白色
-			for (int i = 0; i <= column_count + 1; i++) {
-				tmp_box.coord = new Coordinates(0, i);
-				tmp_top_box_list.Add(new Box(tmp_box));      // 最上行に追加する空マスのリストに追加
-
-				tmp_box.coord = new Coordinates(row_count + 1, i);
-				tmp_bot_box_list.Add(new Box(tmp_box));      // 最下行に追加する空マスのリストに追加
-			}
-			Tapa.box.Insert(0, new List<Box>(tmp_top_box_list));    // 最上行に空マスのリストを追加
-			Tapa.box.Add(new List<Box>(tmp_bot_box_list));          // 最下行に空マスのリストを追加
-			for (int i = 1; i <= row_count; i++) {
-				tmp_box.coord = new Coordinates(i, 0);					// 座標情報を訂正
-				Tapa.box[i].Insert(0, new Box(tmp_box));			// 先頭に空マスを追加
-				tmp_box.coord = new Coordinates(i, column_count + 1);	// 座標情報を訂正
-				Tapa.box[i].Add(new Box(tmp_box));				// 末尾に空マスを追加
-			}
 
 			Box.during_make_inputbord = false;
 		}
@@ -334,12 +439,12 @@ namespace Tapa
 		 *			　（nullならTapa.boxを出力）
 		 *  
 		 * *******************************/
-		public static void printBoard(List<List<Box>> ll_box = null)
+		public static void printBoard(Box[][] ll_box = null)
 		{
-			List<List<Box>> print_box;
+			Box[][] print_box;
 			if (ll_box != null) { print_box = ll_box; }
 			else { print_box = Tapa.box; }
-			foreach (List<Box> tmp_box_list in print_box) {
+			foreach (Box[] tmp_box_list in print_box) {
 				foreach (Box tmp_box in tmp_box_list) {
 					tmp_box.printBoxNum();
 				}
@@ -371,16 +476,11 @@ namespace Tapa
 		public static void printCoordList(List<Coordinates> coord_list)
 		{
 			foreach (Coordinates tmp_coord in coord_list) {
+				//tmp_coord.printCoordinates();
+				//Console.Write(" ");
+
 				tmp_coord.printCoordinates();
-
-
-				Console.WriteLine(Tapa.box[tmp_coord.x][tmp_coord.y].id_list.Count);
-
-
-				Console.Write(" ");
-
-
-				
+				Console.WriteLine(" id:" + Tapa.box[tmp_coord.x][tmp_coord.y].id_list.Count + " hint:" + Tapa.box[tmp_coord.x][tmp_coord.y].min_hint);
 			}
 			Console.WriteLine();
 		}

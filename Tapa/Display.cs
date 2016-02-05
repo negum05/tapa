@@ -7,7 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Runtime.InteropServices; // setforegraoundwindow
+using System.Runtime.InteropServices;	// setforegraoundwindow
+using System.Diagnostics;				// Process
 
 namespace Tapa
 {
@@ -48,12 +49,21 @@ namespace Tapa
 									MessageBoxIcon.Error);
 					return;
 				}
-				
+
 				string tmp = startMakeProblem.Text;
 				startMakeProblem.Text = "問題生成中...";
 				startMakeProblem.Enabled = false;
+
+				// 時間計測開始
+				System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
+
 				// 問題生成の処理
 				Problem.manageMakingProblem();
+
+				//時間計測終了
+				sw.Stop();
+				Console.WriteLine("問題生成にかかった時間 >> " + sw.Elapsed);
+
 				startMakeProblem.Text = tmp;
 				startMakeProblem.Enabled = true;
 			}
@@ -80,9 +90,6 @@ namespace Tapa
 
 		private void Display_Load(object sender, EventArgs e)
 		{
-
-			Console.WriteLine("call\"Display_Load !!!\"");
-	
 			// デフォルトのファイル名
 			textBox9.Text = "tapa_puzzle";
 			Problem.file_name = textBox9.Text + ".txt";
@@ -189,20 +196,33 @@ namespace Tapa
 		// http://www.atmarkit.co.jp/fdotnet/dotnettips/024w32api/w32api.html
 		[DllImport("user32.dll")]
 		private static extern bool SetForegroundWindow(IntPtr hWnd);
+		[DllImport("user32.dll")]
+		private static extern IntPtr GetForegroundWindow();
+		[DllImport("user32.dll")]
+		public static extern int GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
 
 		private void button2_Click_1(object sender, EventArgs e)
 		{
 			System.Diagnostics.Process p =
 				System.Diagnostics.Process.Start(@"C:\Users\Amano\OneDrive\zemi\puzzlevan\puzzlevan.exe", Problem.file_path);
-				// System.Diagnostics.Process.Start(@"D:\negum_d\OneDrive\zemi\puzzlevan\puzzlevan.exe", Problem.file_path);
+			// System.Diagnostics.Process.Start(@"D:\negum_d\OneDrive\zemi\puzzlevan\puzzlevan.exe", Problem.file_path);
 			System.Threading.Thread.Sleep(500); //少し待つ
-			for (int i = 0; i < 10; i++) {
-				SetForegroundWindow(p.MainWindowHandle); // puzzlevanをアクティブにする
-				System.Threading.Thread.Sleep(500); //少し待つ
-				// F2 を送信（回答モードにするため）
-				SendKeys.Send("{F2}");
-				Console.WriteLine("F2送信");
-			}
+
+			// http://blog.kur.jp/entry/2009/12/05/activewin/
+			int id;
+			do {
+				// アクティブなプロセスを取得
+				IntPtr hWnd = GetForegroundWindow();
+				GetWindowThreadProcessId(hWnd, out id);
+				Console.WriteLine("アクティブなプロセス名 >> " + Process.GetProcessById(id).ProcessName.ToString());
+
+			} while (Process.GetProcessById(id).ProcessName != "puzzlevan");
+
+			// F2 を送信（回答モードにするため）
+			System.Threading.Thread.Sleep(500); //少し待つ
+			SendKeys.Send("{F2}");
+			Console.WriteLine("F2送信");
+
 			p.WaitForExit();
 		}
 

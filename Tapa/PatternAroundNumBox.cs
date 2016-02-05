@@ -184,6 +184,45 @@ namespace Tapa
 		}
 
 		/*********************************
+		* 
+		* 数字マス周りが埋まるために必要な最小ヒント数を返す
+		* 引数
+		* boxnum	:	数字マスの数字
+		*   
+		* *******************************/
+		public static int getMinHintAroundNumBox(int num)
+		{
+			switch (num) {
+				case 0: return 0;
+				case 1: return 1;
+				case 2: return 2;
+				case 3: return 2;
+				case 4: return 2;
+				case 5: return 2;
+				case 6: return 2;
+				case 7: return 1;
+				case 8: return 0;
+				case 11: return 2;
+				case 12: return 3;
+				case 13: return 3;
+				case 14: return 3;
+				case 15: return 3;
+				case 22: return 3;
+				case 23: return 4;
+				case 24: return 4;
+				case 33: return 1;
+				case 111: return 3;
+				case 112: return 4;
+				case 113: return 3;
+				case 122: return 4;
+				case 1111: return 1;
+				default:
+					Console.WriteLine("Error:getHintAroundNumBox内 数字マスに範囲外の数字を入れてる可能性あり");
+					return -1;
+			}
+		}
+
+		/*********************************
 		 * 
 		 * 座標とidから座標周りでidの配置方法が可能か判定する。
 		 * 引数
@@ -263,42 +302,42 @@ namespace Tapa
 				switch (id) {
 					case (byte)9:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)10:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)11:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)12:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)13:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)14:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)15:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)16:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					default:
@@ -312,42 +351,42 @@ namespace Tapa
 				switch (id) {
 					case (byte)17:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)18:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)19:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)20:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)21:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)22:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)23:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)24:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					default:
@@ -361,42 +400,42 @@ namespace Tapa
 				switch (id) {
 					case (byte)25:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)26:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)27:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)28:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)29:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)30:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)31:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)32:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					default:
@@ -410,42 +449,42 @@ namespace Tapa
 				switch (id) {
 					case (byte)33:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)34:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)35:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)36:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)37:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)38:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)39:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)40:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					default:
@@ -459,42 +498,42 @@ namespace Tapa
 				switch (id) {
 					case (byte)41:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)42:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)43:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)44:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)45:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)46:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)47:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)48:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					default:
@@ -508,42 +547,42 @@ namespace Tapa
 				switch (id) {
 					case (byte)49:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)50:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)51:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)52:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)53:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)54:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)55:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)56:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					default:
@@ -555,7 +594,7 @@ namespace Tapa
 			// [8] id=57
 			else if (id == HEAD_BN_8) {
 				if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.WHITE
-					&& ML != Box.WHITE && MR != Box.WHITE
+					&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 					&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 				else { return false; }
 			}
@@ -564,102 +603,102 @@ namespace Tapa
 				switch (id) {
 					case (byte)58:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)59:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)60:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)61:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)62:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)63:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)64:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)65:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)66:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)67:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)68:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)69:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)70:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)71:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)72:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)73:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)74:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)75:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)76:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)77:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					default:
@@ -673,162 +712,162 @@ namespace Tapa
 				switch (id) {
 					case (byte)78:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)79:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)80:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)81:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)82:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)83:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)84:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)85:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)86:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)87:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)88:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)89:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)90:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)91:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)92:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)93:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)94:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)95:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)96:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)97:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)98:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)99:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)100:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)101:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)102:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)103:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)104:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)105:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)106:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)107:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)108:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)109:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					default:
@@ -842,17 +881,17 @@ namespace Tapa
 				switch (id) {
 					case (byte)110:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)111:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)112:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)113:
@@ -862,102 +901,102 @@ namespace Tapa
 						else { return false; }
 					case (byte)114:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)115:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)116:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)117:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)118:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)119:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)120:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)121:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)122:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)123:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)124:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)125:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)126:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)127:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)128:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)129:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)130:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)131:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)132:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)133:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					default:
@@ -971,82 +1010,82 @@ namespace Tapa
 				switch (id) {
 					case (byte)134:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)135:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)136:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)137:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)138:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)139:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)140:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)141:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)142:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)143:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)144:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)145:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)146:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)147:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)148:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)149:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					default:
@@ -1060,42 +1099,42 @@ namespace Tapa
 				switch (id) {
 					case (byte)150:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)151:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)152:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)153:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)154:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)155:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)156:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)157:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					default:
@@ -1109,62 +1148,62 @@ namespace Tapa
 				switch (id) {
 					case (byte)158:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)159:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)160:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)161:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)162:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)163:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)164:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)165:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)166:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)167:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)168:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)169:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					default:
@@ -1178,82 +1217,82 @@ namespace Tapa
 				switch (id) {
 					case (byte)170:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)171:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)172:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)173:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)174:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)175:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)176:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)177:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)178:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)179:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)180:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)181:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)182:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)183:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)184:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)185:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					default:
@@ -1267,42 +1306,42 @@ namespace Tapa
 				switch (id) {
 					case (byte)186:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)187:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)188:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)189:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)190:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)191:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)192:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)193:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					default:
@@ -1316,22 +1355,22 @@ namespace Tapa
 				switch (id) {
 					case (byte)194:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)195:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)196:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)197:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					default:
@@ -1345,82 +1384,82 @@ namespace Tapa
 				switch (id) {
 					case (byte)198:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)199:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)200:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)201:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)202:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)203:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)204:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)205:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)206:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)207:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)208:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)209:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)210:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)211:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)212:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)213:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					default:
@@ -1434,122 +1473,122 @@ namespace Tapa
 				switch (id) {
 					case (byte)214:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)215:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)216:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)217:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)218:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)219:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)220:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)221:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)222:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)223:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)224:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)225:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)226:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)227:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)228:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)229:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)230:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)231:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)232:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)233:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)234:
 						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)235:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)236:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)237:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					default:
@@ -1563,42 +1602,42 @@ namespace Tapa
 				switch (id) {
 					case (byte)238:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)239:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)240:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)241:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)242:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)243:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)244:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)245:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					default:
@@ -1612,42 +1651,42 @@ namespace Tapa
 				switch (id) {
 					case (byte)246:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)247:
-						if (TL != Box.BLACK && TC != Box.BLACK && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.WHITE
+						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)248:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)249:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)250:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)251:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					case (byte)252:
 						if (TL != Box.WHITE && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.BLACK && MR != Box.WHITE
+							&& ML != Box.BLACK /*				*/&& MR != Box.WHITE
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)253:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.WHITE
-							&& ML != Box.WHITE && MR != Box.BLACK
+							&& ML != Box.WHITE /*				*/&& MR != Box.BLACK
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.WHITE) { return true; }
 						else { return false; }
 					default:
@@ -1661,12 +1700,12 @@ namespace Tapa
 				switch (id) {
 					case (byte)254:
 						if (TL != Box.WHITE && TC != Box.BLACK && TR != Box.WHITE
-							&& ML != Box.BLACK && MR != Box.BLACK
+							&& ML != Box.BLACK /*				*/&& MR != Box.BLACK
 							&& BL != Box.WHITE && BC != Box.BLACK && BR != Box.WHITE) { return true; }
 						else { return false; }
 					case (byte)255:
 						if (TL != Box.BLACK && TC != Box.WHITE && TR != Box.BLACK
-							&& ML != Box.WHITE && MR != Box.WHITE
+							&& ML != Box.WHITE /*				*/&& MR != Box.WHITE
 							&& BL != Box.BLACK && BC != Box.WHITE && BR != Box.BLACK) { return true; }
 						else { return false; }
 					default:
@@ -1788,42 +1827,42 @@ namespace Tapa
 				switch (id) {
 					case (byte)9:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)10:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)11:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)12:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)13:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)14:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)15:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)16:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					default:
@@ -1837,42 +1876,42 @@ namespace Tapa
 				switch (id) {
 					case (byte)17:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)18:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)19:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)20:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)21:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)22:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)23:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)24:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					default:
@@ -1886,42 +1925,42 @@ namespace Tapa
 				switch (id) {
 					case (byte)25:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)26:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)27:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)28:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)29:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)30:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)31:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)32:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					default:
@@ -1935,42 +1974,42 @@ namespace Tapa
 				switch (id) {
 					case (byte)33:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)34:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)35:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)36:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)37:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)38:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)39:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)40:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					default:
@@ -1984,42 +2023,42 @@ namespace Tapa
 				switch (id) {
 					case (byte)41:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)42:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)43:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)44:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)45:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)46:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)47:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)48:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					default:
@@ -2033,42 +2072,42 @@ namespace Tapa
 				switch (id) {
 					case (byte)49:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)50:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)51:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)52:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)53:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)54:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)55:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)56:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					default:
@@ -2080,7 +2119,7 @@ namespace Tapa
 			// [8] id=57
 			else if (id == HEAD_BN_8) {
 				TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-				ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+				ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 				BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 			}
 			// [11] id=58~77
@@ -2088,102 +2127,102 @@ namespace Tapa
 				switch (id) {
 					case (byte)58:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)59:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)60:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)61:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)62:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)63:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)64:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)65:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)66:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)67:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)68:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)69:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)70:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)71:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)72:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)73:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)74:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)75:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)76:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)77:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					default:
@@ -2197,162 +2236,162 @@ namespace Tapa
 				switch (id) {
 					case (byte)78:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)79:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)80:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)81:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)82:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)83:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)84:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)85:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)86:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)87:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)88:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)89:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)90:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)91:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)92:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)93:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)94:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)95:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)96:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)97:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)98:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)99:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)100:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)101:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)102:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)103:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)104:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)105:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)106:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)107:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)108:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)109:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					default:
@@ -2366,122 +2405,122 @@ namespace Tapa
 				switch (id) {
 					case (byte)110:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)111:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)112:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)113:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)114:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)115:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)116:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)117:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)118:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)119:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)120:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)121:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)122:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)123:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)124:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)125:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)126:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)127:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)128:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)129:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)130:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)131:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)132:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)133:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					default:
@@ -2495,82 +2534,82 @@ namespace Tapa
 				switch (id) {
 					case (byte)134:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)135:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)136:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)137:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)138:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)139:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)140:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)141:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)142:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)143:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)144:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)145:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)146:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)147:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)148:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)149:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					default:
@@ -2584,42 +2623,42 @@ namespace Tapa
 				switch (id) {
 					case (byte)150:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)151:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)152:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)153:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)154:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)155:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)156:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)157:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					default:
@@ -2633,62 +2672,62 @@ namespace Tapa
 				switch (id) {
 					case (byte)158:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)159:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)160:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)161:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)162:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)163:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)164:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)165:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)166:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)167:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)168:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)169:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					default:
@@ -2702,82 +2741,82 @@ namespace Tapa
 				switch (id) {
 					case (byte)170:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)171:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)172:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)173:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)174:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)175:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)176:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)177:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)178:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)179:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)180:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)181:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)182:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)183:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)184:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)185:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					default:
@@ -2791,42 +2830,42 @@ namespace Tapa
 				switch (id) {
 					case (byte)186:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)187:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)188:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)189:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)190:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)191:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)192:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)193:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					default:
@@ -2840,22 +2879,22 @@ namespace Tapa
 				switch (id) {
 					case (byte)194:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					case (byte)195:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)196:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)197:
 						TL.Color = Box.BLACK; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.BLACK;
 						break;
 					default:
@@ -2869,82 +2908,82 @@ namespace Tapa
 				switch (id) {
 					case (byte)198:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)199:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)200:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)201:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)202:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)203:
 						TL.Color = Box.BLACK; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)204:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)205:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.BLACK;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)206:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.WHITE;
 						break;
 					case (byte)207:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)208:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)209:
 						TL.Color = Box.WHITE; TC.Color = Box.BLACK; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)210:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.WHITE; MR.Color = Box.WHITE;
+						ML.Color = Box.WHITE; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.BLACK; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)211:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.WHITE; BR.Color = Box.BLACK;
 						break;
 					case (byte)212:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.BLACK;
-						ML.Color = Box.BLACK; MR.Color = Box.WHITE;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.WHITE;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					case (byte)213:
 						TL.Color = Box.WHITE; TC.Color = Box.WHITE; TR.Color = Box.WHITE;
-						ML.Color = Box.BLACK; MR.Color = Box.BLACK;
+						ML.Color = Box.BLACK; /*				  */MR.Color = Box.BLACK;
 						BL.Color = Box.WHITE; BC.Color = Box.BLACK; BR.Color = Box.WHITE;
 						break;
 					default:
@@ -3253,20 +3292,23 @@ namespace Tapa
 		 * 
 		 * 引数
 		 * co		: (数字)マスの座標
-		 * id		: 各パターンを識別するための数値（型はbyte）
-		 *  
+		 * id_list	: 座標co（数字マス）のもつidのリスト
 		 * 
-		 * 【無駄】同じ数字マスに対してidの数分、周囲の同じマスを作り直してる
 		 * *******************************/
-		static private bool checkNotDumplingId(Coordinates co, byte id)
+		private static bool DEBUG_DANGO = false;
+		static private void excludeDumplingId(Coordinates co, List<byte> id_list)
 		{
-			int max_box_col = Tapa.box[0].Count - 1;	// 列の添字の最大値
-			int max_box_row = Tapa.box.Count;			// 行の添字の最大値
+			// int max_box_col = Tapa.box[0].Count - 1;	// 列の添字の最大値
+			//int max_box_row = Tapa.box.Count;			// 行の添字の最大値
+
+			int max_box_row = Tapa.MAX_BOARD_ROW;	// 行の添字の最大値
+			int max_box_col = Tapa.MAX_BOARD_COL;	// 列の添字の最大値
+
 			const int MAX_CLONE_ROW = 5;
 			const int MAX_CLONE_COL = 5;
 			Coordinates center = new Coordinates(2, 2);
-
 			int[,] clone_color_55 = new int[MAX_CLONE_ROW, MAX_CLONE_COL];	// 数字マス周りの5*5マスのcolorを格納する配列
+			int[,] origin_color_around_numbox = new int[3, 3];	// 関数が呼ばれた時点での、数字マス周りの3*3マスのcolorを格納する配列
 
 			// 数字マス周り5*5マスの色を取得
 			for (int i_box = co.x - 2, i_color = 0; i_color < MAX_CLONE_ROW; i_box++, i_color++) {
@@ -3274,15 +3316,45 @@ namespace Tapa
 					// 外周かそれより外側の要素番号の場合、白色とする。
 					if (i_box <= 0 || max_box_row <= i_box || j_box <= 0 || max_box_col <= j_box) {
 						clone_color_55[i_color, j_color] = Box.WHITE;
+						if (1 <= i_color && i_color <= 3 && 1 <= j_color && j_color <= 3) {	// 数字マス周り8マスのColor
+							origin_color_around_numbox[i_color - 1, j_color - 1] = Box.WHITE;
+						}
 					}
 					else {
 						clone_color_55[i_color, j_color] = Tapa.box[i_box][j_box].Color;
+						if (1 <= i_color && i_color <= 3 && 1 <= j_color && j_color <= 3) {	// 数字マス周り8マスのColor
+							origin_color_around_numbox[i_color - 1, j_color - 1] = clone_color_55[i_color, j_color];
+						}
 					}
 				}
 			}
 
-			// 数字マス周りのクローンを作成
-			List<Box> clonebox_around_numbox_list = new List<Box> {	
+
+			if (DEBUG_DANGO) {
+				Console.WriteLine("【DEBUG_DANGO】団子マス確認用 ");
+				co.printCoordinates();
+				Console.WriteLine();
+				for (int i = 0; i < 5; i++) {
+					for (int j = 0; j < 5; j++) {
+						if (clone_color_55[i, j] == Box.BLACK) { Console.Write("■"); }
+						else if (clone_color_55[i, j] == Box.WHITE) { Console.Write("□"); }
+						else { Console.Write("－"); }
+					}
+					Console.WriteLine();
+				}
+			}
+
+			for (int ite_id = id_list.Count - 1; ite_id >= 0; ite_id--) {	// id_list
+
+				// 数字マス周り3*3マスの色を元に戻す
+				for (int i_color = 1; i_color <= 3; i_color++) {
+					for (int j_color = 1; j_color <= 3; j_color++) {
+						clone_color_55[i_color, j_color] = origin_color_around_numbox[i_color - 1, j_color - 1];
+					}
+				}
+
+				// 数字マス周りのクローンを作成
+				List<Box> clonebox_around_numbox_list = new List<Box> {	
 					new Box(Tapa.box[co.x-1][co.y-1]),	// 左上
 					new Box(Tapa.box[co.x-1][co.y]),	// 上
 					new Box(Tapa.box[co.x-1][co.y+1]),	// 右上
@@ -3293,33 +3365,35 @@ namespace Tapa
 					new Box(Tapa.box[co.x+1][co.y+1])	// 右下
 				};
 
-			// ######## <begin> クローン処理中はリスト関係の処理をしない
-			Box.during_clone = true;
-			// クローンに色を塗る
-			PatternAroundNumBox.setPatternAroundNumBox(co, id, clonebox_around_numbox_list);
-			Box.during_clone = false;
-			// ######## <end> クローン処理中はリスト関係の処理をしない
+				// ######## <begin> クローン処理中はリスト関係の処理をしない
+				Box.during_clone = true;
+				// クローンに色を塗る
+				PatternAroundNumBox.setPatternAroundNumBox(co, id_list[ite_id], clonebox_around_numbox_list);
+				Box.during_clone = false;
+				// ######## <end> クローン処理中はリスト関係の処理をしない
 
-			// 数字マス周りにある黒色のマスを格納
-			List<Coordinates> blackbox_coord_list = new List<Coordinates>();
-			// 数字マス周り8マスをidで埋めた場合の色で塗る。
-			int ite_clonebox_list = 0;
-			for (int i = center.x - 1; i <= center.x + 1; i++) {
-				for (int j = center.y - 1; j <= center.y + 1; j++) {
-					if (i == center.x && j == center.y) { continue; } // clonebox_around_numbox_listに中心の数字マスが含まれないため
-					// idで塗られた色が黒だった場合リストに追加
-					else if ((clone_color_55[i, j] = clonebox_around_numbox_list[ite_clonebox_list++].Color) == Box.BLACK) {
-						blackbox_coord_list.Add(new Coordinates(i, j));
+				// 数字マス周りにある黒色のマスを格納
+				List<Coordinates> blackbox_coord_list = new List<Coordinates>();
+				// 数字マス周り8マスをidで埋めた場合の色で塗る
+				int ite_clonebox_list = 0;
+				for (int i = center.x - 1; i <= center.x + 1; i++) {
+					for (int j = center.y - 1; j <= center.y + 1; j++) {
+						if (i == center.x && j == center.y) { continue; } // clonebox_around_numbox_listに中心の数字マスが含まれないため
+						// idで塗られた色が黒だった場合リストに追加
+						else if ((clone_color_55[i, j] = clonebox_around_numbox_list[ite_clonebox_list++].Color) == Box.BLACK) {
+							blackbox_coord_list.Add(new Coordinates(i, j));
+						}
+					}
+				}
+
+				// 数字マス周りの黒マス周りで団子ができないか調べる。
+				foreach (Coordinates tmp_co in blackbox_coord_list) {
+					if (!checkNotDumpling(tmp_co, clone_color_55)) {
+						Tapa.box[co.x][co.y].id_list.RemoveAt(ite_id);
+						break;
 					}
 				}
 			}
-			// 数字マス周りの黒マス周りで団子ができないか調べる。
-			foreach (Coordinates tmp_co in blackbox_coord_list) {
-				if (!checkNotDumpling(tmp_co, clone_color_55)) {
-					return false;
-				}
-			}
-			return true;
 		}
 
 		/*********************************
@@ -3331,9 +3405,9 @@ namespace Tapa
 		{
 			foreach (Coordinates tmp_co in Tapa.numbox_coord_list) {
 				//if (Tapa.box[tmp_co.x][tmp_co.y].id_list.Count == 0) {	// id_listを持っていなければ
-					Tapa.box[tmp_co.x][tmp_co.y].id_list
-						= new List<byte>(PatternAroundNumBox.getPatternAroundNumBoxList(
-							Tapa.box[tmp_co.x][tmp_co.y].box_num));
+				Tapa.box[tmp_co.x][tmp_co.y].id_list
+					= new List<byte>(PatternAroundNumBox.getPatternAroundNumBoxList(
+						Tapa.box[tmp_co.x][tmp_co.y].boxNum));
 				//}
 			}
 		}
@@ -3375,8 +3449,19 @@ namespace Tapa
 
 			// クローンのマス色変更回数が1回なら、そのマスをその色で埋める。
 			foreach (Box tmp_box in clonebox_around_numbox_list) {
-				if (tmp_box.changed_count_in_search_confirm_box == 1) {
+				if (tmp_box.changed_count_in_search_confirm_box == 1
+					&& Tapa.box[tmp_box.coord.x][tmp_box.coord.y].Color == Box.NOCOLOR) {
 					Tapa.box[tmp_box.coord.x][tmp_box.coord.y].Color = tmp_box.Color;
+
+					///////////
+					if (Tapa.is_count) {
+						Tapa.processnum_kakuteimasu++;
+						if (Tapa.DEBUG) {
+							Console.Write("確定マス" + Tapa.processnum_kakuteimasu);
+							tmp_box.coord.printCoordinates();
+							Console.WriteLine();
+						}
+					}
 				}
 			}
 		}
@@ -3399,6 +3484,7 @@ namespace Tapa
 			StateSave save_point = new StateSave();
 			// 現在の状態を保存
 			StateSave.saveNowState(save_point);
+			
 			// 孤立するidのid_listでの要素番号を保存するリスト
 			List<int> iso_id_ite_list = new List<int>();
 			for (int i = id_list.Count - 1; i >= 0; i--) {
@@ -3407,7 +3493,7 @@ namespace Tapa
 					&& Tapa.not_deployedbox_coord_list.Count > 0) {
 					iso_id_ite_list.Add(i);
 				}
-				StateSave.setSavedState(save_point);
+				StateSave.loadSavedState(save_point);
 			}
 
 			// 孤立したidをid_listから削除
@@ -3434,12 +3520,10 @@ namespace Tapa
 		 * *******************************/
 		static private void excludeIdToKillOtherNameBoxAllId(Coordinates co, List<byte> id_list)
 		{
-			bool test = co.Equals(new Coordinates(3, 1)) ? true : false;
-
-
 			StateSave save_point = new StateSave();
 			// 現在の状態を保存
 			StateSave.saveNowState(save_point);
+
 			// 除外するidのid_listでの要素番号を保存するリスト
 			List<int> kill_id_ite_list = new List<int>();
 			for (int i = id_list.Count - 1; i >= 0; i--) {
@@ -3447,18 +3531,23 @@ namespace Tapa
 				PatternAroundNumBox.setPatternAroundNumBox(co, id_list[i]);
 				// 数字マスのリストから今回試し塗りしたidの数字マスを除外
 				Tapa.numbox_coord_list.Remove(co);
+
 				for (int ite_coord = Tapa.numbox_coord_list.Count - 1; ite_coord >= 0; ite_coord--) {	// 数字マスのリスト
 					Coordinates tmp_co = new Coordinates(Tapa.numbox_coord_list[ite_coord]);
+					
 					for (int ite_id = Tapa.box[tmp_co.x][tmp_co.y].id_list.Count - 1; ite_id >= 0; ite_id--) {	// id_list
 						byte tmp_id = Tapa.box[tmp_co.x][tmp_co.y].id_list[ite_id];
-						// 条件に一致したidをid_listから除外
-						if (!PatternAroundNumBox.checkPatternAroundNumBox(tmp_co, tmp_id)	// idのパターンが配置できない
-							|| !PatternAroundNumBox.checkNotDumplingId(tmp_co, tmp_id)) {	// またはidの通り配置したら黒マスの団子ができてしまう。
+						if (!PatternAroundNumBox.checkPatternAroundNumBox(tmp_co, tmp_id)) {	// idのパターンが配置できない
 							Tapa.box[tmp_co.x][tmp_co.y].id_list.RemoveAt(ite_id);
 						}
 					}
+
+					// idの通り配置したら黒マスの団子ができてしまう
+					PatternAroundNumBox.excludeDumplingId(tmp_co, Tapa.box[tmp_co.x][tmp_co.y].id_list);
+					
 					// id_listのうち、孤立する黒マス群を作るidを除外（id_listごとに処理したほうが効率的）
-					excludeIdToMakeIsolationBlackBoxGroup(tmp_co, Tapa.box[tmp_co.x][tmp_co.y].id_list);
+					PatternAroundNumBox.excludeIdToMakeIsolationBlackBoxGroup(tmp_co, Tapa.box[tmp_co.x][tmp_co.y].id_list);
+					
 					// id_listの大きさが0なら今回試し塗りしたidの添字を、除外するid_listに追加し、次のidを見に行く。
 					if (Tapa.box[tmp_co.x][tmp_co.y].id_list.Count == 0) {
 						kill_id_ite_list.Add(i);
@@ -3467,7 +3556,7 @@ namespace Tapa
 
 				}
 				// 保存した状態をロード
-				StateSave.setSavedState(save_point);
+				StateSave.loadSavedState(save_point);
 			}
 			// 除外対象のidをid_listから除外
 			foreach (int tmp_ite in kill_id_ite_list) {
@@ -3481,39 +3570,120 @@ namespace Tapa
 		 * 配置可能パターンが一意になった場合、その通りに配置する。
 		 *   
 		 * *******************************/
+		public static bool first_1 = false;
 		static public void managePatternAroundNumBox()
 		{
 
 			for (int ite_coord = Tapa.numbox_coord_list.Count - 1; ite_coord >= 0; ite_coord--) {	// 数字マスのリスト
 				Coordinates tmp_co = new Coordinates(Tapa.numbox_coord_list[ite_coord]);
+				//if (Tapa.box[tmp_co.x][tmp_co.y].id_list.Count == 1) { first_1 = true; }
+				//else { first_1 = false; }
+				first_1 = false;
 
-				for (int ite_id = Tapa.box[tmp_co.x][tmp_co.y].id_list.Count - 1; ite_id >= 0; ite_id--) {	// id_list
-					byte tmp_id = Tapa.box[tmp_co.x][tmp_co.y].id_list[ite_id];
-					// 条件に一致したidをid_listから除外
-					if (!PatternAroundNumBox.checkPatternAroundNumBox(tmp_co, tmp_id)	// idのパターンが配置できない
-						|| !PatternAroundNumBox.checkNotDumplingId(tmp_co, tmp_id)) {	// またはidの通り配置したら黒マスの団子ができてしまう。
-						if (Tapa.DEBUG) {
-							tmp_co.printCoordinates();
-							Console.Write(" " + Tapa.box[tmp_co.x][tmp_co.y].id_list[ite_id].ToString() + "\n");
-						}
-						Tapa.box[tmp_co.x][tmp_co.y].id_list.RemoveAt(ite_id);
-					}
+				if (Tapa.DEBUG) {
+					tmp_co.printCoordinates();
+					Console.WriteLine(Tapa.box[tmp_co.x][tmp_co.y].boxNum);
+					Console.Write("0 :id");
+					Tapa.box[tmp_co.x][tmp_co.y].printIdList();
 				}
 
-				// id_listのうち、孤立する黒マス群を作るidを除外（id_listごとに処理したほうが効率的）
-				excludeIdToMakeIsolationBlackBoxGroup(tmp_co, Tapa.box[tmp_co.x][tmp_co.y].id_list);
+				// 配置できないidを削除
+				for (int ite_id = Tapa.box[tmp_co.x][tmp_co.y].id_list.Count - 1; ite_id >= 0; ite_id--) {	// id_list
+					byte tmp_id = Tapa.box[tmp_co.x][tmp_co.y].id_list[ite_id];
+					if (!PatternAroundNumBox.checkPatternAroundNumBox(tmp_co, tmp_id)) {
+						Tapa.box[tmp_co.x][tmp_co.y].id_list.RemoveAt(ite_id);
+
+						if (Tapa.is_count && !first_1 && Tapa.box[tmp_co.x][tmp_co.y].id_list.Count == 1) {
+							Tapa.processnum_kakuteijogaiid++;
+							first_1 = true;
+							if (Tapa.DEBUG) {
+								tmp_co.printCoordinates();
+								Console.WriteLine("確定除外id" + Tapa.processnum_kakuteijogaiid);
+							}
+						}
+					}
+				}
+				if (Tapa.DEBUG) {
+					Console.Write("1 :id");
+					Tapa.box[tmp_co.x][tmp_co.y].printIdList();
+				}
+
+				// id_listのうち、idの通り配置したら黒マスの団子ができてしまうようなidを除外
+				if (Tapa.box[tmp_co.x][tmp_co.y].id_list.Count != 1) {
+					PatternAroundNumBox.excludeDumplingId(tmp_co, Tapa.box[tmp_co.x][tmp_co.y].id_list);
+					if (Tapa.is_count && !first_1 && Tapa.box[tmp_co.x][tmp_co.y].id_list.Count == 1) {
+						Tapa.processnum_dangoid++;
+						first_1 = true;
+						if (Tapa.DEBUG) {
+							tmp_co.printCoordinates();
+							Console.WriteLine("団子id" + Tapa.processnum_dangoid);
+						}
+					}
+				}
+				if (Tapa.DEBUG) {
+					Console.Write("2 :id");
+					Tapa.box[tmp_co.x][tmp_co.y].printIdList();
+				}
+
+				// id_listのうち、孤立する黒マス群を作るidを除外（id_listごとに処理したほうが効率的
+				if (Tapa.box[tmp_co.x][tmp_co.y].id_list.Count != 1) {
+					excludeIdToMakeIsolationBlackBoxGroup(tmp_co, Tapa.box[tmp_co.x][tmp_co.y].id_list);
+					if (Tapa.is_count && !first_1 && Tapa.box[tmp_co.x][tmp_co.y].id_list.Count == 1) {
+						Tapa.processnum_korituid++;
+						first_1 = true;
+						if (Tapa.DEBUG) {
+							tmp_co.printCoordinates();
+							Console.WriteLine("孤立id" + Tapa.processnum_korituid);
+						}
+					}
+				}
+				if (Tapa.DEBUG) {
+					Console.Write("3 :id");
+					Tapa.box[tmp_co.x][tmp_co.y].printIdList();
+				}
+
 				// id_listのうち、idを配置して別の数字マスのid_listの大きさが0になるようなidを除外する。
-				excludeIdToKillOtherNameBoxAllId(tmp_co, Tapa.box[tmp_co.x][tmp_co.y].id_list);
-				
+				if (Tapa.box[tmp_co.x][tmp_co.y].id_list.Count != 1) {
+					excludeIdToKillOtherNameBoxAllId(tmp_co, Tapa.box[tmp_co.x][tmp_co.y].id_list);
+					if (Tapa.is_count && !first_1 && Tapa.box[tmp_co.x][tmp_co.y].id_list.Count == 1) {
+						Tapa.processnum_betu0id++;
+						first_1 = true;
+						if (Tapa.DEBUG) {
+							tmp_co.printCoordinates();
+							Console.WriteLine("別0id" + Tapa.processnum_betu0id);
+						}
+					}
+				}
+				if (Tapa.DEBUG) {
+					Console.Write("4 :id");
+					Tapa.box[tmp_co.x][tmp_co.y].printIdList();
+				}
+
+
 				// id_listが一意ならそれを配置して数字マスリストから除外
 				Tapa.NOW_STATE_PROCESS = Tapa.STATE_ID_LIST_ONLY_ONE;
 				if (Tapa.box[tmp_co.x][tmp_co.y].id_list.Count == 1) {
 					PatternAroundNumBox.setPatternAroundNumBox(tmp_co, Tapa.box[tmp_co.x][tmp_co.y].id_list[0]);
 					Tapa.numbox_coord_list.RemoveAt(ite_coord);
+
+					if (Tapa.DEBUG) {
+						Console.Write("5a :id");
+						Tapa.box[tmp_co.x][tmp_co.y].printIdList();
+						Tapa.printBoard();
+					}
+
+					continue;
 				}
+
 				// tmp_coのid_listを見て数字周りで色が確定しているマスを埋める。
 				Tapa.NOW_STATE_PROCESS = Tapa.STATE_CONFIRM_BOX_COLOR_FROM_ID_LIST;
 				setConfirmBoxArroundNumBox(tmp_co);
+
+				if (Tapa.DEBUG) {
+					Console.Write("5b :id");
+					Tapa.box[tmp_co.x][tmp_co.y].printIdList();
+					Tapa.printBoard();
+				}
 			}
 		}
 	}

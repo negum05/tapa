@@ -10,15 +10,16 @@ namespace Tapa
 	class Problem
 	{
 		// 問題生成をするディレクトリパス（GUIで指定）
-		public static string directory_path;
+		public static string directory_path = @"C:\Users\Amano\Desktop\rooptest_txt\";
 		// 問題のファイル名
 		public static string file_name = "tapa_problem.txt";
 		// 問題のフルパス
 		public static string file_path;
+		// ぱずぷれの問題txt名
+		public static string txt_path;
 
 		private static int MIN_WHITEBOX_START_RATE = 45;
 		private static int MAX_WHITEBOX_START_RATE = 55;
-		public static bool is_adopting_numberbox = false;
 
 
 		// 数字マスを格納できる座標リスト
@@ -32,12 +33,11 @@ namespace Tapa
 		private void setRandomWhiteBox()
 		{
 			int whitebox_num = getRandomInt(Tapa.BOX_SUM * MIN_WHITEBOX_START_RATE / 100, Tapa.BOX_SUM * MAX_WHITEBOX_START_RATE / 100);
-			Console.WriteLine("start_whitebox_num >> " + whitebox_num);
 
 			// 白マス候補の未定マス
 			List<Coordinates> candidate_notdeploy2whitebox_list = new List<Coordinates>(Tapa.not_deployedbox_coord_list);
 
-			for (int i = whitebox_num; i > 0　&& candidate_notdeploy2whitebox_list.Count > 0; i--) {
+			for (int i = whitebox_num; i > 0 && candidate_notdeploy2whitebox_list.Count > 0; i--) {
 				// 白マス候補の未定マスからランダムにマスを選択
 				Coordinates will_whitebox = candidate_notdeploy2whitebox_list[
 					Problem.getRandomInt(0, candidate_notdeploy2whitebox_list.Count)];
@@ -187,7 +187,7 @@ namespace Tapa
 				for (int j = 1; j <= Tapa.MAX_BOARD_COL; j++) {
 					if (Tapa.box[i][j].Color == Box.WHITE) {
 						Tapa.box[i][j].hasNum = true;
-						Tapa.box[i][j].box_num = getBoxNumber(new Coordinates(i, j));
+						Tapa.box[i][j].boxNum = getBoxNumber(new Coordinates(i, j));
 
 						can_be_number_whitebox_list.Add(new Coordinates(i, j));
 					}
@@ -281,7 +281,7 @@ namespace Tapa
 
 				tmp_box.Color = Box.WHITE;	// 選択した座標を白色にする
 				tmp_box.hasNum = true;		// 数字を持ってるフラグをオンにする
-				tmp_box.box_num = boxnumber_in_whitebox_coord_dict[adopting_boxnumber_coord];	// 選択した座標に数字を格納
+				tmp_box.boxNum = boxnumber_in_whitebox_coord_dict[adopting_boxnumber_coord];	// 選択した座標に数字を格納
 				Tapa.numbox_coord_list.Add(new Coordinates(adopting_boxnumber_coord));			// 数字マスリストに追加
 				Tapa.not_deployedbox_coord_list.Remove(adopting_boxnumber_coord);				// 未定マスリストから除外
 				PatternAroundNumBox.preparePatternArroundNumBox();								// 数字に対応したidを格納
@@ -291,10 +291,8 @@ namespace Tapa
 
 				Box.during_make_inputbord = false;
 
-				Problem.is_adopting_numberbox = true;
 				Tapa.solveTapa(Tapa.REPEAT_NUM);
-				Problem.is_adopting_numberbox = false;
-				
+
 
 			} while (Problem.can_be_number_whitebox_list.Count > 0);
 
@@ -331,20 +329,18 @@ namespace Tapa
 
 				Box tmp_box = Tapa.box[white2numbox.x][white2numbox.y];
 				tmp_box.hasNum = true;
-				tmp_box.box_num = boxnumber_in_whitebox_coord_dict[white2numbox];	// 数字を格納 
+				tmp_box.boxNum = boxnumber_in_whitebox_coord_dict[white2numbox];	// 数字を格納 
 				Tapa.numbox_coord_list.Add(new Coordinates(white2numbox));			// 数字マスリストに追加
 				PatternAroundNumBox.preparePatternArroundNumBox();					// 数字に対応したidを格納
 
 				Box.during_make_inputbord = false;
 
-				Problem.is_adopting_numberbox = true;
 				Tapa.solveTapa(Tapa.REPEAT_NUM);
-				Problem.is_adopting_numberbox = false;
 
-
-				Console.WriteLine("未定マス修正");
-				Tapa.printBoard();
-
+				if (Tapa.DEBUG) {
+					Console.WriteLine("未定マス修正");
+					Tapa.printBoard();
+				}
 			}
 
 			// 盤面にある数字マス以外のマスを未定マスにする
@@ -376,113 +372,120 @@ namespace Tapa
 		 * *******************************/
 		private void generateTapaProblemInDeleteNumBox()
 		{
+			// 未削除の数字マスリストを現在残っている数字マスリストで更新
+			Problem.can_be_number_whitebox_list = new List<Coordinates>(Tapa.numbox_coord_list);
+			PatternAroundNumBox.preparePatternArroundNumBox();
 
-			Console.WriteLine("盤面の数字マス選択開始！（削除）");
-			Tapa.printBoard();
+			if (Tapa.DEBUG) {
+				Console.WriteLine("ソート前");
+				Tapa.printCoordList(Problem.can_be_number_whitebox_list);
+			}
 
-			bool is_break = false;
-			while (!is_break){
-				// 未削除の数字マスリストを現在残っている数字マスリストで更新
-				Problem.can_be_number_whitebox_list = new List<Coordinates>(Tapa.numbox_coord_list);
-				PatternAroundNumBox.preparePatternArroundNumBox();
+			// idの数で降順にソート
+			// idが同数だったらヒント数で昇順にソート
+			//Problem.can_be_number_whitebox_list.Sort(
+			//	delegate(Coordinates co1, Coordinates co2) {
+			//		int num1 = Tapa.box[co1.x][co1.y].id_list.Count;
+			//		int num2 = Tapa.box[co2.x][co2.y].id_list.Count;
 
+			//		if (num1 < num2) { return 1; }
+			//		else if (num1 > num2) { return -1; }
+			//		else {
+			//			int hint1 = Tapa.box[co1.x][co1.y].min_hint;
+			//			int hint2 = Tapa.box[co2.x][co2.y].min_hint;
+			//			if (hint1 < hint2) { return -1; }
+			//			else if (hint1 > hint2) { return 1; }
+			//			else return 0;
+			//		}
+			//	});
+			// ヒント数で昇順にソート
+			// ヒント数が同数だったらidで降順にソート
+			Problem.can_be_number_whitebox_list.Sort(
+				delegate(Coordinates co1, Coordinates co2) {
+					int hint1 = Tapa.box[co1.x][co1.y].min_hint;
+					int hint2 = Tapa.box[co2.x][co2.y].min_hint;
+					if (hint1 < hint2) { return -1; }
+					else if (hint1 > hint2) { return 1; }
+					else {
+						int num1 = Tapa.box[co1.x][co1.y].id_list.Count;
+						int num2 = Tapa.box[co2.x][co2.y].id_list.Count;
+						if (num1 < num2) { return -1; }
+						else if (num1 > num2) { return 1; }
+						else return 0;
+					}
+				});
+			Tapa.numbox_coord_list.Sort(
+				delegate(Coordinates co1, Coordinates co2) {
+					int hint1 = Tapa.box[co1.x][co1.y].min_hint;
+					int hint2 = Tapa.box[co2.x][co2.y].min_hint;
+					if (hint1 < hint2) { return 1; }
+					else if (hint1 > hint2) { return -1; }
+					else {
+						int num1 = Tapa.box[co1.x][co1.y].id_list.Count;
+						int num2 = Tapa.box[co2.x][co2.y].id_list.Count;
+						if (num1 < num2) { return 1; }
+						else if (num1 > num2) { return -1; }
+						else return 0;
+					}
+				}
+				);
 
-				// idの数で降順にソート
-				Problem.can_be_number_whitebox_list.Sort(
-					delegate(Coordinates co1, Coordinates co2){
-						return Tapa.box[co2.x][co2.y].id_list.Count - Tapa.box[co1.x][co1.y].id_list.Count;
-					});
+			if (Tapa.DEBUG) {
+				Console.WriteLine("ソート後");
+				Tapa.printCoordList(Problem.can_be_number_whitebox_list);
+			}
 
+			// 数字マスを削除する前の盤面にある数字マスの数
+			int first_numbox_num = Tapa.numbox_coord_list.Count;
+			do {
+				// 時間計測開始
+				System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
 
-				// 数字マスを削除する前の盤面にある数字マスの数
-				int first_numbox_num = Tapa.numbox_coord_list.Count;
-				do {
-					// 現在の状態を保存
-					StateSave save_point = new StateSave();
-					StateSave.saveNowState(save_point);
+				// 現在の状態を保存
+				StateSave save_point = new StateSave();
+				StateSave.saveNowState(save_point);
 
-					// 削除する数字マスをランダムに選択
-					//Coordinates deleting_numbox_coord = Problem.can_be_number_whitebox_list[
-					//	Problem.getRandomInt(0, Problem.can_be_number_whitebox_list.Count)];
-					
-					// idの数でソートされた未削除の数字マスリストの先頭を削除
-					Coordinates deleting_numbox_coord = Problem.can_be_number_whitebox_list[0];
+				// 削除する数字マスをランダムに選択
+				//Coordinates deleting_numbox_coord = Problem.can_be_number_whitebox_list[
+				//	Problem.getRandomInt(0, Problem.can_be_number_whitebox_list.Count)];
 
-					// 削除する数字マスを、未削除の数字マス座標リストから除外する。
-					Problem.can_be_number_whitebox_list.Remove(deleting_numbox_coord);
-					Box deleting_box = Tapa.box[deleting_numbox_coord.x][deleting_numbox_coord.y];	// 浅いコピー
+				// idの数でソートされた数字マスリストの先頭を選択（削除する数字マス）
+				Coordinates deleting_numbox_coord = Problem.can_be_number_whitebox_list[0];
 
+				// 選択された数字マスを、未削除の数字マス座標リストから除外する。
+				Problem.can_be_number_whitebox_list.Remove(deleting_numbox_coord);
+				Box deleting_box = Tapa.box[deleting_numbox_coord.x][deleting_numbox_coord.y];	// 浅いコピー
 
-					
-					Console.Write("削除前 >> " + Tapa.box[deleting_numbox_coord.x][deleting_numbox_coord.y].box_num);
-					deleting_numbox_coord.printCoordinates();
-					Console.WriteLine();
-					Tapa.printBoard();
+				// 選択した数字マスを未定マスにする
+				deleting_box.revision_color = Box.NOCOLOR;	// 選択した座標を未定マスにする
+				deleting_box.hasNum = false;				// 数字を持ってるフラグをオフにする
+				Tapa.numbox_coord_list.Remove(deleting_numbox_coord);							// 数字マスリストから除外
+				Tapa.not_deployedbox_coord_list.Add(new Coordinates(deleting_numbox_coord));	// 未定マスリストに追加
 
+				// 問題を解く
+				Tapa.solveTapa(Tapa.REPEAT_NUM);
 
-
+				// 解ならば復元後に、選択した数字マスをそのまま未定マスにする。
+				if (Tapa.isCorrectAnswer()) {
+					StateSave.loadSavedState(save_point);
 					// 選択した数字マスを未定マスにする
-					deleting_box.revision_color = Box.NOCOLOR;	// 選択した座標を未定マスにする
-					deleting_box.hasNum = false;				// 数字を持ってるフラグをオフにする
+					Tapa.box[deleting_numbox_coord.x][deleting_numbox_coord.y].revision_color = Box.NOCOLOR;	// 選択した座標を未定マスにする
+					Tapa.box[deleting_numbox_coord.x][deleting_numbox_coord.y].hasNum = false;				// 数字を持ってるフラグをオフにする
 					Tapa.numbox_coord_list.Remove(deleting_numbox_coord);							// 数字マスリストから除外
 					Tapa.not_deployedbox_coord_list.Add(new Coordinates(deleting_numbox_coord));	// 未定マスリストに追加
-
-
-					Console.Write("削除後 >> " + Tapa.box[deleting_numbox_coord.x][deleting_numbox_coord.y].box_num);
-					deleting_numbox_coord.printCoordinates();
-					Console.WriteLine();
-					Tapa.printBoard();
-
-
-					// 問題を解く
-					Problem.is_adopting_numberbox = true;
-					Tapa.solveTapa(Tapa.REPEAT_NUM);
-					Problem.is_adopting_numberbox = false;
-
-
-					
-					// 解ならば復元後に、選択した数字マスをそのまま未定マスにする。
-					if (Tapa.isCorrectAnswer()) {
-						Console.Write("回答後[正解] >> ");
-						deleting_numbox_coord.printCoordinates();
-						Console.WriteLine();
-						Tapa.printBoard();
-
-
-
-						StateSave.setSavedState(save_point);
-						// 選択した数字マスを未定マスにする
-						Tapa.box[deleting_numbox_coord.x][deleting_numbox_coord.y].revision_color = Box.NOCOLOR;	// 選択した座標を未定マスにする
-						Tapa.box[deleting_numbox_coord.x][deleting_numbox_coord.y].hasNum = false;				// 数字を持ってるフラグをオフにする
-						Tapa.numbox_coord_list.Remove(deleting_numbox_coord);							// 数字マスリストから除外
-						Tapa.not_deployedbox_coord_list.Add(new Coordinates(deleting_numbox_coord));	// 未定マスリストに追加
-					}
-					else {
-						Console.Write("回答後[不正解] >> ");
-						deleting_numbox_coord.printCoordinates();
-						Console.WriteLine();
-						Tapa.printBoard();
-
-
-						// 解でないなら、盤面を復元するのみ。
-						StateSave.setSavedState(save_point);
-					}
-				} while (Problem.can_be_number_whitebox_list.Count > 0);
-
-				// 数字マスが1つも削除されていなければ
-				if (Tapa.numbox_coord_list.Count == first_numbox_num) {
-
-					Console.WriteLine("check");
-					Tapa.printBoard();
-					Console.WriteLine();
-					
-					is_break = true;
-					break;
+				}
+				else {
+					// 解でないなら、盤面を復元するのみ。
+					StateSave.loadSavedState(save_point);
 				}
 
-				Tapa.printBoard();
-				Console.WriteLine();
-			} 
+				//時間計測終了
+				sw.Stop();
+				deleting_numbox_coord.printCoordinates();
+				Console.WriteLine("の削除可否判断にかかった時間 >> " + sw.Elapsed);
+
+			} while (Problem.can_be_number_whitebox_list.Count > 0);
+
 		}
 
 		/*********************************
@@ -499,46 +502,12 @@ namespace Tapa
 			// 数字マスの座標とその数字を関連付けたハッシュ
 			Dictionary<Coordinates, int> boxnumber_in_whitebox_coord_dict = new Dictionary<Coordinates, int>();
 			foreach (Coordinates tmp_co in Problem.can_be_number_whitebox_list) {
-				boxnumber_in_whitebox_coord_dict[tmp_co] = Tapa.box[tmp_co.x][tmp_co.y].box_num;
+				boxnumber_in_whitebox_coord_dict[tmp_co] = Tapa.box[tmp_co.x][tmp_co.y].boxNum;
 			}
 
 			// （黒マスListなども含む）盤面の初期化
-			Tapa.clearBoard();
+			Tapa.resetBoard();
 
-
-			//Dictionary<Coordinates, int> tmp_dict = new Dictionary<Coordinates, int>();
-			//tmp_dict[new Coordinates(1, 3)] = 1;
-			//tmp_dict[new Coordinates(1, 5)] = 2;
-			//tmp_dict[new Coordinates(1, 8)] = 2;
-			//tmp_dict[new Coordinates(2, 2)] = 4;
-			//tmp_dict[new Coordinates(3, 5)] = 13;
-			//tmp_dict[new Coordinates(3, 8)] = 12;
-			//tmp_dict[new Coordinates(4, 2)] = 7;
-			//tmp_dict[new Coordinates(4, 5)] = 23;
-			//tmp_dict[new Coordinates(4, 8)] = 2;
-			//tmp_dict[new Coordinates(6, 2)] = 2;
-			//tmp_dict[new Coordinates(7, 1)] = 0;
-			//tmp_dict[new Coordinates(7, 3)] = 1;
-			//tmp_dict[new Coordinates(7, 4)] = 4;
-			//tmp_dict[new Coordinates(7, 6)] = 5;
-			//tmp_dict[new Coordinates(8, 6)] = 2;
-			//tmp_dict[new Coordinates(8, 7)] = 1;
-
-
-
-			//Box.during_make_inputbord = true;
-
-			//foreach (KeyValuePair<Coordinates, int> pair in tmp_dict) {
-			//	Box tmp_box = Tapa.box[pair.Key.x][pair.Key.y];
-			//	tmp_box.hasNum = true;
-			//	tmp_box.box_num = pair.Value;
-			//	Tapa.numbox_coord_list.Add(new Coordinates(pair.Key));			// 数字マスリストに追加
-			//	PatternAroundNumBox.preparePatternArroundNumBox();
-			//	Tapa.not_deployedbox_coord_list.Remove(pair.Key);
-			//}
-
-			//Box.during_make_inputbord = false;
-			
 			switch (pattern) {
 				case 0:
 					generateTapaProblemInAddNumBox(boxnumber_in_whitebox_coord_dict);
@@ -550,7 +519,7 @@ namespace Tapa
 						Box tmp_box = Tapa.box[pair.Key.x][pair.Key.y];
 
 						tmp_box.hasNum = true;		// 数字を持ってるフラグをオンにする
-						tmp_box.box_num = boxnumber_in_whitebox_coord_dict[pair.Key];	// 選択した座標に数字を格納
+						tmp_box.boxNum = boxnumber_in_whitebox_coord_dict[pair.Key];	// 選択した座標に数字を格納
 						Tapa.numbox_coord_list.Add(new Coordinates(pair.Key));			// 数字マスリストに追加
 						Tapa.not_deployedbox_coord_list.Remove(pair.Key);				// 未定マスリストから除外
 						PatternAroundNumBox.preparePatternArroundNumBox();				// 数字に対応したidを格納
@@ -564,6 +533,8 @@ namespace Tapa
 					generateTapaProblemInDeleteNumBox();
 					break;
 			}
+
+			
 
 		}
 
@@ -599,12 +570,58 @@ namespace Tapa
 
 		/*********************************
 		 * 
+		 * ぱずぷれで作成したtxtファイルの読み込み
+		 *   
+		 * *******************************/
+		private void readTapaTxt()
+		{
+
+			Problem.txt_path = @"C:\Users\Amano\OneDrive\zemi\dot_data\madoka\madoka.txt";
+
+			List<string> line_list = new List<string>();
+			using (StreamReader sr = new StreamReader(
+				Problem.txt_path, Encoding.GetEncoding("Shift_JIS"))) {
+
+				string line = "";
+
+				while ((line = sr.ReadLine()) != null) {
+					line_list.Add(line);
+				}
+			}
+
+			Tapa.MAX_BOARD_ROW = Convert.ToInt32(line_list[2]);	// 3行目に行数
+			Tapa.MAX_BOARD_COL = Convert.ToInt32(line_list[3]);	// 4行目に列数
+
+			// 盤面生成
+			Tapa.resetBoard();
+
+			for (int i = 1; i <= Tapa.MAX_BOARD_ROW; i++) {
+				string wk_str = line_list[i + 3];
+				for (int j = 1; j <= Tapa.MAX_BOARD_COL; j++) {
+					int pt = wk_str.IndexOf(' ');
+
+					if (wk_str.Substring(0, pt) == "#") { Tapa.box[i][j].Color = Box.BLACK; }
+					else { Tapa.box[i][j].Color = Box.WHITE; }
+
+					wk_str = wk_str.Substring(pt + 1);
+					
+				}
+			}
+
+		}
+
+		/*********************************
+		 * 
 		 * ぱずぷれv3用のtxtファイルを出力する
 		 *   
 		 * *******************************/
 		private static void generateTapaProblemText()
 		{
-			file_path = directory_path + file_name;
+			// file_path = directory_path + Tapa.file_name;
+			// file_path = MyCSVManagement.working_directory + Tapa.file_name;	// csv生成時
+			file_path = @"C:\Users\Amano\OneDrive\zemi\dot_data\madoka\madoka_prob.txt";
+
+
 			Console.WriteLine("file_path >> " + file_path);
 			using (StreamWriter w = new StreamWriter(file_path)) {
 				w.WriteLine("pzprv3\ntapa\n{0}\n{1}", Tapa.MAX_BOARD_ROW, Tapa.MAX_BOARD_COL);
@@ -617,9 +634,9 @@ namespace Tapa
 							// リストの作成
 							List<int> tmp_box_num_list = new List<int>();
 							do {              // 数字を桁毎にリストに追加
-								tmp_box_num_list.Insert(0, tmp_box.box_num % 10);
-								tmp_box.box_num /= 10;
-							} while (tmp_box.box_num > 0);  // do-whileは0の場合を許可するため
+								tmp_box_num_list.Insert(0, tmp_box.boxNum % 10);
+								tmp_box.boxNum /= 10;
+							} while (tmp_box.boxNum > 0);  // do-whileは0の場合を許可するため
 
 							foreach (int tmp_num in tmp_box_num_list) {
 								st += tmp_num.ToString() + ",";
@@ -638,78 +655,31 @@ namespace Tapa
 
 		public static void manageMakingProblem()
 		{
-			Problem p;
+			Problem p; 
 
-			
 			do {
-				Tapa.clearBoard();
-
-
-				//Tapa.box[1][3].Color = Box.WHITE;
-				//Tapa.box[1][6].Color = Box.WHITE;
-				//Tapa.box[1][10].Color = Box.WHITE;
-				//Tapa.box[2][2].Color = Box.WHITE;
-				//Tapa.box[2][4].Color = Box.WHITE;
-				//Tapa.box[2][6].Color = Box.WHITE;
-				//Tapa.box[2][8].Color = Box.WHITE;
-				//Tapa.box[2][9].Color = Box.WHITE;
-				//Tapa.box[3][6].Color = Box.WHITE;
-				//Tapa.box[3][8].Color = Box.WHITE;
-				//Tapa.box[3][9].Color = Box.WHITE;
-				//Tapa.box[4][1].Color = Box.WHITE;
-				//Tapa.box[4][2].Color = Box.WHITE;
-				//Tapa.box[4][3].Color = Box.WHITE;
-				//Tapa.box[4][5].Color = Box.WHITE;
-				//Tapa.box[5][5].Color = Box.WHITE;
-				//Tapa.box[5][7].Color = Box.WHITE;
-				//Tapa.box[5][9].Color = Box.WHITE;
-				//Tapa.box[6][2].Color = Box.WHITE;
-				//Tapa.box[6][4].Color = Box.WHITE;
-				//Tapa.box[6][5].Color = Box.WHITE;
-				//Tapa.box[6][7].Color = Box.WHITE;
-				//Tapa.box[6][10].Color = Box.WHITE;
-				//Tapa.box[7][1].Color = Box.WHITE;
-				//Tapa.box[7][5].Color = Box.WHITE;
-				//Tapa.box[7][8].Color = Box.WHITE;
-				//Tapa.box[8][3].Color = Box.WHITE;
-				//Tapa.box[8][7].Color = Box.WHITE;
-				//Tapa.box[8][9].Color = Box.WHITE;
-				//Tapa.box[9][1].Color = Box.WHITE;
-				//Tapa.box[9][4].Color = Box.WHITE;
-				//Tapa.box[9][5].Color = Box.WHITE;
-				//Tapa.box[9][6].Color = Box.WHITE;
-				//Tapa.box[10][1].Color = Box.WHITE;
-				//Tapa.box[10][3].Color = Box.WHITE;
-				//Tapa.box[10][4].Color = Box.WHITE;
-				//Tapa.box[10][5].Color = Box.WHITE;
-				//Tapa.box[10][6].Color = Box.WHITE;
-				//Tapa.box[10][7].Color = Box.WHITE;
-				//Tapa.box[10][9].Color = Box.WHITE;
+				Tapa.resetBoard();
 				p = new Problem();
 
 				p.setRandomWhiteBox();
 				p.makeBlackBoxRoute();
-
-				Tapa.printBoard();
-				Console.WriteLine();
-
-				Console.WriteLine("notdeployedbox_list >> " + Tapa.not_deployedbox_coord_list.Count);
-				Console.WriteLine("numbox_coord_list >> " + Tapa.numbox_coord_list.Count);
-				Console.WriteLine("edge_blackbox_coordlist >> " + Tapa.edge_blackbox_coord_list.Count);
-				Console.WriteLine("isolation_blackboxes_group_list >> " + Tapa.isolation_blackboxes_group_list.Count);
-
-				if (Tapa.isCorrectAnswer()) { Console.WriteLine("正解！！"); }
 			} while (!Tapa.isCorrectAnswer());
-			 
+
+			
+
+			p.readTapaTxt();
+
 			p.setBoxNumber();
 
-			Tapa.printBoard();			
+			
 
 			p.generateTapaPrblem(1);
 
-			Tapa.printBoard();
+			Tapa.processnum_numbox = Tapa.numbox_coord_list.Count;
 
 			generateTapaProblemText();
+
+			
 		}
 	}
 }

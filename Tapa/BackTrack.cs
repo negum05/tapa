@@ -88,7 +88,7 @@ namespace Tapa
 						}
 					}
 					// 元の状態に戻す
-					StateSave.setSavedState(save_point);
+					StateSave.loadSavedState(save_point);
 
 					// 黒マスで塗ったら正解の盤面が生成できなかった場合
 					if (!ret_bool) {
@@ -140,7 +140,7 @@ namespace Tapa
 					}
 				}
 				// 元の状態に戻す
-				StateSave.setSavedState(save_point);
+				StateSave.loadSavedState(save_point);
 
 				// 黒マスで塗ったら正解の盤面が生成できなかった場合
 				if (!ret_bool) {
@@ -166,7 +166,7 @@ namespace Tapa
 			do {
 				if (doBackTrack(0)) {
 
-					StateSave.setSavedState(BackTrack.correct_save_point);
+					StateSave.loadSavedState(BackTrack.correct_save_point);
 
 					Console.WriteLine("バックトラック成功 深さ：{0}", min_Depth);
 					Tapa.printBoard();
