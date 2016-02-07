@@ -72,7 +72,7 @@ namespace Tapa
 		 * box_num : 数字マスの値（[1 2]なら12）
 		 *   
 		 * *******************************/
-		static List<byte> getPatternAroundNumBoxList(int box_num)
+		public static List<byte> getPatternAroundNumBoxList(int box_num)
 		{
 			List<byte> byte_list = new List<byte>();
 			byte head_id = 0;
@@ -3404,11 +3404,8 @@ namespace Tapa
 		static public void preparePatternArroundNumBox()
 		{
 			foreach (Coordinates tmp_co in Tapa.numbox_coord_list) {
-				//if (Tapa.box[tmp_co.x][tmp_co.y].id_list.Count == 0) {	// id_listを持っていなければ
 				Tapa.box[tmp_co.x][tmp_co.y].id_list
-					= new List<byte>(PatternAroundNumBox.getPatternAroundNumBoxList(
-						Tapa.box[tmp_co.x][tmp_co.y].boxNum));
-				//}
+					= PatternAroundNumBox.getPatternAroundNumBoxList(Tapa.box[tmp_co.x][tmp_co.y].boxNum);
 			}
 		}
 
@@ -3421,6 +3418,7 @@ namespace Tapa
 		 * *******************************/
 		static private void setConfirmBoxArroundNumBox(Coordinates co)
 		{
+			
 			// 数字マス周りのクローンを作成
 			List<Box> clonebox_around_numbox_list = new List<Box> {	
 					new Box(Tapa.box[co.x-1][co.y-1]),	// 左上
@@ -3661,7 +3659,6 @@ namespace Tapa
 
 
 				// id_listが一意ならそれを配置して数字マスリストから除外
-				Tapa.NOW_STATE_PROCESS = Tapa.STATE_ID_LIST_ONLY_ONE;
 				if (Tapa.box[tmp_co.x][tmp_co.y].id_list.Count == 1) {
 					PatternAroundNumBox.setPatternAroundNumBox(tmp_co, Tapa.box[tmp_co.x][tmp_co.y].id_list[0]);
 					Tapa.numbox_coord_list.RemoveAt(ite_coord);
@@ -3676,7 +3673,6 @@ namespace Tapa
 				}
 
 				// tmp_coのid_listを見て数字周りで色が確定しているマスを埋める。
-				Tapa.NOW_STATE_PROCESS = Tapa.STATE_CONFIRM_BOX_COLOR_FROM_ID_LIST;
 				setConfirmBoxArroundNumBox(tmp_co);
 
 				if (Tapa.DEBUG) {

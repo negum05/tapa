@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Text;
-using Microsoft.Office.Interop.Excel;
+// using Microsoft.Office.Interop.Excel;
 
 namespace Tapa
 {
@@ -25,13 +25,6 @@ namespace Tapa
 		public static List<List<Coordinates>> isolation_blackboxes_group_list = new List<List<Coordinates>>();
 
 		public static bool DEBUG = false;
-		public static bool DEBUG_PRINT_PROCESS = false;
-
-		public static int NOW_STATE_PROCESS = 0;
-		public static int STATE_ID_LIST_ONLY_ONE = 1;						// idリストが一意の時
-		public static int STATE_CONFIRM_BOX_COLOR_FROM_ID_LIST = 2;			// idリストからマスが確定する時
-		public static int STATE_AVOID_DUMPLING_AROUND_BLACK_BOX = 3;		// 黒マスの上下左右で団子マスを避ける時
-		public static int STATE_ISOLATION_BLACK_BOXES_ONLY_EXTENDABLE = 4;	// 一繋がりの黒マス群の伸び代が一箇所のみの時
 
 		public static int MAX_BOARD_ROW = 30;
 		public static int MAX_BOARD_COL = 30;
@@ -51,6 +44,22 @@ namespace Tapa
 		public static int processnum_betu0id;
 		public static int processnum_kakuteimasu;
 		public static int processnum_numbox;
+
+		public static int visittimes_kuromasu;
+		public static int visittimes_kakuteijogaiid;
+		public static int visittimes_dangoid;
+		public static int visittimes_korituid;
+		public static int visittimes_betu0id;
+		public static int visittimes_kakuteimasu;
+
+		public static TimeSpan sum_times_kuromasu;
+		public static TimeSpan sum_times_kakuteijogaiid;
+		public static TimeSpan sum_times_dangoid;
+		public static TimeSpan sum_times_korituid;
+		public static TimeSpan sum_times_betu0id;
+		public static TimeSpan sum_times_kakuteimasu;
+		//ストップウォッチを開始する
+		public static System.Diagnostics.Stopwatch sw_csv = System.Diagnostics.Stopwatch.StartNew();
 		public static bool is_count = false;
 
 
@@ -60,31 +69,46 @@ namespace Tapa
 		[STAThread]
 		static void Main(string[] args)
 		{
-			// 時間計測開始
-			System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
+			Problem.default_path = System.Environment.CurrentDirectory + @"\tapa_prob";
+			Console.WriteLine("defaultpath >> " + Problem.default_path);
+			// デフォルトディレクトリがなければ作成する
+			if (!System.IO.Directory.Exists(Problem.default_path)) {
+				Console.WriteLine("check");
+				System.IO.Directory.CreateDirectory(Problem.default_path);
+			}
+
+			Problem.default_path += @"\";
 
 
-			Problem.manageMakingProblem();
+			// ################# 問題生成用
+			//// 時間計測開始
+			//System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
 
-			//時間計測終了
-			sw.Stop();
-			Console.WriteLine("問題生成にかかった時間 >> " + sw.Elapsed);
-			Console.ReadLine();
-			return;
+			//Problem.manageMakingProblem();
 
-			//// ボタンをWindows風のスタイルにしてくれる
-			//System.Windows.Forms.Application.EnableVisualStyles();
-			//// falseにすることでパフォーマンスを優先する
-			//System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
-			//// Form1()が停止しない間常に動作
-			//System.Windows.Forms.Application.Run(new Display());
-
-			//MyCSVManagement.makeSampleData();
-
+			////時間計測終了
+			//sw.Stop();
+			//Console.WriteLine("問題生成にかかった時間 >> " + sw.Elapsed);
+			//Console.ReadLine();
 			//return;
 
 
-			
+			// ################# GUI用
+			// ボタンをWindows風のスタイルにしてくれる
+			System.Windows.Forms.Application.EnableVisualStyles();
+			// falseにすることでパフォーマンスを優先する
+			System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
+			// Form1()が停止しない間常に動作
+			System.Windows.Forms.Application.Run(new Display());
+
+
+			// ################# csv作成用
+			//MyCSVManagement.makeSampleData();
+			//return;
+
+
+			// ################# excelファイルから問題を読み込む用
+			/*
 			if (args.Length == 0) {
 				Console.WriteLine("Error:コマンドライン引き数が正しくありません。\n"
 								+ "第一引数：入力ファイル\n第二引数：出力ファイル\n");
@@ -122,137 +146,7 @@ namespace Tapa
 			if (isCorrectAnswer()) { Console.WriteLine("正解！！"); }
 			else { Console.WriteLine("不正解"); }
 			return;
-			
-
-
-			int sum = 0;
-			for (int j = 0; j < 10; j++) {
-
-				// http://excelcsharp.lance40.com/bookopen.html
-				// Excel操作用オブジェクト
-				Microsoft.Office.Interop.Excel.Application xlApp = null;
-				Microsoft.Office.Interop.Excel.Workbooks xlBooks = null;
-				Microsoft.Office.Interop.Excel.Workbook xlBook = null;
-				Microsoft.Office.Interop.Excel.Sheets xlSheets = null;
-				Microsoft.Office.Interop.Excel.Worksheet xlSheet = null;
-
-
-				String ex_file_name = @"C:\Users\Amano\Desktop\rooptest\sample" + String.Format("{0:0000}", j) + ".xlsx";
-
-
-				// Excelアプリケーション生成
-				xlApp = new Microsoft.Office.Interop.Excel.Application();
-
-				// ◆操作対象のExcelブックを開く◆
-				// Openメソッド
-				xlBooks = xlApp.Workbooks;
-				xlBook = xlBooks.Add();
-
-				// シートを選択する
-				xlSheets = xlBook.Worksheets;
-				xlSheet = xlSheets[1] as Microsoft.Office.Interop.Excel.Worksheet; // 1シート目を操作対象に設定する
-
-				// 非表示
-				xlApp.Visible = false;
-				xlApp.DisplayAlerts = false; // Excelの確認ダイアログ表示有無
-
-				xlSheet.Cells[1, 1] = "問題";
-				xlSheet.Cells[1, 2] = "黒マス数";
-				xlSheet.Cells[1, 3] = "白マス数";
-				xlSheet.Cells[1, 4] = "黒マスの割合";
-				xlSheet.Cells[1, 5] = "数字の数";
-				xlSheet.Cells[1, 6] = "黒マス";
-				xlSheet.Cells[1, 7] = "確定id除外";
-				xlSheet.Cells[1, 8] = "団子id";
-				xlSheet.Cells[1, 9] = "孤立id";
-				xlSheet.Cells[1, 10] = "別0id";
-				xlSheet.Cells[1, 11] = "確定マス";
-
-
-
-				for (int i = 2; i <= 100001; i++) {
-					Tapa.file_name = "tapa" + String.Format("{0:000000}", sum++) + ".txt";
-					processnum_kuromasu = 0;
-					processnum_kakuteijogaiid = 0;
-					processnum_dangoid = 0;
-					processnum_korituid = 0;
-					processnum_betu0id = 0;
-					processnum_kakuteimasu = 0;
-					processnum_numbox = 0;
-
-
-					Problem.manageMakingProblem();
-
-
-
-					//if (args.Length == 0) {
-					//	Console.WriteLine("Error:コマンドライン引き数が正しくありません。\n"
-					//					+ "第一引数：入力ファイル\n第二引数：出力ファイル\n");
-					//	Application.Exit();
-					//}
-
-					//Console.WriteLine("#######################入力ファイル名 >> " + args[0]);
-
-					//// 入力ファイルの読み込み
-					//Tapa.inputTapa(args[0]);
-					//// 準備：数字マスにidのリストを追加
-					//PatternAroundNumBox.preparePatternArroundNumBox();
-					//// 盤面の出力
-					//Console.WriteLine("入力盤面");
-					//Tapa.printBoard();
-					//Console.WriteLine();
-
-					is_count = true;
-					Tapa.solveTapa(Tapa.REPEAT_NUM);
-					is_count = false;
-
-					xlSheet.Cells[i, 1] = file_name;
-					xlSheet.Cells[i, 2] = Tapa.isolation_blackboxes_group_list[0].Count;
-					xlSheet.Cells[i, 3] = 100 - Tapa.isolation_blackboxes_group_list[0].Count;
-					xlSheet.Cells[i, 4] = Tapa.isolation_blackboxes_group_list[0].Count;
-					xlSheet.Cells[i, 5] = Tapa.processnum_numbox;
-					xlSheet.Cells[i, 6] = Tapa.processnum_kuromasu;
-					xlSheet.Cells[i, 7] = Tapa.processnum_kakuteijogaiid;
-					xlSheet.Cells[i, 8] = Tapa.processnum_dangoid;
-					xlSheet.Cells[i, 9] = Tapa.processnum_korituid;
-					xlSheet.Cells[i, 10] = Tapa.processnum_betu0id;
-					xlSheet.Cells[i, 11] = Tapa.processnum_kakuteimasu;
-
-				}
-
-				// 未定マスが存在するなら、バックトラックを行う。
-				//if (Tapa.not_deployedbox_coord_list.Count > 0) {
-				//	BackTrack backtrack = new BackTrack();
-				//	backtrack.manageBackTrack();
-				//	StateSave.setSavedState(BackTrack.correct_save_point);
-				//	printBoard();
-				//	Console.WriteLine("\n深さ >> " + BackTrack.min_depth);
-				//}
-
-				
-
-
-				xlBook.SaveAs(ex_file_name);
-
-				// ■■■以下、COMオブジェクトの解放■■■
-				// Sheet解放
-				System.Runtime.InteropServices.Marshal.ReleaseComObject(xlSheet);
-				System.Runtime.InteropServices.Marshal.ReleaseComObject(xlSheets);
-
-				// Book解放
-				xlBook.Close();
-				System.Runtime.InteropServices.Marshal.ReleaseComObject(xlBook);
-				System.Runtime.InteropServices.Marshal.ReleaseComObject(xlBooks);
-
-				// Excelアプリケーションを解放
-				xlApp.Quit();
-				System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp);
-			}
-
-			return;
-
-
-
+			*/
 
 		}
 
@@ -306,24 +200,13 @@ namespace Tapa
 				was_change_board = false;
 				// 数字マス周りのパターンを管理
 				PatternAroundNumBox.managePatternAroundNumBox();
-				//Console.WriteLine("{0}回目：数字マス周りの処理後", cycle_num);
-				//Tapa.printBoard();
-				//Console.WriteLine("notdeployedbox_list >> " + Tapa.not_deployedbox_coord_list.Count);
-				//Console.WriteLine("numbox_coord_list >> " + Tapa.numbox_coord_list.Count);
-				//Console.WriteLine("edge_blackbox_coordlist >> " + Tapa.edge_blackbox_coord_list.Count);
-				//Console.WriteLine("isolation_blackboxes_group_list >> " + Tapa.isolation_blackboxes_group_list.Count);
 
 				// 伸び代のある黒マスから、黒マスが伸びないかを見て、可能なら実際に伸ばす。
 				Box.manageBlackBox();
-				//Console.WriteLine("{0}回目：黒マス関係の処理後", cycle_num);
-				//Tapa.printBoard();
-				//Console.WriteLine("notdeployedbox_list >> " + Tapa.not_deployedbox_coord_list.Count);
-				//Console.WriteLine("numbox_coord_list >> " + Tapa.numbox_coord_list.Count);
-				//Console.WriteLine("edge_blackbox_coordlist >> " + Tapa.edge_blackbox_coord_list.Count);
-				//Console.WriteLine("isolation_blackboxes_group_list >> " + Tapa.isolation_blackboxes_group_list.Count);
 
 				if (!was_change_board) { break; }
 			}
+			Tapa.printBoard();
 		}
 
 		/*********************************
@@ -502,36 +385,6 @@ namespace Tapa
 			}
 			return false;
 		}
-
-		/*********************************
-		 * 
-		 *   今の処理をシェルに出力
-		 *  
-		 * *******************************/
-		public static void printNowStateProcess()
-		{
-			switch (Tapa.NOW_STATE_PROCESS) {
-				case 0:
-					Console.Write("盤面生成");
-					break;
-				case 1:
-					Console.Write("id_listが一意");
-					break;
-				case 2:
-					Console.Write("id_listからマスの色が決定する");
-					break;
-				case 3:
-					Console.Write("黒マスの上下左右を見て団子を回避");
-					break;
-				case 4:
-					Console.Write("一繋がりの黒マスの伸び代が一意");
-					break;
-				default:
-					Console.Write("Error: 塗られた理由が不明");
-					break;
-			}
-		}
-
 
 	}
 }

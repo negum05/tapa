@@ -71,12 +71,6 @@ namespace Tapa
 						// 色の塗られたマスの上下左右の黒マスの伸び代をチェック/変更する
 						resetExtendableBlackBoxAround(this.coord);
 						Tapa.not_deployedbox_coord_list.Remove(this.coord);	// 未定マスリストから除外
-						if (Tapa.DEBUG_PRINT_PROCESS) {
-							this.coord.printCoordinates();
-							Console.Write(" : ");
-							Tapa.printNowStateProcess();
-							Console.WriteLine();
-						}
 					}
 				}
 			}
@@ -779,9 +773,7 @@ namespace Tapa
 		public static bool is_count_bb = false;
 		public static void manageBlackBox()
 		{
-			Tapa.NOW_STATE_PROCESS = Tapa.STATE_AVOID_DUMPLING_AROUND_BLACK_BOX;
 			// 孤立した黒マス群のリストを見て、伸び代が1つしかない黒マス群があればそこを黒に塗る。
-			Tapa.NOW_STATE_PROCESS = Tapa.STATE_ISOLATION_BLACK_BOXES_ONLY_EXTENDABLE;
 			extendIsolationBlackBoxGroup();
 
 		}
