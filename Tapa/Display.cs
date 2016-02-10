@@ -35,35 +35,47 @@ namespace Tapa
 		{
 			this.Cursor = Cursors.WaitCursor;
 			try {
-				Console.WriteLine("radio >> " + radio_dot.Checked);
-
-				if (tb_savefile_path.TextLength == 0) {
-					MessageBox.Show("保存先ファイルを指定してください。",
-									"エラー",
-									MessageBoxButtons.OK,
-									MessageBoxIcon.Error);
-					return;
-				}
-				if (radio_dot.Checked) {
-					if (tb_dotfile_path.TextLength == 0) {
-						MessageBox.Show("Dot画のファイル名を指定してください。",
+				if (radio_hint.Checked) {
+					if (tb_hintfile_path.TextLength == 0) {
+						MessageBox.Show("ヒントを生成したいファイル名を指定してください。",
 											"エラー",
 											MessageBoxButtons.OK,
 											MessageBoxIcon.Error);
 						return;
 					}
-					if (!System.IO.File.Exists(Problem.dotfile_path)) {
-						MessageBox.Show("指定されたDot画のファイルが存在しません。",
+					if (!System.IO.File.Exists(Problem.prb_hintfile_path)) {
+						MessageBox.Show("ヒントを生成したいファイルが存在しません。",
 										"エラー",
 										MessageBoxButtons.OK,
 										MessageBoxIcon.Error);
 						return;
 					}
 				}
-
-				Console.WriteLine("save >> " + Problem.savefile_path);
-				Console.WriteLine("play >> " + Problem.playfile_path);
-				Console.WriteLine("dot >> " + Problem.dotfile_path);
+				else {
+					if (tb_savefile_path.TextLength == 0) {
+						MessageBox.Show("保存先ファイルを指定してください。",
+										"エラー",
+										MessageBoxButtons.OK,
+										MessageBoxIcon.Error);
+						return;
+					}
+					if (radio_dot.Checked) {
+						if (tb_dotfile_path.TextLength == 0) {
+							MessageBox.Show("Dot画のファイル名を指定してください。",
+												"エラー",
+												MessageBoxButtons.OK,
+												MessageBoxIcon.Error);
+							return;
+						}
+						if (!System.IO.File.Exists(Problem.dotfile_path)) {
+							MessageBox.Show("指定されたDot画のファイルが存在しません。",
+											"エラー",
+											MessageBoxButtons.OK,
+											MessageBoxIcon.Error);
+							return;
+						}
+					}
+				}
 
 				Tapa.BOX_SUM = Tapa.MAX_BOARD_ROW * Tapa.MAX_BOARD_COL;	// マス数
 
@@ -75,10 +87,11 @@ namespace Tapa
 				// 時間計測開始
 				System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
 				// 問題生成の処理
-				if (radio_dot.Checked) {
-					Problem.manageMakingProblemFromTxt();
+				if (!radio_random.Checked) {
+					if (radio_hint.Checked) { Problem.manageMakingHintFromTxt(); }
+					else { Problem.manageMakingProblemFromTxt(); }
 					if (!Problem.is_correct_txtformat) {
-						MessageBox.Show("指定されたDot画がぱずぷれ形式ではない可能性があります。",
+						MessageBox.Show("指定されたDot画またはヒント対象ファイルがぱずぷれ形式ではない可能性があります。",
 										"エラー",
 										MessageBoxButtons.OK,
 										MessageBoxIcon.Error);
@@ -91,7 +104,8 @@ namespace Tapa
 				Console.WriteLine("問題生成にかかった時間 >> " + sw.Elapsed);
 
 				// 遊ぶファイルを今回作ったものにする
-				tb_playfile_path.Text = Problem.playfile_path = Problem.savefile_path;
+				if (radio_hint.Checked) { tb_playfile_path.Text = Problem.playfile_path = Problem.ans_hintfile_path; }
+				else { tb_playfile_path.Text = Problem.playfile_path = Problem.savefile_path; }
 				startMakeProblem.Text = tmp;
 				startMakeProblem.Enabled = true;
 				Enabled = true;
@@ -126,7 +140,8 @@ namespace Tapa
 		private void Display_Load(object sender, EventArgs e)
 		{
 			radio_random.Checked = true;
-			radio_random_CheckedChanged(sender, e);
+			radio_random_CheckedChanged_1(sender, e);
+
 			// デフォルトの保存先（mainの初めに指定）
 			tb_savefile_path.Text = Problem.default_path + @"tapa_prob.txt";
 			tb_playfile_path.Text = Problem.default_path + @"tapa_prob.txt";
@@ -138,77 +153,9 @@ namespace Tapa
 			comboBox2.SelectedIndex = comboBox2.Items.IndexOf("10");
 		}
 
-		/*********************************
-		 * 
-		 *	最大行数
-		 *   
-		 * *******************************/
-		private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			// 追加できないためGUIで設定
-			//for (int i = 8; i <= 18; i++) {
-			//	// コンボボックスへの項目の追加
-			//	comboBox1.Items.Add(i.ToString());
-			//}
 
-			// 読み取り専用（テキストボックスは編集不可）にする
-			comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
-			Tapa.MAX_BOARD_ROW = int.Parse(comboBox1.SelectedItem.ToString());	// 行数
-		}
 
-		/*********************************
-		 * 
-		 *	最大列数
-		 *   
-		 * *******************************/
-		private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			// 追加できないためGUIで設定
-			//for (int i = 8; i <= 18; i++) {
-			//	// コンボボックスへの項目の追加
-			//	comboBox2.Items.Add(i.ToString());
-			//}
 
-			// 読み取り専用（テキストボックスは編集不可）にする
-			comboBox2.DropDownStyle = ComboBoxStyle.DropDownList;
-			Tapa.MAX_BOARD_COL = int.Parse(comboBox2.SelectedItem.ToString());	// 列数
-		}
-
-		private void textBox1_TextChanged(object sender, EventArgs e)
-		{
-
-		}
-
-		/*********************************
-		 * 
-		 *	【フォルダを選択】ボタン
-		 *   
-		 * *******************************/
-		private void button1_Click(object sender, EventArgs e)
-		{
-			if (this.tb_playfile_path.Text.Length == 0) {
-				this.openFileDialog_playfile.FileName = @"*.txt";
-				this.openFileDialog_playfile.InitialDirectory =
-				  Environment.GetFolderPath(
-					Environment.SpecialFolder.Desktop);
-			}
-			else {
-				this.openFileDialog_playfile.FileName =
-				  System.IO.Path.GetFileName(this.tb_playfile_path.Text);
-				this.openFileDialog_playfile.InitialDirectory =
-				  System.IO.Path.GetDirectoryName(this.tb_playfile_path.Text);
-			}
-
-			this.openFileDialog_playfile.DefaultExt = @"txt";
-			this.openFileDialog_playfile.Filter = @"TEXT(*.txt)|*.txt|すべて(*.*)|*.*";
-			this.openFileDialog_playfile.FilterIndex = 1;
-			this.openFileDialog_playfile.Title = @"遊ぶファイルを選択";
-			if (this.openFileDialog_playfile.ShowDialog() == DialogResult.OK) {
-				this.tb_playfile_path.Text = this.openFileDialog_playfile.FileName;
-				Problem.playfile_path = this.openFileDialog_playfile.FileName;
-				Console.WriteLine("遊ぶファイル >> " + Problem.playfile_path);
-			}
-		}
 
 		private void textBox8_TextChanged(object sender, EventArgs e)
 		{
@@ -222,6 +169,8 @@ namespace Tapa
 		private static extern IntPtr GetForegroundWindow();
 		[DllImport("user32.dll")]
 		public static extern int GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
+
+		// 【puzzlevanで遊ぶ】
 		private void button2_Click_1(object sender, EventArgs e)
 		{
 			if (tb_playfile_path.TextLength == 0) {
@@ -260,75 +209,104 @@ namespace Tapa
 			Console.WriteLine("F2送信");
 		}
 
-		private void textBox3_TextChanged(object sender, EventArgs e)
-		{
-
-		}
-
-		private void groupBox1_Enter(object sender, EventArgs e)
-		{
-
-		}
-
-		private void radio_random_CheckedChanged(object sender, EventArgs e)
-		{
-			tb_dotfile_path.Hide();
-			sl_dotfile_path.Hide();
-
-			textBox6.Text = "生成する問題の行数と列数の選択";
-			textBox1.Show();
-			textBox2.Show();
-			comboBox1.Show();
-			comboBox2.Show();
-		}
-
-		private void radio_dot_CheckedChanged(object sender, EventArgs e)
-		{
-			// 行・列数選択を非表示
-			textBox1.Hide();
-			textBox2.Hide();
-			comboBox1.Hide();
-			comboBox2.Hide();
-
-			textBox6.Text = "対象のDot画の選択";
-			sl_dotfile_path.Show();
-			tb_dotfile_path.Show();
-		}
-
-		// http://www.atmarkit.co.jp/fdotnet/chushin/introwinform_04/introwinform_04_02.html
-		private void button3_Click(object sender, EventArgs e)
-		{
-			if (this.tb_dotfile_path.Text.Length == 0) {
-				this.openFileDialog_dotfile.FileName = @"*.txt";
-				this.openFileDialog_dotfile.InitialDirectory =
-				  Environment.GetFolderPath(
-					Environment.SpecialFolder.Desktop);
-			}
-			else {
-				this.openFileDialog_dotfile.FileName =
-				  System.IO.Path.GetFileName(this.tb_dotfile_path.Text);
-				this.openFileDialog_dotfile.InitialDirectory =
-				  System.IO.Path.GetDirectoryName(this.tb_dotfile_path.Text);
-			}
-
-			this.openFileDialog_dotfile.DefaultExt = @"txt";
-			this.openFileDialog_dotfile.Filter = @"TEXT(*.txt)|*.txt|すべて(*.*)|*.*";
-			this.openFileDialog_dotfile.FilterIndex = 1;
-			this.openFileDialog_dotfile.Title = @"Dot画の選択";
-			if (this.openFileDialog_dotfile.ShowDialog() == DialogResult.OK) {
-				this.tb_dotfile_path.Text = this.openFileDialog_dotfile.FileName;
-				Problem.dotfile_path = this.openFileDialog_dotfile.FileName;
-				Console.WriteLine("dotファイル >> " + Problem.dotfile_path);
-			}
-		}
-
 		private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
 		{
 
 		}
 
+		private void radioButton1_CheckedChanged(object sender, EventArgs e)
+		{
+			
+		}
+
+		// 【radio】ランダム問題生成
+		private void radio_random_CheckedChanged_1(object sender, EventArgs e)
+		{
+			group_dot.Hide();
+			group_hint.Hide();
+
+			group_play.Show();
+			group_save.Show();
+			group_rc.Show();
+		}
+
+		// 【radio】Dot画から問題生成
+		private void radio_dot_CheckedChanged_2(object sender, EventArgs e)
+		{
+			group_rc.Hide();
+			group_hint.Hide();
+
+			group_play.Show();
+			group_save.Show();
+			group_dot.Show();
+		}
+
+		// 【radio】ヒント生成
+		private void radio_hint_CheckedChanged(object sender, EventArgs e)
+		{
+
+			
+			Console.WriteLine("1");
+			group_dot.Hide();
+			group_play.Hide();
+			group_save.Hide();
+			group_rc.Hide();
+
+			Console.WriteLine("2");
+			group_hint.Show();
+			Console.WriteLine("3");
+		}
+
+		private void groupBox1_Enter_3(object sender, EventArgs e)
+		{
+
+		}
+
+		private void group_play_Enter(object sender, EventArgs e)
+		{
+
+		}
+
+		private void group_save_Enter(object sender, EventArgs e)
+		{
+
+		}
+
+		private void group_dot_Enter(object sender, EventArgs e)
+		{
+
+		}
+
+		// 【ファイルの選択】ヒントを生成したいファイルを選択
+		private void button1_Click_1(object sender, EventArgs e)
+		{
+			if (this.tb_hintfile_path.Text.Length == 0) {
+				this.open_hintfile.FileName = @"*.txt";
+				this.open_hintfile.InitialDirectory =
+				  Environment.GetFolderPath(
+					Environment.SpecialFolder.Desktop);
+			}
+			else {
+				this.open_hintfile.FileName =
+				  System.IO.Path.GetFileName(this.tb_hintfile_path.Text);
+				this.open_hintfile.InitialDirectory =
+				  System.IO.Path.GetDirectoryName(this.tb_hintfile_path.Text);
+			}
+
+			this.open_hintfile.DefaultExt = @"txt";
+			this.open_hintfile.Filter = @"TEXT(*.txt)|*.txt|すべて(*.*)|*.*";
+			this.open_hintfile.FilterIndex = 1;
+			this.open_hintfile.Title = @"ヒントを出力したいファイルを選択";
+			if (this.open_hintfile.ShowDialog() == DialogResult.OK) {
+				this.tb_hintfile_path.Text = this.open_hintfile.FileName;
+				Problem.prb_hintfile_path = this.open_hintfile.FileName;
+				Console.WriteLine("ヒント対象ファイル >> " + Problem.prb_hintfile_path);
+			}
+		}
+
+		// 【ファイルの選択】生成した問題の保存先を選択
 		// http://codepanic.itigo.jp/cs/dialog_save.html
-		private void sl_savefile_path_Click(object sender, EventArgs e)
+		private void sl_savefile_path_Click_1(object sender, EventArgs e)
 		{
 			// ダイアログのタイトルを指定
 			saveFileDialog1.Title = "生成した問題の保存先";
@@ -358,10 +336,113 @@ namespace Tapa
 			}
 		}
 
-		private void textBox6_TextChanged(object sender, EventArgs e)
+		private void tb_savefile_path_TextChanged(object sender, EventArgs e)
 		{
 
 		}
+
+		// 【ファイルを選択】遊ぶ問題を選択
+		private void sl_playfile_path_Click(object sender, EventArgs e)
+		{
+			if (this.tb_playfile_path.Text.Length == 0) {
+				this.openFileDialog_playfile.FileName = @"*.txt";
+				this.openFileDialog_playfile.InitialDirectory =
+				  Environment.GetFolderPath(
+					Environment.SpecialFolder.Desktop);
+			}
+			else {
+				this.openFileDialog_playfile.FileName =
+				  System.IO.Path.GetFileName(this.tb_playfile_path.Text);
+				this.openFileDialog_playfile.InitialDirectory =
+				  System.IO.Path.GetDirectoryName(this.tb_playfile_path.Text);
+			}
+
+			this.openFileDialog_playfile.DefaultExt = @"txt";
+			this.openFileDialog_playfile.Filter = @"TEXT(*.txt)|*.txt|すべて(*.*)|*.*";
+			this.openFileDialog_playfile.FilterIndex = 1;
+			this.openFileDialog_playfile.Title = @"遊ぶファイルを選択";
+			if (this.openFileDialog_playfile.ShowDialog() == DialogResult.OK) {
+				this.tb_playfile_path.Text = this.openFileDialog_playfile.FileName;
+				Problem.playfile_path = this.openFileDialog_playfile.FileName;
+				Console.WriteLine("遊ぶファイル >> " + Problem.playfile_path);
+			}
+		}
+
+
+
+		private void saveFileDialog1_FileOk(object sender, CancelEventArgs e)
+		{
+
+		}
+
+		private void open_hintfile_FileOk(object sender, CancelEventArgs e)
+		{
+
+		}
+
+		private void openFileDialog_playfile_FileOk(object sender, CancelEventArgs e)
+		{
+
+		}
+
+		// http://www.atmarkit.co.jp/fdotnet/chushin/introwinform_04/introwinform_04_02.html
+		// 【ファイルの選択】dotファイル選択
+		private void sl_dotfile_path_Click(object sender, EventArgs e)
+		{
+			if (this.tb_dotfile_path.Text.Length == 0) {
+				this.openFileDialog_dotfile.FileName = @"*.txt";
+				this.openFileDialog_dotfile.InitialDirectory =
+				  Environment.GetFolderPath(
+					Environment.SpecialFolder.Desktop);
+			}
+			else {
+				this.openFileDialog_dotfile.FileName =
+				  System.IO.Path.GetFileName(this.tb_dotfile_path.Text);
+				this.openFileDialog_dotfile.InitialDirectory =
+				  System.IO.Path.GetDirectoryName(this.tb_dotfile_path.Text);
+			}
+
+			this.openFileDialog_dotfile.DefaultExt = @"txt";
+			this.openFileDialog_dotfile.Filter = @"TEXT(*.txt)|*.txt|すべて(*.*)|*.*";
+			this.openFileDialog_dotfile.FilterIndex = 1;
+			this.openFileDialog_dotfile.Title = @"Dot画の選択";
+			if (this.openFileDialog_dotfile.ShowDialog() == DialogResult.OK) {
+				this.tb_dotfile_path.Text = this.openFileDialog_dotfile.FileName;
+				Problem.dotfile_path = this.openFileDialog_dotfile.FileName;
+				Console.WriteLine("dotファイル >> " + Problem.dotfile_path);
+			}
+		}
+
+		
+		// 【combobox】最大行数
+		private void comboBox1_SelectedIndexChanged_1(object sender, EventArgs e)
+		{
+			// 追加できないためGUIで設定
+			//for (int i = 8; i <= 18; i++) {
+			//	// コンボボックスへの項目の追加
+			//	comboBox1.Items.Add(i.ToString());
+			//}
+
+			// 読み取り専用（テキストボックスは編集不可）にする
+			comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
+			Tapa.MAX_BOARD_ROW = int.Parse(comboBox1.SelectedItem.ToString());	// 行数
+		}
+
+		// 【combobox】最大列数
+		private void comboBox2_SelectedIndexChanged_1(object sender, EventArgs e)
+		{
+			// 追加できないためGUIで設定
+			//for (int i = 8; i <= 18; i++) {
+			//	// コンボボックスへの項目の追加
+			//	comboBox2.Items.Add(i.ToString());
+			//}
+
+			// 読み取り専用（テキストボックスは編集不可）にする
+			comboBox2.DropDownStyle = ComboBoxStyle.DropDownList;
+			Tapa.MAX_BOARD_COL = int.Parse(comboBox2.SelectedItem.ToString());	// 列数
+		}
+
+		// 【textbox】ヒントを生成したい対象ファイル
 
 	}
 }

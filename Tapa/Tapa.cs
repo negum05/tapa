@@ -37,31 +37,32 @@ namespace Tapa
 
 		// エクセルに書き込む用
 		public static string file_name = "tapa";
-		public static int processnum_kuromasu;
-		public static int processnum_kakuteijogaiid;
-		public static int processnum_dangoid;
-		public static int processnum_korituid;
-		public static int processnum_betu0id;
-		public static int processnum_kakuteimasu;
-		public static int processnum_numbox;
+		public static int processnum_kuromasu = 0;
+		public static int processnum_kakuteijogaiid = 0;
+		public static int processnum_dangoid = 0;
+		public static int processnum_korituid = 0;
+		public static int processnum_betu0id = 0;
+		public static int processnum_kakuteimasu = 0;
+		public static int processnum_numbox = 0;
 
-		public static int visittimes_kuromasu;
-		public static int visittimes_kakuteijogaiid;
-		public static int visittimes_dangoid;
-		public static int visittimes_korituid;
-		public static int visittimes_betu0id;
-		public static int visittimes_kakuteimasu;
+		public static long visittimes_kuromasu = 0;
+		public static long visittimes_kakuteijogaiid = 0;
+		public static long visittimes_dangoid = 0;
+		public static long visittimes_korituid = 0;
+		public static long visittimes_betu0id = 0;
+		public static long visittimes_kakuteimasu = 0;
 
-		public static TimeSpan sum_times_kuromasu;
-		public static TimeSpan sum_times_kakuteijogaiid;
-		public static TimeSpan sum_times_dangoid;
-		public static TimeSpan sum_times_korituid;
-		public static TimeSpan sum_times_betu0id;
-		public static TimeSpan sum_times_kakuteimasu;
+		public static long sum_times_kuromasu = 0;
+		public static long sum_times_kakuteijogaiid = 0;
+		public static long sum_times_dangoid = 0;
+		public static long sum_times_korituid = 0;
+		public static long sum_times_betu0id = 0;
+		public static long sum_times_kakuteimasu = 0;
+
+		public static long time_makeproblem = 0;
 		//ストップウォッチを開始する
 		public static System.Diagnostics.Stopwatch sw_csv = System.Diagnostics.Stopwatch.StartNew();
 		public static bool is_count = false;
-
 
 		/// <summary>
 		/// アプリケーションのメイン エントリ ポイントです。
@@ -69,15 +70,20 @@ namespace Tapa
 		[STAThread]
 		static void Main(string[] args)
 		{
-			Problem.default_path = System.Environment.CurrentDirectory + @"\tapa_prob";
-			Console.WriteLine("defaultpath >> " + Problem.default_path);
-			// デフォルトディレクトリがなければ作成する
-			if (!System.IO.Directory.Exists(Problem.default_path)) {
-				Console.WriteLine("check");
-				System.IO.Directory.CreateDirectory(Problem.default_path);
-			}
+			//Problem.manageMakingHintFromTxt();
+			//return;
 
-			Problem.default_path += @"\";
+
+
+			//Problem.default_path = System.Environment.CurrentDirectory + @"\tapa_prob";
+			//Console.WriteLine("defaultpath >> " + Problem.default_path);
+			//// デフォルトディレクトリがなければ作成する
+			//if (!System.IO.Directory.Exists(Problem.default_path)) {
+			//	Console.WriteLine("check");
+			//	System.IO.Directory.CreateDirectory(Problem.default_path);
+			//}
+
+			//Problem.default_path += @"\";
 
 
 			// ################# 問題生成用
@@ -88,18 +94,22 @@ namespace Tapa
 
 			////時間計測終了
 			//sw.Stop();
+			// Tapa.time_makeproblem = sw_csv.ElapsedMilliseconds;
+
 			//Console.WriteLine("問題生成にかかった時間 >> " + sw.Elapsed);
 			//Console.ReadLine();
 			//return;
 
 
-			// ################# GUI用
+			//// ################# GUI用
 			// ボタンをWindows風のスタイルにしてくれる
 			System.Windows.Forms.Application.EnableVisualStyles();
 			// falseにすることでパフォーマンスを優先する
 			System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
 			// Form1()が停止しない間常に動作
 			System.Windows.Forms.Application.Run(new Display());
+			Console.ReadLine();
+
 
 
 			// ################# csv作成用
@@ -107,8 +117,8 @@ namespace Tapa
 			//return;
 
 
-			// ################# excelファイルから問題を読み込む用
 			/*
+			// ################# excelファイルから問題を読み込む用
 			if (args.Length == 0) {
 				Console.WriteLine("Error:コマンドライン引き数が正しくありません。\n"
 								+ "第一引数：入力ファイル\n第二引数：出力ファイル\n");
@@ -147,7 +157,6 @@ namespace Tapa
 			else { Console.WriteLine("不正解"); }
 			return;
 			*/
-
 		}
 
 		/*********************************
@@ -194,19 +203,23 @@ namespace Tapa
 		 * cycle_num	: 手法の繰り返し上限回数
 		 *  
 		 * *******************************/
-		public static void solveTapa(int cycle_num)
+		public static bool is_over_solve_num;
+		public static void solveTapa(int cycle_num, int solve_num = int.MaxValue)
 		{
-			for (cycle_num = 1; cycle_num <= 30; cycle_num++) {
-				was_change_board = false;
+			is_over_solve_num = false;
+			for (int i = cycle_num; i > 0; i--) {
+				Tapa.was_change_board = false;
+
 				// 数字マス周りのパターンを管理
-				PatternAroundNumBox.managePatternAroundNumBox();
+				PatternAroundNumBox.managePatternAroundNumBox(solve_num);
+				if (Tapa.is_over_solve_num) { break; }
 
 				// 伸び代のある黒マスから、黒マスが伸びないかを見て、可能なら実際に伸ばす。
-				Box.manageBlackBox();
+				Box.manageBlackBox(solve_num);
+				if (Tapa.is_over_solve_num) { break; }
 
 				if (!was_change_board) { break; }
 			}
-			Tapa.printBoard();
 		}
 
 		/*********************************
@@ -359,11 +372,9 @@ namespace Tapa
 		public static void printCoordList(List<Coordinates> coord_list)
 		{
 			foreach (Coordinates tmp_coord in coord_list) {
-				//tmp_coord.printCoordinates();
-				//Console.Write(" ");
-
+				Console.Write(Tapa.box[tmp_coord.x][tmp_coord.y].boxNum);
 				tmp_coord.printCoordinates();
-				Console.WriteLine(" id:" + Tapa.box[tmp_coord.x][tmp_coord.y].id_list.Count + " hint:" + Tapa.box[tmp_coord.x][tmp_coord.y].min_hint);
+				Console.Write(" ");
 			}
 			Console.WriteLine();
 		}

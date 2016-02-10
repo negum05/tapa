@@ -3418,7 +3418,8 @@ namespace Tapa
 		 * *******************************/
 		static private void setConfirmBoxArroundNumBox(Coordinates co)
 		{
-			
+			Tapa.sw_csv.Restart();	// CSV
+
 			// 数字マス周りのクローンを作成
 			List<Box> clonebox_around_numbox_list = new List<Box> {	
 					new Box(Tapa.box[co.x-1][co.y-1]),	// 左上
@@ -3451,6 +3452,9 @@ namespace Tapa
 					&& Tapa.box[tmp_box.coord.x][tmp_box.coord.y].Color == Box.NOCOLOR) {
 					Tapa.box[tmp_box.coord.x][tmp_box.coord.y].Color = tmp_box.Color;
 
+					Tapa.sum_times_kakuteimasu += Tapa.sw_csv.ElapsedMilliseconds;	// CSV
+					Tapa.visittimes_kakuteimasu++;
+
 					///////////
 					if (Tapa.is_count) {
 						Tapa.processnum_kakuteimasu++;
@@ -3482,7 +3486,7 @@ namespace Tapa
 			StateSave save_point = new StateSave();
 			// 現在の状態を保存
 			StateSave.saveNowState(save_point);
-			
+
 			// 孤立するidのid_listでの要素番号を保存するリスト
 			List<int> iso_id_ite_list = new List<int>();
 			for (int i = id_list.Count - 1; i >= 0; i--) {
@@ -3522,17 +3526,29 @@ namespace Tapa
 			// 現在の状態を保存
 			StateSave.saveNowState(save_point);
 
-			// 除外するidのid_listでの要素番号を保存するリスト
+			// 除外するidのid_listでのインデックスを保存するリスト
 			List<int> kill_id_ite_list = new List<int>();
 			for (int i = id_list.Count - 1; i >= 0; i--) {
 				// idの試し塗り
 				PatternAroundNumBox.setPatternAroundNumBox(co, id_list[i]);
 				// 数字マスのリストから今回試し塗りしたidの数字マスを除外
 				Tapa.numbox_coord_list.Remove(co);
+				Tapa.box[co.x][co.y].hasNum = false;
 
-				for (int ite_coord = Tapa.numbox_coord_list.Count - 1; ite_coord >= 0; ite_coord--) {	// 数字マスのリスト
+				// co周り5*5マスにある黒マスが属する黒マス群のインデックスを取得
+				List<int> bbgroup_index_list = Box.getIndexBlackBoxGroupListAround55(co);
+				List<Coordinates> numbox_around_bbgroup_coord_list = Box.getCoordListAroundBlackBoxGroup(bbgroup_index_list);
+
+				//Console.WriteLine("黒マス群");
+				//Tapa.printMultiCoordList(Tapa.isolation_blackboxes_group_list);
+				//Console.WriteLine("チェック対象数字マス >> ");
+				//Tapa.printCoordList(numbox_around_bbgroup_coord_list);
+
+
+				for (int ite_coord = numbox_around_bbgroup_coord_list.Count - 1; ite_coord >= 0; ite_coord--) {
+					// for (int ite_coord = Tapa.numbox_coord_list.Count - 1; ite_coord >= 0; ite_coord--) {	// 数字マスのリスト
 					Coordinates tmp_co = new Coordinates(Tapa.numbox_coord_list[ite_coord]);
-					
+
 					for (int ite_id = Tapa.box[tmp_co.x][tmp_co.y].id_list.Count - 1; ite_id >= 0; ite_id--) {	// id_list
 						byte tmp_id = Tapa.box[tmp_co.x][tmp_co.y].id_list[ite_id];
 						if (!PatternAroundNumBox.checkPatternAroundNumBox(tmp_co, tmp_id)) {	// idのパターンが配置できない
@@ -3542,10 +3558,10 @@ namespace Tapa
 
 					// idの通り配置したら黒マスの団子ができてしまう
 					PatternAroundNumBox.excludeDumplingId(tmp_co, Tapa.box[tmp_co.x][tmp_co.y].id_list);
-					
+
 					// id_listのうち、孤立する黒マス群を作るidを除外（id_listごとに処理したほうが効率的）
 					PatternAroundNumBox.excludeIdToMakeIsolationBlackBoxGroup(tmp_co, Tapa.box[tmp_co.x][tmp_co.y].id_list);
-					
+
 					// id_listの大きさが0なら今回試し塗りしたidの添字を、除外するid_listに追加し、次のidを見に行く。
 					if (Tapa.box[tmp_co.x][tmp_co.y].id_list.Count == 0) {
 						kill_id_ite_list.Add(i);
@@ -3566,17 +3582,16 @@ namespace Tapa
 		 * 
 		 * 数字マス周りのパターンを管理
 		 * 配置可能パターンが一意になった場合、その通りに配置する。
+		 * solve_num	:	ヒントを作るマス数の上限
 		 *   
 		 * *******************************/
 		public static bool first_1 = false;
-		static public void managePatternAroundNumBox()
+		static public void managePatternAroundNumBox(int solve_num = int.MaxValue)
 		{
-
 			for (int ite_coord = Tapa.numbox_coord_list.Count - 1; ite_coord >= 0; ite_coord--) {	// 数字マスのリスト
 				Coordinates tmp_co = new Coordinates(Tapa.numbox_coord_list[ite_coord]);
-				//if (Tapa.box[tmp_co.x][tmp_co.y].id_list.Count == 1) { first_1 = true; }
-				//else { first_1 = false; }
-				first_1 = false;
+				if (Tapa.box[tmp_co.x][tmp_co.y].id_list.Count == 1) { first_1 = true; }
+				else { first_1 = false; }
 
 				if (Tapa.DEBUG) {
 					tmp_co.printCoordinates();
@@ -3585,6 +3600,7 @@ namespace Tapa
 					Tapa.box[tmp_co.x][tmp_co.y].printIdList();
 				}
 
+				Tapa.sw_csv.Restart();	// CSV
 				// 配置できないidを削除
 				for (int ite_id = Tapa.box[tmp_co.x][tmp_co.y].id_list.Count - 1; ite_id >= 0; ite_id--) {	// id_list
 					byte tmp_id = Tapa.box[tmp_co.x][tmp_co.y].id_list[ite_id];
@@ -3600,14 +3616,20 @@ namespace Tapa
 							}
 						}
 					}
+					Tapa.sum_times_kakuteijogaiid += Tapa.sw_csv.ElapsedMilliseconds;	// CSV
+					Tapa.visittimes_kakuteijogaiid++;
 				}
+
 				if (Tapa.DEBUG) {
 					Console.Write("1 :id");
 					Tapa.box[tmp_co.x][tmp_co.y].printIdList();
 				}
 
+
 				// id_listのうち、idの通り配置したら黒マスの団子ができてしまうようなidを除外
 				if (Tapa.box[tmp_co.x][tmp_co.y].id_list.Count != 1) {
+					Tapa.sw_csv.Restart();	// CSV
+
 					PatternAroundNumBox.excludeDumplingId(tmp_co, Tapa.box[tmp_co.x][tmp_co.y].id_list);
 					if (Tapa.is_count && !first_1 && Tapa.box[tmp_co.x][tmp_co.y].id_list.Count == 1) {
 						Tapa.processnum_dangoid++;
@@ -3617,14 +3639,20 @@ namespace Tapa
 							Console.WriteLine("団子id" + Tapa.processnum_dangoid);
 						}
 					}
+					Tapa.sum_times_dangoid += Tapa.sw_csv.ElapsedMilliseconds;	// CSV
+					Tapa.visittimes_dangoid++;
 				}
+
 				if (Tapa.DEBUG) {
 					Console.Write("2 :id");
 					Tapa.box[tmp_co.x][tmp_co.y].printIdList();
 				}
 
+
 				// id_listのうち、孤立する黒マス群を作るidを除外（id_listごとに処理したほうが効率的
 				if (Tapa.box[tmp_co.x][tmp_co.y].id_list.Count != 1) {
+					Tapa.sw_csv.Restart();	// CSV
+
 					excludeIdToMakeIsolationBlackBoxGroup(tmp_co, Tapa.box[tmp_co.x][tmp_co.y].id_list);
 					if (Tapa.is_count && !first_1 && Tapa.box[tmp_co.x][tmp_co.y].id_list.Count == 1) {
 						Tapa.processnum_korituid++;
@@ -3634,14 +3662,20 @@ namespace Tapa
 							Console.WriteLine("孤立id" + Tapa.processnum_korituid);
 						}
 					}
+					Tapa.sum_times_korituid += Tapa.sw_csv.ElapsedMilliseconds;	// CSV
+					Tapa.visittimes_korituid++;
 				}
+
 				if (Tapa.DEBUG) {
 					Console.Write("3 :id");
 					Tapa.box[tmp_co.x][tmp_co.y].printIdList();
 				}
 
+
 				// id_listのうち、idを配置して別の数字マスのid_listの大きさが0になるようなidを除外する。
 				if (Tapa.box[tmp_co.x][tmp_co.y].id_list.Count != 1) {
+					Tapa.sw_csv.Restart();	// CSV
+
 					excludeIdToKillOtherNameBoxAllId(tmp_co, Tapa.box[tmp_co.x][tmp_co.y].id_list);
 					if (Tapa.is_count && !first_1 && Tapa.box[tmp_co.x][tmp_co.y].id_list.Count == 1) {
 						Tapa.processnum_betu0id++;
@@ -3651,16 +3685,19 @@ namespace Tapa
 							Console.WriteLine("別0id" + Tapa.processnum_betu0id);
 						}
 					}
+					Tapa.sum_times_betu0id += Tapa.sw_csv.ElapsedMilliseconds;	// CSV
+					Tapa.visittimes_betu0id++;
 				}
+
 				if (Tapa.DEBUG) {
 					Console.Write("4 :id");
 					Tapa.box[tmp_co.x][tmp_co.y].printIdList();
 				}
-
-
+				
 				// id_listが一意ならそれを配置して数字マスリストから除外
 				if (Tapa.box[tmp_co.x][tmp_co.y].id_list.Count == 1) {
 					PatternAroundNumBox.setPatternAroundNumBox(tmp_co, Tapa.box[tmp_co.x][tmp_co.y].id_list[0]);
+
 					Tapa.numbox_coord_list.RemoveAt(ite_coord);
 
 					if (Tapa.DEBUG) {
@@ -3669,12 +3706,23 @@ namespace Tapa
 						Tapa.printBoard();
 					}
 
+					// ヒント生成数が上限を超えたら終了
+					if (solve_num <= Problem.first_count_notdeployed - Tapa.not_deployedbox_coord_list.Count) {
+						Tapa.is_over_solve_num = true;
+						return;
+					}
+
 					continue;
 				}
 
 				// tmp_coのid_listを見て数字周りで色が確定しているマスを埋める。
 				setConfirmBoxArroundNumBox(tmp_co);
+				if (solve_num <= Problem.first_count_notdeployed - Tapa.not_deployedbox_coord_list.Count) {
+					Tapa.is_over_solve_num = true;
+					return;
+				}
 
+				// ヒント生成数が上限を超えたら終了
 				if (Tapa.DEBUG) {
 					Console.Write("5b :id");
 					Tapa.box[tmp_co.x][tmp_co.y].printIdList();

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Windows.Forms;
 
 namespace Tapa
 {
@@ -13,11 +14,14 @@ namespace Tapa
 		public static string savefile_path;	// 問題生成したファイルの保存先のパス
 		public static string playfile_path;	// 遊ぶファイルのパス
 		public static string dotfile_path;	// dot画ファイルのパス
+		public static string prb_hintfile_path; // ヒントの求められているファイルのパス
+		public static string ans_hintfile_path = System.Windows.Forms.Application.StartupPath + @"\ans_hint.txt";	// ヒントファイルのパス
+		
 
 		public static bool is_correct_txtformat = true;
 
-		private static int MIN_WHITEBOX_START_RATE = 70;	// 1818設定	1010=45-55
-		private static int MAX_WHITEBOX_START_RATE = 70;
+		public static int MIN_WHITEBOX_START_RATE = 45;	// 1818設定	1010=45-55
+		public static int MAX_WHITEBOX_START_RATE = 55;
 
 
 		// 数字マスを格納できる座標リスト
@@ -394,7 +398,7 @@ namespace Tapa
 			}
 			// 【削除する数字マスを選ぶ順番】
 			// ヒント数で降順にソート[固定]
-			// ヒント数が同数だったらidの数で降順にソートしたデータを後ろから選ぶ
+			// ヒント数が同数だったらidの数で昇順にソートしたデータを後ろから選ぶ
 			Tapa.numbox_coord_list.Sort(
 				delegate(Coordinates co1, Coordinates co2) {
 					int hint1 = Tapa.box[co1.x][co1.y].min_hint;
@@ -404,8 +408,8 @@ namespace Tapa
 					else {
 						int num1 = Tapa.box[co1.x][co1.y].id_list.Count;
 						int num2 = Tapa.box[co2.x][co2.y].id_list.Count;
-						if (num1 < num2) { return 1; }
-						else if (num1 > num2) { return -1; }
+						if (num1 < num2) { return -1; }
+						else if (num1 > num2) { return 1; }
 						else return 0;
 					}
 				});
@@ -460,7 +464,7 @@ namespace Tapa
 				//時間計測終了
 				sw.Stop();
 				deleting_numbox_coord.printCoordinates();
-				Console.WriteLine("の削除可否判断にかかった時間 >> " + sw.Elapsed + "(" + Problem.can_be_number_whitebox_list.Count + ")");
+				Console.WriteLine("del >> " + sw.Elapsed + "(" + Problem.can_be_number_whitebox_list.Count + ")");
 
 			}
 
@@ -559,17 +563,18 @@ namespace Tapa
 
 		/*********************************
 		 * 
-		 * ぱずぷれで作成したtxtファイルの読み込み
-		 *   
+		 * ぱずぷれで作成したtxtファイルの読み込み(Dot画用)
+		 * #	:	黒
+		 * +	:	白
+		 * ・	:	未定
+		 * 1,2	:	[12]
+		 *    
 		 * *******************************/
-		private void readTapaTxt()
+		private void readDotTapaTxt(string readfile_path)
 		{
-
-			Console.WriteLine(Problem.playfile_path);
-
 			List<string> line_list = new List<string>();
 			using (StreamReader sr = new StreamReader(
-				Problem.dotfile_path, Encoding.GetEncoding("Shift_JIS"))) {
+				readfile_path, Encoding.GetEncoding("Shift_JIS"))) {
 
 				string line = "";
 
@@ -584,6 +589,7 @@ namespace Tapa
 
 			Tapa.MAX_BOARD_ROW = Convert.ToInt32(line_list[2]);	// 3行目に行数
 			Tapa.MAX_BOARD_COL = Convert.ToInt32(line_list[3]);	// 4行目に列数
+			Tapa.BOX_SUM = Tapa.MAX_BOARD_ROW * Tapa.MAX_BOARD_COL;
 
 			// 盤面生成
 			Tapa.resetBoard();
@@ -605,22 +611,81 @@ namespace Tapa
 
 		/*********************************
 		 * 
+		 * ぱずぷれで作成したtxtファイルの読み込み(回答途中)
+		 * #	:	黒
+		 * +	:	白
+		 * ・	:	未定
+		 * 1,2	:	[12]
+		 *    
+		 * *******************************/
+		private void readPartwayTapaTxt(string readfile_path)
+		{
+
+			List<string> line_list = new List<string>();
+			using (StreamReader sr = new StreamReader(
+				readfile_path, Encoding.GetEncoding("Shift_JIS"))) {
+
+				string line = "";
+
+				while ((line = sr.ReadLine()) != null) {
+					line_list.Add(line);
+				}
+			}
+			if (line_list[0] != "pzprv3" || line_list[1] != "tapa") {
+				Problem.is_correct_txtformat = false;
+				return;
+			}
+
+			Tapa.MAX_BOARD_ROW = Convert.ToInt32(line_list[2]);	// 3行目に行数
+			Tapa.MAX_BOARD_COL = Convert.ToInt32(line_list[3]);	// 4行目に列数
+			Tapa.BOX_SUM = Tapa.MAX_BOARD_ROW * Tapa.MAX_BOARD_COL;
+
+			// 盤面生成
+			Tapa.resetBoard();
+
+			for (int i = 1; i <= Tapa.MAX_BOARD_ROW; i++) {
+				string wk_str = line_list[i + 3].Replace(",", "");	// 数字マスの区切りを削除
+				for (int j = 1; j <= Tapa.MAX_BOARD_COL; j++) {
+
+					int pt = wk_str.IndexOf(' ');
+
+					if (wk_str.Substring(0, pt) == "#") { Tapa.box[i][j].Color = Box.BLACK; }
+					else if (wk_str.Substring(0, pt) == "+") { Tapa.box[i][j].Color = Box.WHITE; }
+					else if (char.IsDigit(wk_str, 0)) {
+						Box tmp_box = Tapa.box[i][j];
+						tmp_box.hasNum = true;
+						tmp_box.boxNum = int.Parse(wk_str.Substring(0, pt));
+						Tapa.not_deployedbox_coord_list.Remove(tmp_box.coord);
+						// 周囲8マスに未定マスがあれば数字マスリストに追加する
+						if (Box.existNotDeployedBoxAround8(tmp_box.coord)) { Tapa.numbox_coord_list.Add(tmp_box.coord); }
+					}
+					else { }
+
+					wk_str = wk_str.Substring(pt + 1);
+				}
+			}
+			// 数字に対応したidを格納
+			PatternAroundNumBox.preparePatternArroundNumBox();
+		}
+
+		/*********************************
+		 * 
 		 * ぱずぷれv3用のtxtファイルを出力する
+		 * 引数
+		 * local_savefile_path	:	txtファイルを出力するパス
 		 *   
 		 * *******************************/
-		private static void generateTapaProblemText()
+		private static void generateTapaProblemText(string local_savefile_path)
 		{
-			string local_savefile_path = Problem.savefile_path;
+			// local_savefile_path = Problem.savefile_path;
 			// string local_savefile_path = MyCSVManagement.working_directory + Tapa.file_name;	// csv生成時
 			// string local_savefile_path = @"C:\Users\Amano\OneDrive\pikachu\pikachu_tapa.txt";	// 決め打ち
 
 
 			Console.WriteLine("savefile_path >> " + local_savefile_path);
 			using (StreamWriter w = new StreamWriter(local_savefile_path)) {
-				Console.WriteLine("111");
 
 				w.WriteLine("pzprv3\ntapa\n{0}\n{1}", Tapa.MAX_BOARD_ROW, Tapa.MAX_BOARD_COL);
-				Console.WriteLine("222");
 
 				for (int i = 1; i <= Tapa.MAX_BOARD_ROW; i++) {
 					String st = "";
@@ -649,6 +714,47 @@ namespace Tapa
 			}
 		}
 
+
+		/*********************************
+		 * 
+		 * ぱずぷれv3用のtxtファイルのヒントを出力する
+		 * 引数
+		 * local_savefile_path	:	txtファイルを出力するパス
+		 *   
+		 * *******************************/
+		private static void generateTapaHintText(string local_savefile_path)
+		{
+			Console.WriteLine("savefile_path >> " + local_savefile_path);
+			using (StreamWriter w = new StreamWriter(local_savefile_path)) {
+
+				w.WriteLine("pzprv3\ntapa\n{0}\n{1}", Tapa.MAX_BOARD_ROW, Tapa.MAX_BOARD_COL);
+
+				for (int i = 1; i <= Tapa.MAX_BOARD_ROW; i++) {
+					String st = "";
+					for (int j = 1; j <= Tapa.MAX_BOARD_COL; j++) {
+						Box tmp_box = Tapa.box[i][j];
+						if (tmp_box.hasNum) {
+							// リストの作成
+							List<int> tmp_box_num_list = new List<int>();
+							do {              // 数字を桁毎にリストに追加
+								tmp_box_num_list.Insert(0, tmp_box.boxNum % 10);
+								tmp_box.boxNum /= 10;
+							} while (tmp_box.boxNum > 0);  // do-whileは0の場合を許可するため
+
+							foreach (int tmp_num in tmp_box_num_list) {
+								st += tmp_num.ToString() + ",";
+							}
+							st = st.Remove(st.Length - 1);
+						}
+						else if (tmp_box.Color == Box.WHITE) { st += "+"; }
+						else if (tmp_box.Color == Box.BLACK) { st += "#"; }
+						else { st += "."; }
+						st += " ";
+					}
+					w.WriteLine(st);
+				}
+			}
+		}
 
 		/*********************************
 		 * 
@@ -685,7 +791,7 @@ namespace Tapa
 
 			p.generateTapaPrblem(1);
 			Tapa.processnum_numbox = Tapa.numbox_coord_list.Count;
-			generateTapaProblemText();
+			generateTapaProblemText(Problem.savefile_path);
 		}
 
 		/*********************************
@@ -695,9 +801,9 @@ namespace Tapa
 		 * *******************************/
 		public static void manageMakingProblemFromTxt()
 		{
-			Tapa.resetBoard();
+			// Tapa.resetBoard();
 			Problem p = new Problem();
-			p.readTapaTxt();
+			p.readDotTapaTxt(Problem.dotfile_path);
 
 			p.setBoxNumber();
 			if (Tapa.DEBUG) {
@@ -708,7 +814,30 @@ namespace Tapa
 			// 0:add 1:del 2:add+del  
 			p.generateTapaPrblem(1);
 			Tapa.processnum_numbox = Tapa.numbox_coord_list.Count;
-			generateTapaProblemText();
+			generateTapaProblemText(Problem.savefile_path);
+		}
+
+		/*********************************
+		 * 
+		 * txtからヒントを生成
+		 *   
+		 * *******************************/
+		public static int first_count_notdeployed;
+		public static void manageMakingHintFromTxt()
+		{
+			// Tapa.resetBoard();
+			Problem p = new Problem();
+			p.readPartwayTapaTxt(Problem.prb_hintfile_path);
+			Problem.first_count_notdeployed = Tapa.not_deployedbox_coord_list.Count;
+
+			Tapa.solveTapa(Tapa.REPEAT_NUM, 3);
+
+			Tapa.printBoard();
+
+
+
+			// ヒントtxtはexeファイルと同じディレクトリ
+			generateTapaHintText(Problem.ans_hintfile_path);
 		}
 	}
 }

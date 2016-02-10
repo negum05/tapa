@@ -8,6 +8,12 @@ namespace Tapa
 {
 	class Coordinates
 	{
+		// 向き
+		public static readonly Coordinates LEFT = new Coordinates(0, -1);
+		public static readonly Coordinates RIGHT = new Coordinates(0, 1);
+		public static readonly Coordinates UP = new Coordinates(-1, 0);
+		public static readonly Coordinates DOWN = new Coordinates(1, 0);
+
 		public int x { get; set; }	// x座標
 		public int y { get; set; }	// y座標
 
