@@ -9,6 +9,7 @@ namespace Tapa
 	class Coordinates
 	{
 		// 向き
+		public static readonly Coordinates ZERO = new Coordinates(0, 0);
 		public static readonly Coordinates LEFT = new Coordinates(0, -1);
 		public static readonly Coordinates RIGHT = new Coordinates(0, 1);
 		public static readonly Coordinates UP = new Coordinates(-1, 0);

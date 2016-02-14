@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Text;
-// using Microsoft.Office.Interop.Excel;
+
 
 namespace Tapa
 {
@@ -70,6 +70,9 @@ namespace Tapa
 		[STAThread]
 		static void Main(string[] args)
 		{
+			//PictToDotManagement.makeDotFromPict();
+			//return;
+
 			//Problem.manageMakingHintFromTxt();
 			//return;
 
@@ -102,7 +105,7 @@ namespace Tapa
 
 
 			//// ################# GUI用
-			// ボタンをWindows風のスタイルにしてくれる
+			//// ボタンをWindows風のスタイルにしてくれる
 			System.Windows.Forms.Application.EnableVisualStyles();
 			// falseにすることでパフォーマンスを優先する
 			System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
@@ -156,7 +159,8 @@ namespace Tapa
 			if (isCorrectAnswer()) { Console.WriteLine("正解！！"); }
 			else { Console.WriteLine("不正解"); }
 			return;
-			*/
+			 * */
+			
 		}
 
 		/*********************************
@@ -166,6 +170,8 @@ namespace Tapa
 		 * *******************************/
 		public static void resetBoard()
 		{
+
+			Tapa.BOX_SUM = Tapa.MAX_BOARD_ROW * Tapa.MAX_BOARD_COL;
 			box = new Box[Tapa.MAX_BOARD_ROW + 2][];
 			// idの残っている数字マスの座標のリストを初期化
 			numbox_coord_list.Clear();
@@ -204,18 +210,18 @@ namespace Tapa
 		 *  
 		 * *******************************/
 		public static bool is_over_solve_num;
-		public static void solveTapa(int cycle_num, int solve_num = int.MaxValue)
+		public static void solveTapa(int cycle_num, int solve_limit = -1)
 		{
 			is_over_solve_num = false;
 			for (int i = cycle_num; i > 0; i--) {
 				Tapa.was_change_board = false;
 
 				// 数字マス周りのパターンを管理
-				PatternAroundNumBox.managePatternAroundNumBox(solve_num);
+				PatternAroundNumBox.managePatternAroundNumBox(solve_limit);
 				if (Tapa.is_over_solve_num) { break; }
 
 				// 伸び代のある黒マスから、黒マスが伸びないかを見て、可能なら実際に伸ばす。
-				Box.manageBlackBox(solve_num);
+				Box.manageBlackBox(solve_limit);
 				if (Tapa.is_over_solve_num) { break; }
 
 				if (!was_change_board) { break; }

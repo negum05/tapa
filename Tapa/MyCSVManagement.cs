@@ -12,15 +12,15 @@ namespace Tapa
 {
 	class MyCSVManagement
 	{
-		private static int MAX_TXT = 100;
-		private static int MIN_GEN_ROW = 10;
-		private static int MIN_GEN_COL = 10;
-		private static int MAX_GEN_ROW = 10;
-		private static int MAX_GEN_COL = 10;
+		private static int MAX_TXT = 500;
+		private static int MIN_GEN_ROW = 18;
+		private static int MIN_GEN_COL = 18;
+		private static int MAX_GEN_ROW = 18;
+		private static int MAX_GEN_COL = 18;
 
 
 		// csvファイルのディレクトリ
-		public static string base_directory = @"C:\Users\Amano\Desktop\sample_tapa\time_search\";
+		public static string base_directory = @"C:\Users\Amano\Desktop\sample_tapa\time_search\0214\";
 		public static string working_directory = "default";
 		public static string dir_name = "default";
 		public static String csv_name;
@@ -39,12 +39,12 @@ namespace Tapa
 
 
 					Tapa.BOX_SUM = Tapa.MAX_BOARD_COL * Tapa.MAX_BOARD_ROW;
-					dir_name = "tapa_new0id" + Tapa.MAX_BOARD_ROW + "_" + Tapa.MAX_BOARD_COL;
+					dir_name = "tapa_fast_" + Tapa.MAX_BOARD_ROW + "_" + Tapa.MAX_BOARD_COL;
 					// dir_name = "tapa_rate" + rate + "_" + Tapa.MAX_BOARD_ROW + "_" + Tapa.MAX_BOARD_COL;
 					makeFolder();
 
 					for (int txt_id = 0; txt_id < MAX_TXT; txt_id++) {
-						Tapa.file_name = "tapa" + Tapa.MAX_BOARD_ROW + Tapa.MAX_BOARD_COL + String.Format("{0:0000}", txt_id) + ".txt";
+						Tapa.file_name = "tapa" + Tapa.MAX_BOARD_ROW + Tapa.MAX_BOARD_COL + String.Format("{0:00000}", txt_id) + ".txt";
 						Tapa.processnum_kuromasu = 0;
 						Tapa.processnum_kakuteijogaiid = 0;
 						Tapa.processnum_dangoid = 0;
@@ -155,7 +155,7 @@ namespace Tapa
 		}
 	}
 
-	public class Book
+	class Book
 	{
 		public string tapa_name { get; set; }
 		public string c_blackbox { get; set; }

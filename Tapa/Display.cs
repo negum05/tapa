@@ -77,7 +77,11 @@ namespace Tapa
 					}
 				}
 
+				Tapa.MAX_BOARD_ROW = int.Parse(comboBox1.Text);
+				Tapa.MAX_BOARD_COL = int.Parse(comboBox2.Text);
 				Tapa.BOX_SUM = Tapa.MAX_BOARD_ROW * Tapa.MAX_BOARD_COL;	// マス数
+				Console.WriteLine("【内部】row:col >> " + Tapa.MAX_BOARD_ROW + ":" + Tapa.MAX_BOARD_COL);
+				Console.WriteLine("【GUI】row:col >> " + comboBox1.Text + ":" + comboBox2.Text);
 
 				string tmp = startMakeProblem.Text;
 				startMakeProblem.Text = "問題生成中...";
@@ -244,17 +248,12 @@ namespace Tapa
 		// 【radio】ヒント生成
 		private void radio_hint_CheckedChanged(object sender, EventArgs e)
 		{
-
-			
-			Console.WriteLine("1");
 			group_dot.Hide();
 			group_play.Hide();
 			group_save.Hide();
 			group_rc.Hide();
 
-			Console.WriteLine("2");
 			group_hint.Show();
-			Console.WriteLine("3");
 		}
 
 		private void groupBox1_Enter_3(object sender, EventArgs e)
@@ -425,7 +424,6 @@ namespace Tapa
 
 			// 読み取り専用（テキストボックスは編集不可）にする
 			comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
-			Tapa.MAX_BOARD_ROW = int.Parse(comboBox1.SelectedItem.ToString());	// 行数
 		}
 
 		// 【combobox】最大列数
@@ -439,7 +437,6 @@ namespace Tapa
 
 			// 読み取り専用（テキストボックスは編集不可）にする
 			comboBox2.DropDownStyle = ComboBoxStyle.DropDownList;
-			Tapa.MAX_BOARD_COL = int.Parse(comboBox2.SelectedItem.ToString());	// 列数
 		}
 
 		// 【textbox】ヒントを生成したい対象ファイル

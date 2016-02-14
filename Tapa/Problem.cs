@@ -16,12 +16,12 @@ namespace Tapa
 		public static string dotfile_path;	// dot画ファイルのパス
 		public static string prb_hintfile_path; // ヒントの求められているファイルのパス
 		public static string ans_hintfile_path = System.Windows.Forms.Application.StartupPath + @"\ans_hint.txt";	// ヒントファイルのパス
-		
+
 
 		public static bool is_correct_txtformat = true;
 
-		public static int MIN_WHITEBOX_START_RATE = 45;	// 1818設定	1010=45-55
-		public static int MAX_WHITEBOX_START_RATE = 55;
+		public static int MIN_WHITEBOX_START_RATE = 25;	// 10*10盤面だと45-55あたりがいい感じ
+		public static int MAX_WHITEBOX_START_RATE = 50;
 
 
 		// 数字マスを格納できる座標リスト
@@ -274,7 +274,7 @@ namespace Tapa
 			do {
 				// 時間計測開始
 				System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
-				
+
 
 				// 埋める数字マスをランダムに選択
 				Coordinates adopting_boxnumber_coord = Problem.can_be_number_whitebox_list[
@@ -424,8 +424,8 @@ namespace Tapa
 			// 削除対象のリストを後ろからチェック
 			for (int i = Problem.can_be_number_whitebox_list.Count - 1; i >= 0; i--) {
 				// 時間計測開始
-				System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
-				
+				//System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
+
 				// 現在の状態を保存
 				StateSave save_point = new StateSave();
 				StateSave.saveNowState(save_point);
@@ -462,9 +462,9 @@ namespace Tapa
 				}
 
 				//時間計測終了
-				sw.Stop();
-				deleting_numbox_coord.printCoordinates();
-				Console.WriteLine("del >> " + sw.Elapsed + "(" + Problem.can_be_number_whitebox_list.Count + ")");
+				//sw.Stop();
+				//deleting_numbox_coord.printCoordinates();
+				//Console.WriteLine("del >> " + sw.Elapsed + "(" + Problem.can_be_number_whitebox_list.Count + ")");
 
 			}
 
@@ -516,7 +516,7 @@ namespace Tapa
 					//時間計測終了
 					sw.Stop();
 					Console.WriteLine("generateTapaProblemInAddNumBoxの総時間 >> " + sw.Elapsed + "(" + Problem.can_be_number_whitebox_list.Count + ")");
-					
+
 
 					// 時間計測開始
 					System.Diagnostics.Stopwatch sw2 = System.Diagnostics.Stopwatch.StartNew();
@@ -527,7 +527,7 @@ namespace Tapa
 					break;
 			}
 
-			
+
 
 		}
 
@@ -603,7 +603,7 @@ namespace Tapa
 					else { Tapa.box[i][j].Color = Box.WHITE; }
 
 					wk_str = wk_str.Substring(pt + 1);
-					
+
 				}
 			}
 
@@ -677,9 +677,9 @@ namespace Tapa
 		 * *******************************/
 		private static void generateTapaProblemText(string local_savefile_path)
 		{
-			// local_savefile_path = Problem.savefile_path;
-			// string local_savefile_path = MyCSVManagement.working_directory + Tapa.file_name;	// csv生成時
-			// string local_savefile_path = @"C:\Users\Amano\OneDrive\pikachu\pikachu_tapa.txt";	// 決め打ち
+
+			// local_savefile_path = MyCSVManagement.working_directory + Tapa.file_name;	// csv生成時
+			// local_savefile_path = @"C:\Users\Amano\OneDrive\pikachu\pikachu_tapa.txt";	// 決め打ち
 
 
 			Console.WriteLine("savefile_path >> " + local_savefile_path);
@@ -722,7 +722,7 @@ namespace Tapa
 		 * local_savefile_path	:	txtファイルを出力するパス
 		 *   
 		 * *******************************/
-		private static void generateTapaHintText(string local_savefile_path)
+		public static void generateTapaHintText(string local_savefile_path)
 		{
 			Console.WriteLine("savefile_path >> " + local_savefile_path);
 			using (StreamWriter w = new StreamWriter(local_savefile_path)) {
@@ -763,7 +763,7 @@ namespace Tapa
 		 * *******************************/
 		public static void manageMakingProblem()
 		{
-			Problem p; 
+			Problem p;
 
 			do {
 				Tapa.resetBoard();
@@ -801,7 +801,6 @@ namespace Tapa
 		 * *******************************/
 		public static void manageMakingProblemFromTxt()
 		{
-			// Tapa.resetBoard();
 			Problem p = new Problem();
 			p.readDotTapaTxt(Problem.dotfile_path);
 
@@ -822,20 +821,22 @@ namespace Tapa
 		 * txtからヒントを生成
 		 *   
 		 * *******************************/
-		public static int first_count_notdeployed;
 		public static void manageMakingHintFromTxt()
 		{
-			// Tapa.resetBoard();
 			Problem p = new Problem();
 			p.readPartwayTapaTxt(Problem.prb_hintfile_path);
-			Problem.first_count_notdeployed = Tapa.not_deployedbox_coord_list.Count;
 
-			Tapa.solveTapa(Tapa.REPEAT_NUM, 3);
+			for (int i = Tapa.numbox_coord_list.Count - 1; i >= 0; i--) {
+				Coordinates co = Tapa.numbox_coord_list[i];
+				if (!Box.existNotDeployedBoxAround8(co)) {
+					Tapa.numbox_coord_list.Remove(co);
+				}
+			}
 
-			Tapa.printBoard();
+			// Tapa.solveTapa(Tapa.REPEAT_NUM, Tapa.not_deployedbox_coord_list.Count - 4);
+			Tapa.solveTapa(Tapa.REPEAT_NUM);
 
-
-
+			ans_hintfile_path = @"C:\Users\Amano\OneDrive\zemi\ans_tapa.txt";
 			// ヒントtxtはexeファイルと同じディレクトリ
 			generateTapaHintText(Problem.ans_hintfile_path);
 		}

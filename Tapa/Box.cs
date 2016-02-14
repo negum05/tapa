@@ -409,20 +409,20 @@ namespace Tapa
 		 * co	: 黒マスの座標
 		 *   
 		 * *******************************/
-		private static bool canExtendBlackBox(Coordinates co)
+		public static bool canExtendBlackBox(Coordinates co)
 		{
 			if (Tapa.box[co.x][co.y].Color != Box.BLACK) {
 				Console.WriteLine("Error: canExtendBlackBoxに黒マス以外の座標を引数として渡しています。({0},{1})", co.x, co.y);
 				Application.Exit();
 			}
 
-			if (Tapa.box[co.x - 1][co.y].Color != Box.NOCOLOR		// 上のマス色
-				&& Tapa.box[co.x][co.y + 1].Color != Box.NOCOLOR	// 右のマス色
-				&& Tapa.box[co.x + 1][co.y].Color != Box.NOCOLOR	// 下のマス色
-				&& Tapa.box[co.x][co.y - 1].Color != Box.NOCOLOR) {	// 左のマス色
-				return false;
+			if (Tapa.box[co.x - 1][co.y].Color == Box.NOCOLOR		// 上のマス色
+				|| Tapa.box[co.x][co.y + 1].Color == Box.NOCOLOR	// 右のマス色
+				|| Tapa.box[co.x + 1][co.y].Color == Box.NOCOLOR	// 下のマス色
+				|| Tapa.box[co.x][co.y - 1].Color == Box.NOCOLOR) {	// 左のマス色
+				return true;
 			}
-			return true;
+			return false;
 		}
 
 		/*********************************
@@ -488,7 +488,7 @@ namespace Tapa
 			}
 			return false;
 		}
-		
+
 		/*********************************
 		 * 
 		 * 座標co周り5*5マスにある黒マスの属する黒マス群のインデックスをリストで返す。
@@ -570,6 +570,12 @@ namespace Tapa
 				y_right = 4 + tl.y;
 				x_bottom = Box.bb_group[t].x - Box.bb_group[s].x + 4 + tl.x;
 			}
+			else if (d.Equals(Coordinates.ZERO)) {
+				Coordinates tmp = Box.bb_group[0];
+				tl = new Coordinates(tmp.x - 2, tmp.y - 2);
+				y_right = 4 + tl.y;
+				x_bottom = tl.x + 4;
+			}
 			else {
 				Console.WriteLine("【Box.getNumBoxIndexAroundLine】向きがおかしい");
 				return;
@@ -602,14 +608,13 @@ namespace Tapa
 		 *   
 		 * *******************************/
 		private static void doDFStoSortBlackBoxGroup(
-			int u, int s, int t, Coordinates d, ref List<Coordinates>ret_numbox_coord_list)
+			int u, int s, int t, Coordinates d, ref List<Coordinates> ret_numbox_coord_list)
 		{
 			if (visited[u]) { return; }
 			visited[u] = true;
 			t = u;	// 突き当りを更新
 
 			foreach (int v in edge[u]) {
-
 				Coordinates next_d = bb_group[v] - bb_group[u];
 				if (s == t) { d = next_d; }	// 突き当りと始点が同じ ＝ 曲がったばかり
 				else {
@@ -620,7 +625,6 @@ namespace Tapa
 				}
 				doDFStoSortBlackBoxGroup(v, s, t, d, ref ret_numbox_coord_list);
 			}
-
 		}
 
 		/*********************************
@@ -635,44 +639,51 @@ namespace Tapa
 		static Dictionary<int, List<int>> edge;
 		static List<Coordinates> bb_group;	// dfsを行う黒マス群の一時保存用
 		static bool[] visited;	// dfsで到着済みかを判定する
-		public static List<Coordinates> getCoordListAroundBlackBoxGroup(List<int> bbgroup_index_list){
+		public static List<Coordinates> getCoordListAroundBlackBoxGroup(List<int> bbgroup_index_list)
+		{
 
 			// 黒マス周りの数字マスの、数字マスリストでのインデックス格納用
 			List<Coordinates> ret_numbox_coord_list = new List<Coordinates>();
 			for (int bb_index = bbgroup_index_list.Count - 1; bb_index >= 0; bb_index--) {
-
 				bb_group = Tapa.isolation_blackboxes_group_list[bbgroup_index_list[bb_index]];
-				// 今回ソートする黒マス群の大きさ確保　falseで初期化
-				visited = new bool[bb_group.Count];
-				for (int i = visited.Length - 1; i >= 0; i--) { visited[i] = false; }
-				
-				// xを昇順、yを昇順でソート（左上の黒マスが先頭）
-				bb_group.Sort(
-					delegate(Coordinates co1, Coordinates co2){
-						if (co1.x < co2.x) { return -1; }
-						else if (co1.x > co2.x) { return 1; }
-						else {
-							if (co1.y < co2.y) { return -1; }
-							else if (co1.y > co2.y) { return 1; }
-							else return 0;
-						}
-					});
 
-				// 辺を設定
-				edge = new Dictionary<int, List<int>>();
-				for(int i = bb_group.Count - 1; i >= 0; i--){
-					List<Coordinates> adjacent_coord = Box.getBlackBoxCoordinatesAround(bb_group[i]);
-					List<int> index = new List<int>();
-					for(int j = adjacent_coord.Count-1; j >= 0; j--){
-						if(!bb_group.Contains(adjacent_coord[j])){ adjacent_coord.RemoveAt(j); }
-						else { index.Add(bb_group.IndexOf(adjacent_coord[j]));} 
-
-						}
-					edge[i] = index;
+				// 黒マス群が黒マス単体の時
+				if (bb_group.Count == 1) {
+					getNumBoxIndexAroundLine(0, 0, Coordinates.ZERO, ref ret_numbox_coord_list);
 				}
-				// 黒マス群周りの数字をdfs中に取得する
-				// 引数：親、（現在の直線の）始点、　（現在の直線の）終点、（現在の直線の）向き、数字マス保存用
-				doDFStoSortBlackBoxGroup(0, 0, 0, new Coordinates(0,0), ref ret_numbox_coord_list);
+				else {				
+					// 今回ソートする黒マス群の大きさ確保　falseで初期化
+					visited = new bool[bb_group.Count];
+					for (int i = visited.Length - 1; i >= 0; i--) { visited[i] = false; }
+
+					// xを昇順、yを昇順でソート（左上の黒マスが先頭）
+					bb_group.Sort(
+						delegate(Coordinates co1, Coordinates co2) {
+							if (co1.x < co2.x) { return -1; }
+							else if (co1.x > co2.x) { return 1; }
+							else {
+								if (co1.y < co2.y) { return -1; }
+								else if (co1.y > co2.y) { return 1; }
+								else return 0;
+							}
+						});
+
+					// 辺を設定
+					edge = new Dictionary<int, List<int>>();
+					for (int i = bb_group.Count - 1; i >= 0; i--) {
+						List<Coordinates> adjacent_coord = Box.getBlackBoxCoordinatesAround(bb_group[i]);
+						List<int> index = new List<int>();
+						for (int j = adjacent_coord.Count - 1; j >= 0; j--) {
+							if (!bb_group.Contains(adjacent_coord[j])) { adjacent_coord.RemoveAt(j); }
+							else { index.Add(bb_group.IndexOf(adjacent_coord[j])); }
+
+						}
+						edge[i] = index;
+					}
+					// 黒マス群周りの数字をdfs中に取得する
+					// 引数：親、（現在の直線の）始点、　（現在の直線の）終点、（現在の直線の）向き、数字マス保存用
+					doDFStoSortBlackBoxGroup(0, 0, 0, new Coordinates(0, 0), ref ret_numbox_coord_list);
+				}
 
 			}
 
@@ -800,7 +811,7 @@ namespace Tapa
 		 * solve_num	:	ヒントを作るマス数の上限
 		 *   
 		 * *******************************/
-		private static void extendIsolationBlackBoxGroup(int solve_num = int.MaxValue)
+		private static void extendIsolationBlackBoxGroup(int solve_limit = int.MaxValue)
 		{
 			// 黒マス群が一つしかなければこの処理をしない（解が一意にならないため）
 			if (Tapa.isolation_blackboxes_group_list.Count == 1) { return; }
@@ -822,14 +833,9 @@ namespace Tapa
 					List<Coordinates> around_undeployed_coord = Box.getNoColorBoxCoordinatesAround(last_extendable_coord);
 					Tapa.box[around_undeployed_coord[0].x][around_undeployed_coord[0].y].Color = Box.BLACK;
 
-					if (solve_num <= Problem.first_count_notdeployed - Tapa.not_deployedbox_coord_list.Count) {
+					if (solve_limit >= Tapa.not_deployedbox_coord_list.Count) {
 						Tapa.is_over_solve_num = true;
 						return;
-					}
-
-					/////////////
-					if (Tapa.is_count) {
-						Tapa.processnum_kuromasu++;
 					}
 
 					if (Tapa.DEBUG) {
@@ -852,12 +858,16 @@ namespace Tapa
 		 * false	: ある
 		 *   
 		 * *******************************/
-		public static bool checkNotIsolationBlackBoxGroup()
+		public static bool checkNotIsolationBlackBoxGroup(List<List<Coordinates>> bb_multi_list = null)
 		{
-			for (int ite_iso_group_list = Tapa.isolation_blackboxes_group_list.Count - 1; ite_iso_group_list >= 0; ite_iso_group_list--) {
+			List<List<Coordinates>> ml = new List<List<Coordinates>>();
+			if (bb_multi_list == null) { ml = Tapa.isolation_blackboxes_group_list; }
+			else { ml = bb_multi_list; }
+
+			for (int ite_iso_group_list = ml.Count - 1; ite_iso_group_list >= 0; ite_iso_group_list--) {
 				bool is_not_iso = false;
 				// List<Coordinates> tmp_iso_group = Tapa.isolation_blackboxes_group_list[ite_iso_group_list];
-				foreach (Coordinates tmp_co in Tapa.isolation_blackboxes_group_list[ite_iso_group_list]) {
+				foreach (Coordinates tmp_co in ml[ite_iso_group_list]) {
 					// 伸び代のある黒マスがあれば次の黒マス群を見に行く
 					// Console.Write(" >> " + Tapa.box[tmp_co.x][tmp_co.y].can_extend_blackbox + "\n");
 					if (Tapa.box[tmp_co.x][tmp_co.y].can_extend_blackbox) {
@@ -889,6 +899,33 @@ namespace Tapa
 			}
 			return true;
 		}
+
+		/*********************************
+		 * 
+		 * co座標の周囲3*3マスに黒マスの団子がないか調べる
+		 * true		: ない
+		 * false	: ある
+		 *   
+		 * *******************************/
+		public static bool checkNotDumplingBlackBoxAround(Coordinates co)
+		{
+			int TL = Tapa.box[co.x - 1][co.y - 1].Color;	// 左上
+			int TC = Tapa.box[co.x - 1][co.y].Color;		// 上
+			int TR = Tapa.box[co.x - 1][co.y + 1].Color;	// 右上
+			int ML = Tapa.box[co.x][co.y - 1].Color;		// 左
+			int MC = Tapa.box[co.x][co.y].Color;			// 真ん中
+			int MR = Tapa.box[co.x][co.y + 1].Color;		// 右
+			int BL = Tapa.box[co.x + 1][co.y - 1].Color;	// 左下
+			int BC = Tapa.box[co.x + 1][co.y].Color;		// 下
+			int BR = Tapa.box[co.x + 1][co.y + 1].Color;	// 右下
+
+			if (TL + TC + ML + MC == 4) { return false; }
+			if (TC + TR + MC + MR == 4) { return false; }
+			if (ML + MC + BL + BC == 4) { return false; }
+			if (MC + MR + BC + BR == 4) { return false; }
+			return true;
+		}
+
 
 		/*********************************
 		* 
@@ -1003,13 +1040,19 @@ namespace Tapa
 		 *   
 		 * *******************************/
 		public static bool is_count_bb = false;
-		public static void manageBlackBox(int solve_num = int.MaxValue)
+		public static void manageBlackBox(int solve_limit = int.MaxValue)
 		{
+			int first_count = Tapa.not_deployedbox_coord_list.Count;
 			Tapa.sw_csv.Restart();	// CSV
 			// 孤立した黒マス群のリストを見て、伸び代が1つしかない黒マス群があればそこを黒に塗る。
-			extendIsolationBlackBoxGroup(solve_num);
-			Tapa.sum_times_kakuteijogaiid += Tapa.sw_csv.ElapsedMilliseconds;	// CSV
-			Tapa.visittimes_kakuteijogaiid++;
+			extendIsolationBlackBoxGroup(solve_limit);
+			Tapa.sum_times_kuromasu += Tapa.sw_csv.ElapsedMilliseconds;	// CSV
+			Tapa.visittimes_kuromasu++;
+
+			/////////////
+			if (Tapa.is_count) {
+				Tapa.processnum_kuromasu += first_count - Tapa.not_deployedbox_coord_list.Count ;
+			}
 
 		}
 
