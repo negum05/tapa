@@ -248,6 +248,21 @@ namespace Tapa
 		/*** (end) set ***/
 
 		public bool saved_was_change_board { get; set; }
+
+		/*********************************
+		 * 
+		 * 盤面sのうち、bの座標を未定マスにした盤面を作成する。
+		 *   
+		 * *******************************/
+		public static void makeEditBoard(StateSave s)
+		{
+			Tapa.resetBoard();
+			for (int i = 1; i <= Tapa.MAX_BOARD_ROW; i++) {
+				for (int j = 1; j <= Tapa.MAX_BOARD_COL; j++) {
+					Tapa.box[i][j].connecting_color = s.saved_box[i][j].Color;
+				}
+			}
+		}
 	}
 }
 

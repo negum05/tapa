@@ -25,16 +25,16 @@ namespace Tapa
 		public static List<List<Coordinates>> isolation_blackboxes_group_list = new List<List<Coordinates>>();
 
 		public static bool DEBUG = false;
+		
 
-		public static int MAX_BOARD_ROW = 30;
-		public static int MAX_BOARD_COL = 30;
+		public static int MAX_BOARD_ROW;
+		public static int MAX_BOARD_COL;
 		public static int BOX_SUM = MAX_BOARD_COL * MAX_BOARD_ROW;
 
+		public static bool is_fast = false;
+		
 		public static bool was_change_board;
-
-		public static int REPEAT_NUM = 40;
-
-
+		
 		// エクセルに書き込む用
 		public static string file_name = "tapa";
 		public static int processnum_kuromasu = 0;
@@ -70,6 +70,16 @@ namespace Tapa
 		[STAThread]
 		static void Main(string[] args)
 		{
+			//// ################# GUI用
+			// ボタンをWindows風のスタイルにしてくれる
+			System.Windows.Forms.Application.EnableVisualStyles();
+			// falseにすることでパフォーマンスを優先する
+			System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
+			// Form1()が停止しない間常に動作
+			System.Windows.Forms.Application.Run(new Display());
+			Console.ReadLine();
+
+
 			//PictToDotManagement.makeDotFromPict();
 			//return;
 
@@ -104,14 +114,7 @@ namespace Tapa
 			//return;
 
 
-			//// ################# GUI用
-			//// ボタンをWindows風のスタイルにしてくれる
-			System.Windows.Forms.Application.EnableVisualStyles();
-			// falseにすることでパフォーマンスを優先する
-			System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
-			// Form1()が停止しない間常に動作
-			System.Windows.Forms.Application.Run(new Display());
-			Console.ReadLine();
+			
 
 
 
@@ -207,24 +210,33 @@ namespace Tapa
 		 * Tapaを解く(BuckTrack無し)
 		 * 引数：
 		 * cycle_num	: 手法の繰り返し上限回数
+		 * process_limit: 手法の制限 3:制限 4:制限なし
+		 * solve_limit	: 何マス埋めるか
 		 *  
 		 * *******************************/
 		public static bool is_over_solve_num;
-		public static void solveTapa(int cycle_num, int solve_limit = -1)
+		public static void solveTapa(int solve_limit = -1)
 		{
 			is_over_solve_num = false;
-			for (int i = cycle_num; i > 0; i--) {
+			int process_limit = 3;
+			while(true) {
 				Tapa.was_change_board = false;
-
 				// 数字マス周りのパターンを管理
-				PatternAroundNumBox.managePatternAroundNumBox(solve_limit);
+				PatternAroundNumBox.managePatternAroundNumBox(process_limit, solve_limit);
 				if (Tapa.is_over_solve_num) { break; }
 
 				// 伸び代のある黒マスから、黒マスが伸びないかを見て、可能なら実際に伸ばす。
 				Box.manageBlackBox(solve_limit);
 				if (Tapa.is_over_solve_num) { break; }
 
-				if (!was_change_board) { break; }
+				if (!was_change_board) {
+					if (process_limit == 3) {
+						if (Tapa.is_fast) { return; }	// 高速モードなら手法の制限解除を行わない
+						process_limit = 4; continue;	// 解法を制限して回答が進まなければ制限解除
+					}	
+					return;	// 解法の制限をなくしても問題が解けない or 回答終了 の場合終わり 
+				}
+				if (process_limit == 4) { process_limit = 3; } // 解法の制限を解除して解が進んだ場合、改めて解法を制限する
 			}
 		}
 
@@ -378,9 +390,7 @@ namespace Tapa
 		public static void printCoordList(List<Coordinates> coord_list)
 		{
 			foreach (Coordinates tmp_coord in coord_list) {
-				Console.Write(Tapa.box[tmp_coord.x][tmp_coord.y].boxNum);
 				tmp_coord.printCoordinates();
-				Console.Write(" ");
 			}
 			Console.WriteLine();
 		}

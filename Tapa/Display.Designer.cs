@@ -37,12 +37,15 @@
 			this.radio_dot = new System.Windows.Forms.RadioButton();
 			this.ランダム = new System.Windows.Forms.ToolTip(this.components);
 			this.radio_random = new System.Windows.Forms.RadioButton();
+			this.radio_fast = new System.Windows.Forms.RadioButton();
+			this.radio_normal = new System.Windows.Forms.RadioButton();
 			this.openFileDialog_dotfile = new System.Windows.Forms.OpenFileDialog();
 			this.ぱずぷれリンク = new System.Windows.Forms.ToolTip(this.components);
 			this.openFileDialog_playfile = new System.Windows.Forms.OpenFileDialog();
 			this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
 			this.ヒント生成 = new System.Windows.Forms.ToolTip(this.components);
 			this.radio_hint = new System.Windows.Forms.RadioButton();
+			this.comboBox3 = new System.Windows.Forms.ComboBox();
 			this.group_save = new System.Windows.Forms.GroupBox();
 			this.sl_savefile_path = new System.Windows.Forms.Button();
 			this.tb_savefile_path = new System.Windows.Forms.TextBox();
@@ -62,20 +65,25 @@
 			this.button1 = new System.Windows.Forms.Button();
 			this.tb_hintfile_path = new System.Windows.Forms.TextBox();
 			this.open_hintfile = new System.Windows.Forms.OpenFileDialog();
+			this.group_hint_num = new System.Windows.Forms.GroupBox();
+			this.button_pictset = new System.Windows.Forms.Button();
+			this.Group_speed = new System.Windows.Forms.GroupBox();
 			this.group_save.SuspendLayout();
 			this.group_play.SuspendLayout();
 			this.group_dot.SuspendLayout();
 			this.group_rc.SuspendLayout();
 			this.groupBox1.SuspendLayout();
 			this.group_hint.SuspendLayout();
+			this.group_hint_num.SuspendLayout();
+			this.Group_speed.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// startMakeProblem
 			// 
 			this.startMakeProblem.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.startMakeProblem.Location = new System.Drawing.Point(155, 312);
+			this.startMakeProblem.Location = new System.Drawing.Point(152, 312);
 			this.startMakeProblem.Name = "startMakeProblem";
-			this.startMakeProblem.Size = new System.Drawing.Size(111, 38);
+			this.startMakeProblem.Size = new System.Drawing.Size(114, 38);
 			this.startMakeProblem.TabIndex = 0;
 			this.startMakeProblem.Text = "問題生成を開始";
 			this.startMakeProblem.UseVisualStyleBackColor = true;
@@ -108,7 +116,7 @@
 			this.textBox4.ReadOnly = true;
 			this.textBox4.Size = new System.Drawing.Size(293, 24);
 			this.textBox4.TabIndex = 8;
-			this.textBox4.Text = "Tapaの問題を生成するだけ";
+			this.textBox4.Text = "Tapaの問題作成支援ソフト";
 			// 
 			// button2
 			// 
@@ -146,6 +154,32 @@
 			this.radio_random.UseVisualStyleBackColor = true;
 			this.radio_random.CheckedChanged += new System.EventHandler(this.radio_random_CheckedChanged_1);
 			// 
+			// radio_fast
+			// 
+			this.radio_fast.AutoSize = true;
+			this.radio_fast.Location = new System.Drawing.Point(6, 14);
+			this.radio_fast.Name = "radio_fast";
+			this.radio_fast.Size = new System.Drawing.Size(43, 16);
+			this.radio_fast.TabIndex = 0;
+			this.radio_fast.TabStop = true;
+			this.radio_fast.Text = "fast";
+			this.ランダム.SetToolTip(this.radio_fast, "問題生成、回答に使う手法を制限する。");
+			this.radio_fast.UseVisualStyleBackColor = true;
+			this.radio_fast.CheckedChanged += new System.EventHandler(this.radio_easy_CheckedChanged);
+			// 
+			// radio_normal
+			// 
+			this.radio_normal.AutoSize = true;
+			this.radio_normal.Location = new System.Drawing.Point(71, 14);
+			this.radio_normal.Name = "radio_normal";
+			this.radio_normal.Size = new System.Drawing.Size(57, 16);
+			this.radio_normal.TabIndex = 1;
+			this.radio_normal.TabStop = true;
+			this.radio_normal.Text = "normal";
+			this.ランダム.SetToolTip(this.radio_normal, "問題生成、回答に手法を制限しない。");
+			this.radio_normal.UseVisualStyleBackColor = true;
+			this.radio_normal.CheckedChanged += new System.EventHandler(this.radio_normal_CheckedChanged);
+			// 
 			// openFileDialog_dotfile
 			// 
 			this.openFileDialog_dotfile.FileName = "openFileDialog1";
@@ -172,6 +206,119 @@
 			this.ヒント生成.SetToolTip(this.radio_hint, "ぱずぷれ形式のtxtから問題のヒントを生成します");
 			this.radio_hint.UseVisualStyleBackColor = true;
 			this.radio_hint.CheckedChanged += new System.EventHandler(this.radio_hint_CheckedChanged);
+			// 
+			// comboBox3
+			// 
+			this.comboBox3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBox3.FormattingEnabled = true;
+			this.comboBox3.ItemHeight = 12;
+			this.comboBox3.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23",
+            "24",
+            "25",
+            "26",
+            "27",
+            "28",
+            "29",
+            "30",
+            "31",
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42",
+            "43",
+            "44",
+            "45",
+            "46",
+            "47",
+            "48",
+            "49",
+            "50",
+            "51",
+            "52",
+            "53",
+            "54",
+            "55",
+            "56",
+            "57",
+            "58",
+            "59",
+            "60",
+            "61",
+            "62",
+            "63",
+            "64",
+            "65",
+            "66",
+            "67",
+            "68",
+            "69",
+            "70",
+            "71",
+            "72",
+            "73",
+            "74",
+            "75",
+            "76",
+            "77",
+            "78",
+            "79",
+            "80",
+            "81",
+            "82",
+            "83",
+            "84",
+            "85",
+            "86",
+            "87",
+            "88",
+            "89",
+            "90",
+            "91",
+            "92",
+            "93",
+            "94",
+            "95",
+            "96",
+            "97",
+            "98",
+            "99",
+            "100"});
+			this.comboBox3.Location = new System.Drawing.Point(159, 14);
+			this.comboBox3.Name = "comboBox3";
+			this.comboBox3.Size = new System.Drawing.Size(47, 20);
+			this.comboBox3.TabIndex = 0;
+			this.ヒント生成.SetToolTip(this.comboBox3, "残りの未配色マスのうち何%のマスを埋めたいかを指定してください。なお、途中盤面が間違っていた場合は、途中盤面の内あっている盤面のみを出力します。");
+			this.comboBox3.SelectedIndexChanged += new System.EventHandler(this.comboBox3_SelectedIndexChanged);
 			// 
 			// group_save
 			// 
@@ -226,7 +373,7 @@
 			this.sl_playfile_path.Name = "sl_playfile_path";
 			this.sl_playfile_path.Size = new System.Drawing.Size(99, 23);
 			this.sl_playfile_path.TabIndex = 30;
-			this.sl_playfile_path.Text = "フォルダを選択";
+			this.sl_playfile_path.Text = "ファイルを選択";
 			this.sl_playfile_path.UseVisualStyleBackColor = true;
 			this.sl_playfile_path.Click += new System.EventHandler(this.sl_playfile_path_Click);
 			// 
@@ -334,6 +481,7 @@
 			this.comboBox2.Name = "comboBox2";
 			this.comboBox2.Size = new System.Drawing.Size(44, 20);
 			this.comboBox2.TabIndex = 7;
+			this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
 			// 
 			// comboBox1
 			// 
@@ -378,7 +526,7 @@
 			this.group_hint.Controls.Add(this.tb_hintfile_path);
 			this.group_hint.Location = new System.Drawing.Point(15, 123);
 			this.group_hint.Name = "group_hint";
-			this.group_hint.Size = new System.Drawing.Size(368, 40);
+			this.group_hint.Size = new System.Drawing.Size(368, 41);
 			this.group_hint.TabIndex = 31;
 			this.group_hint.TabStop = false;
 			this.group_hint.Text = "ヒントを生成したいtxtファイルを選択";
@@ -390,7 +538,7 @@
 			this.button1.Name = "button1";
 			this.button1.Size = new System.Drawing.Size(99, 23);
 			this.button1.TabIndex = 30;
-			this.button1.Text = "フォルダを選択";
+			this.button1.Text = "ファイルを選択";
 			this.button1.UseVisualStyleBackColor = true;
 			this.button1.Click += new System.EventHandler(this.button1_Click_1);
 			// 
@@ -409,21 +557,55 @@
 			this.open_hintfile.FileName = "open_hintfile";
 			this.open_hintfile.FileOk += new System.ComponentModel.CancelEventHandler(this.open_hintfile_FileOk);
 			// 
+			// group_hint_num
+			// 
+			this.group_hint_num.Controls.Add(this.comboBox3);
+			this.group_hint_num.Location = new System.Drawing.Point(15, 169);
+			this.group_hint_num.Name = "group_hint_num";
+			this.group_hint_num.Size = new System.Drawing.Size(367, 40);
+			this.group_hint_num.TabIndex = 31;
+			this.group_hint_num.TabStop = false;
+			this.group_hint_num.Text = "ヒント数の指定（%）";
+			// 
+			// button_pictset
+			// 
+			this.button_pictset.Location = new System.Drawing.Point(161, 270);
+			this.button_pictset.Name = "button_pictset";
+			this.button_pictset.Size = new System.Drawing.Size(75, 23);
+			this.button_pictset.TabIndex = 34;
+			this.button_pictset.Text = "画像を編集";
+			this.button_pictset.UseVisualStyleBackColor = true;
+			this.button_pictset.Click += new System.EventHandler(this.button_pictset_Click);
+			// 
+			// Group_speed
+			// 
+			this.Group_speed.Controls.Add(this.radio_normal);
+			this.Group_speed.Controls.Add(this.radio_fast);
+			this.Group_speed.Location = new System.Drawing.Point(12, 294);
+			this.Group_speed.Name = "Group_speed";
+			this.Group_speed.Size = new System.Drawing.Size(134, 36);
+			this.Group_speed.TabIndex = 35;
+			this.Group_speed.TabStop = false;
+			this.Group_speed.Text = "SPEED";
+			// 
 			// Display
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(395, 360);
-			this.Controls.Add(this.group_hint);
+			this.Controls.Add(this.Group_speed);
+			this.Controls.Add(this.button_pictset);
 			this.Controls.Add(this.groupBox1);
-			this.Controls.Add(this.group_rc);
 			this.Controls.Add(this.group_dot);
-			this.Controls.Add(this.group_play);
-			this.Controls.Add(this.group_save);
 			this.Controls.Add(this.button2);
 			this.Controls.Add(this.textBox4);
 			this.Controls.Add(this.linkLabel1);
 			this.Controls.Add(this.startMakeProblem);
+			this.Controls.Add(this.group_save);
+			this.Controls.Add(this.group_hint_num);
+			this.Controls.Add(this.group_play);
+			this.Controls.Add(this.group_hint);
+			this.Controls.Add(this.group_rc);
 			this.Name = "Display";
 			this.Text = "Tapa_puzzle";
 			this.Load += new System.EventHandler(this.Display_Load);
@@ -439,6 +621,9 @@
 			this.groupBox1.PerformLayout();
 			this.group_hint.ResumeLayout(false);
 			this.group_hint.PerformLayout();
+			this.group_hint_num.ResumeLayout(false);
+			this.Group_speed.ResumeLayout(false);
+			this.Group_speed.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -479,6 +664,12 @@
 		private System.Windows.Forms.Button button1;
 		private System.Windows.Forms.TextBox tb_hintfile_path;
 		private System.Windows.Forms.OpenFileDialog open_hintfile;
+		private System.Windows.Forms.GroupBox group_hint_num;
+		private System.Windows.Forms.ComboBox comboBox3;
+		private System.Windows.Forms.Button button_pictset;
+		private System.Windows.Forms.GroupBox Group_speed;
+		private System.Windows.Forms.RadioButton radio_normal;
+		private System.Windows.Forms.RadioButton radio_fast;
 
 
     }

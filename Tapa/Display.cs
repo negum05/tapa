@@ -21,6 +21,7 @@ namespace Tapa
 
 	public partial class Display : Form
 	{
+		public static string puzzlevan_path = @"C:\Users\Amano\OneDrive\zemi\puzzlevan\puzzlevan.exe";
 
 		public Display()
 		{
@@ -80,8 +81,6 @@ namespace Tapa
 				Tapa.MAX_BOARD_ROW = int.Parse(comboBox1.Text);
 				Tapa.MAX_BOARD_COL = int.Parse(comboBox2.Text);
 				Tapa.BOX_SUM = Tapa.MAX_BOARD_ROW * Tapa.MAX_BOARD_COL;	// マス数
-				Console.WriteLine("【内部】row:col >> " + Tapa.MAX_BOARD_ROW + ":" + Tapa.MAX_BOARD_COL);
-				Console.WriteLine("【GUI】row:col >> " + comboBox1.Text + ":" + comboBox2.Text);
 
 				string tmp = startMakeProblem.Text;
 				startMakeProblem.Text = "問題生成中...";
@@ -92,7 +91,16 @@ namespace Tapa
 				System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
 				// 問題生成の処理
 				if (!radio_random.Checked) {
-					if (radio_hint.Checked) { Problem.manageMakingHintFromTxt(); }
+					if (radio_hint.Checked) {
+						Problem.hint_percent = int.Parse(comboBox3.Text);
+						if (!Problem.manageMakingHintFromTxt()) {
+							MessageBox.Show("指定された問題はこのプログラムでは解けませんでした。",
+										"力及ばず",
+										MessageBoxButtons.OK,
+										MessageBoxIcon.Error);
+							Problem.is_correct_txtformat = true;
+						}
+					}
 					else { Problem.manageMakingProblemFromTxt(); }
 					if (!Problem.is_correct_txtformat) {
 						MessageBox.Show("指定されたDot画またはヒント対象ファイルがぱずぷれ形式ではない可能性があります。",
@@ -101,6 +109,14 @@ namespace Tapa
 										MessageBoxIcon.Error);
 						Problem.is_correct_txtformat = true;
 					}
+					if (!Problem.is_correct_tapa_dot) {
+						MessageBox.Show("指定されたDot画がTapaの解答として正しくない可能性があります。",
+										"エラー",
+										MessageBoxButtons.OK,
+										MessageBoxIcon.Error);
+						Problem.is_correct_tapa_dot = true;
+					}
+					
 				}
 				else { Problem.manageMakingProblem(); }
 				//時間計測終了
@@ -145,6 +161,7 @@ namespace Tapa
 		{
 			radio_random.Checked = true;
 			radio_random_CheckedChanged_1(sender, e);
+			radio_normal.Checked = true;
 
 			// デフォルトの保存先（mainの初めに指定）
 			tb_savefile_path.Text = Problem.default_path + @"tapa_prob.txt";
@@ -155,11 +172,9 @@ namespace Tapa
 			comboBox1.SelectedIndex = comboBox1.Items.IndexOf("10");
 			// 列数の初期値(10)を設定
 			comboBox2.SelectedIndex = comboBox2.Items.IndexOf("10");
+			// ヒント数の初期値(3)を設定
+			comboBox3.SelectedIndex = comboBox3.Items.IndexOf("3");
 		}
-
-
-
-
 
 		private void textBox8_TextChanged(object sender, EventArgs e)
 		{
@@ -193,22 +208,22 @@ namespace Tapa
 			}
 
 			System.Diagnostics.Process p =
-				System.Diagnostics.Process.Start(@"C:\Users\Amano\OneDrive\zemi\puzzlevan\puzzlevan.exe", Problem.playfile_path);
+				System.Diagnostics.Process.Start(puzzlevan_path, Problem.playfile_path);
 			// System.Diagnostics.Process.Start(@"D:\negum_d\OneDrive\zemi\puzzlevan\puzzlevan.exe", Problem.file_path);
 			System.Threading.Thread.Sleep(500); //少し待つ
 
 			// http://blog.kur.jp/entry/2009/12/05/activewin/
 			int id;
+			int i = 0;
 			do {
 				// アクティブなプロセスを取得
 				IntPtr hWnd = GetForegroundWindow();
 				GetWindowThreadProcessId(hWnd, out id);
 				Console.WriteLine("アクティブなプロセス名 >> " + Process.GetProcessById(id).ProcessName.ToString());
+				i++;
+			} while (Process.GetProcessById(id).ProcessName != "puzzlevan" && i < 5);
 
-			} while (Process.GetProcessById(id).ProcessName != "puzzlevan");
-
-			// F2 を送信（回答モードにするため）
-			System.Threading.Thread.Sleep(500); //少し待つ
+			// F2 を送信（Puzzlevanを回答モードにするため）
 			SendKeys.Send("{F2}");
 			Console.WriteLine("F2送信");
 		}
@@ -228,10 +243,14 @@ namespace Tapa
 		{
 			group_dot.Hide();
 			group_hint.Hide();
+			group_hint_num.Hide();
+			button_pictset.Hide();
 
 			group_play.Show();
 			group_save.Show();
 			group_rc.Show();
+
+			startMakeProblem.Text = "問題生成";
 		}
 
 		// 【radio】Dot画から問題生成
@@ -239,10 +258,14 @@ namespace Tapa
 		{
 			group_rc.Hide();
 			group_hint.Hide();
+			group_hint_num.Hide();
 
+			button_pictset.Show();
 			group_play.Show();
 			group_save.Show();
 			group_dot.Show();
+
+			startMakeProblem.Text = "問題生成";
 		}
 
 		// 【radio】ヒント生成
@@ -252,8 +275,12 @@ namespace Tapa
 			group_play.Hide();
 			group_save.Hide();
 			group_rc.Hide();
+			button_pictset.Hide();
 
 			group_hint.Show();
+			group_hint_num.Show();
+
+			startMakeProblem.Text = "ヒントの生成";
 		}
 
 		private void groupBox1_Enter_3(object sender, EventArgs e)
@@ -439,7 +466,42 @@ namespace Tapa
 			comboBox2.DropDownStyle = ComboBoxStyle.DropDownList;
 		}
 
-		// 【textbox】ヒントを生成したい対象ファイル
+		private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+		{
 
+		}
+
+		private void comboBox3_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			// 追加できないためGUIで設定
+			//for (int i = 1; i <= 100; i++) {
+			//	// コンボボックスへの項目の追加
+			//	comboBox2.Items.Add(i.ToString());
+			//}
+
+			// 読み取り専用（テキストボックスは編集不可）にする
+			comboBox2.DropDownStyle = ComboBoxStyle.DropDownList;
+		}
+
+		// 画像を選択
+		private void button_pictset_Click(object sender, EventArgs e)
+		{
+			PictManagementForm p = new PictManagementForm();
+			p.ShowDialog();
+
+			p.Dispose();
+		}
+
+		// speed:normal 手法の制限の解除を行う
+		private void radio_normal_CheckedChanged(object sender, EventArgs e)
+		{
+			Tapa.is_fast = false;
+		}
+
+		// speed:fast 手法の制限の解除を行わない
+		private void radio_easy_CheckedChanged(object sender, EventArgs e)
+		{
+			Tapa.is_fast = true;
+		}
 	}
 }

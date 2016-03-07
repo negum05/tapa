@@ -6,38 +6,38 @@ using System.Threading.Tasks;
 using System.Drawing;
 
 namespace Tapa
-{
+{	
 	// http://hikipuro.hatenadiary.jp/entry/2015/08/10/085645
-	// 2値化
-	class ThresholdingFilter
+	// グレースケール化
+	class GrayScale
 	{
-		// 引数で渡されたビットマップ画像を 2 値化します
-		public static Bitmap Apply(Bitmap source, byte threshold = 128)
+		// 引数で渡されたビットマップ画像をグレースケール化します
+		public static Bitmap Apply(Bitmap source)
 		{
 			// ビットマップ画像から全てのピクセルを抜き出す
 			PixelManipulator s = PixelManipulator.LoadBitmap(source);
 			PixelManipulator d = s.Clone();
 
-			// しきい値の設定
-			byte[] thr_array = new byte[256];
-			int i;
-			for (i = 0; i < threshold; i++) {
-				thr_array[i] = (byte)0;
-			}
-			for (; i < 256; i++) {
-				thr_array[i] = (byte)255;
-			}
-
 			// 全てのピクセルを巡回する
 			s.EachPixel((x, y) => {
-				// 2 値化する
-				// グレースケール化されてることが前提なのでrgbは同じ値と仮定
-				byte color = thr_array[s.R(x,y)];
+				// グレースケールにする
+				byte r = s.R(x, y);
+				byte g = s.G(x, y);
+				byte b = s.B(x, y);
+				byte color = _GrayScale(r, g, b);
+
 				d.SetPixel(x, y, color, color, color);
 			});
 
 			// 新しいビットマップ画像を作成して、ピクセルをセットする
 			return d.CreateBitmap();
-		}		
+		}
+
+		// グレースケール化
+		private static byte _GrayScale(byte r, byte g, byte b)
+		{
+			return (byte)(0.29891f * r + 0.58661f * g + 0.11448f * b);
+
+		}
 	}
 }
