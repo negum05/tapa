@@ -119,6 +119,7 @@
   <ItemGroup>
     <Compile Include="Box.cs" />
     <Compile Include="BackTrack.cs" />
+    <Compile Include="FolderManagement.cs" />
     <Compile Include="GrayScale.cs" />
     <Compile Include="PictManagement.cs">
       <SubType>Form</SubType>

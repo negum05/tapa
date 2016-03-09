@@ -20,7 +20,7 @@ namespace Tapa
 		public static bool is_correct_txtformat = true;
 		public static bool is_correct_tapa_dot = true;
 
-		public static int MIN_WHITEBOX_START_RATE = 25;	// 10*10盤面だと45-55あたりがいい感じ
+		public static int MIN_WHITEBOX_START_RATE = 25;
 		public static int MAX_WHITEBOX_START_RATE = 90;
 
 		public static int hint_percent = 1;	// ヒント生成数（パーセント）

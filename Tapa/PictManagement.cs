@@ -129,7 +129,7 @@ namespace Tapa
 				PictManagementForm.dir_path = System.IO.Path.GetDirectoryName(this.tb_pictfile_path.Text);
 				// 保存先のディレクトリを作成、パスを取得
 				PictManagementForm.savedir_path
-					= MyCSVManagement.makeFolder(PictManagementForm.dir_path, PictManagementForm.file_name);
+					= FolderManagement.makeFolder(PictManagementForm.dir_path, PictManagementForm.file_name);
 				pictureBox1.Image = PictToDotManagement.makeDotFromPict(
 					PictManagementForm.dir_path, PictManagementForm.file_name, PictManagementForm.savedir_path);
 			}

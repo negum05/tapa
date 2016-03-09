@@ -21,7 +21,7 @@ namespace Tapa
 
 	public partial class Display : Form
 	{
-		public static string puzzlevan_path = @"C:\Users\Amano\OneDrive\zemi\puzzlevan\puzzlevan.exe";
+		public static string puzzlevan_path = System.IO.Directory.GetCurrentDirectory() + @"\puzzlevan\puzzlevan.exe";
 
 		public Display()
 		{
@@ -206,10 +206,15 @@ namespace Tapa
 								MessageBoxIcon.Error);
 				return;
 			}
-
+			if (!System.IO.File.Exists(puzzlevan_path)) {
+				MessageBox.Show("Puzzlevanが" + puzzlevan_path + "\nに存在しません。",
+								"エラー",
+								MessageBoxButtons.OK,
+								MessageBoxIcon.Error);
+				return;
+			}
 			System.Diagnostics.Process p =
 				System.Diagnostics.Process.Start(puzzlevan_path, Problem.playfile_path);
-			// System.Diagnostics.Process.Start(@"D:\negum_d\OneDrive\zemi\puzzlevan\puzzlevan.exe", Problem.file_path);
 			System.Threading.Thread.Sleep(500); //少し待つ
 
 			// http://blog.kur.jp/entry/2009/12/05/activewin/
@@ -222,7 +227,7 @@ namespace Tapa
 				Console.WriteLine("アクティブなプロセス名 >> " + Process.GetProcessById(id).ProcessName.ToString());
 				i++;
 			} while (Process.GetProcessById(id).ProcessName != "puzzlevan" && i < 5);
-
+			System.Threading.Thread.Sleep(500); //少し待つ
 			// F2 を送信（Puzzlevanを回答モードにするため）
 			SendKeys.Send("{F2}");
 			Console.WriteLine("F2送信");
